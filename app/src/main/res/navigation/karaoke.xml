@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/karaoke"
+    app:startDestination="@id/karaokeMainFragment">
+
+    <fragment
+        android:id="@+id/karaokeMainFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.KaraokeMainFragment"
+        android:label="KaraokeMainFragment">
+        <action
+            android:id="@+id/action_karaokeMainFragment_to_karaokeListFragment"
+            app:destination="@id/karaokeListFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <action
+            android:id="@+id/action_karaokeMainFragment_to_karaokeArtistListFragment"
+            app:destination="@id/karaokeArtistListFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:uri="https://www.senriot.com/kaorake/main" />
+    </fragment>
+    <fragment
+        android:id="@+id/karaokeListFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.KaraokeListFragment"
+        android:label="KaraokeListFragment">
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/karaokeArtistListFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.KaraokeArtistListFragment"
+        android:label="KaraokeArtistListFragment">
+        <action
+            android:id="@+id/action_karaokeArtistListFragment_to_karaokeArtistSongsFragment"
+            app:destination="@id/karaokeArtistSongsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/karaokeArtistSongsFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.KaraokeArtistSongsFragment"
+        android:label="KaraokeArtistSongsFragment" >
+        <argument
+            android:name="artist"
+            app:argType="com.android.karaoke.common.models.Artist" />
+    </fragment>
+</navigation>

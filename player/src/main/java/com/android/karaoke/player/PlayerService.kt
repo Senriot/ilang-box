@@ -4,29 +4,31 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
+import android.graphics.Typeface
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
-import android.view.Display
-import android.view.LayoutInflater
-import android.view.SurfaceHolder
-import android.view.WindowManager
+import android.os.SystemClock
+import android.view.*
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.events.ProfileDataInitEvent
-import com.android.karaoke.common.models.Song
-import com.android.karaoke.common.models.SystemParams
-import com.android.karaoke.common.realm.appConfig
+import com.android.karaoke.common.models.*
+import com.android.karaoke.common.realm.UserDataHelper
+import com.android.karaoke.common.realm.userConfig
 import com.android.karaoke.player.databinding.VideoPresentationBinding
 import com.android.karaoke.player.events.*
 import com.android.karaoke.player.recorder.AudioRecorder
 import com.apkfuns.logutils.LogUtils
+import com.vicpin.krealmextensions.query
+import com.vicpin.krealmextensions.save
+import com.zlm.hp.lyrics.LyricsReader
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
-import io.realm.annotations.Ignore
+import io.realm.kotlin.where
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
@@ -43,13 +45,20 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private var mWindowManager: WindowManager? = null
     private var mainDisplay: SurfaceHolder? = null
-    private var profileData: SystemParams? = null
+    private var userData: UserData? = null
     private val mTrackAudioIndex = Vector<Int>()
     private var trackNum = 0
     private var currentTrack: String? = null
     private var curAudioIndex: Int = 0
     private var accompany = Accompany.BC
     private var audioRecorder: AudioRecorder? = null
+    private var mBinding: VideoPresentationBinding? = null
+    private var readItem: ReadItem? = null
+    private var readBgm: ReadBgm? = null
+
+    private var mBaseTimer = SystemClock.elapsedRealtime();
+
+    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌
 
     val currentPlay = ObservableField<Song>()
 
@@ -65,7 +74,7 @@ class PlayerService : Service(), PresentationHelper.Listener
 
 
     private val realm by lazy {
-        Realm.getInstance(appConfig)
+        Realm.getInstance(userConfig)
     }
 
     private val mPlayer by lazy {
@@ -93,19 +102,26 @@ class PlayerService : Service(), PresentationHelper.Listener
 
         override fun onCompletion(mp: MediaPlayer?)
         {
-            EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
-            audioRecorder?.stop()
-            audioRecorder = null
-            profileData?.let { data ->
-                if (data.currentPlay != null)
-                {
-                    realm.executeTransaction {
-                        data.history.add(0, data.currentPlay)
-                        data.currentPlay = null
+            if (displayType.get() == 1)
+            {
+//                playBgm()
+                audioRecorder?.stop()
+            } else
+            {
+                EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
+                audioRecorder?.stop()
+                audioRecorder = null
+                userData?.let { data ->
+                    if (data.currentPlay != null)
+                    {
+                        realm.executeTransaction {
+                            data.history.add(0, data.currentPlay)
+                            data.currentPlay = null
+                        }
                     }
                 }
+                playNext()
             }
-            playNext()
         }
 
         override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int)
@@ -114,27 +130,34 @@ class PlayerService : Service(), PresentationHelper.Listener
 
         override fun onPrepared(mp: MediaPlayer?)
         {
-            mTrackAudioIndex.clear()
-            mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
-                ?.forEachIndexed { index, _ ->
-                    mTrackAudioIndex.add(index)
-                    trackNum += 1
-                }
-            currentTrack = profileData?.currentPlay?.amTrack
-            mp?.start()
-            when (currentTrack?.trim())
+            if (displayType.get() == 1)
             {
-                "R"  -> mp?.setAudioChannel(2)
-                "L"  -> mp?.setAudioChannel(1)
-                else ->
-                {
-                    if (trackNum > 1)
-                    {
-                        curAudioIndex = currentTrack?.toInt() ?: 0
-                        mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
+
+            } else
+            {
+
+                mTrackAudioIndex.clear()
+                mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
+                    ?.forEachIndexed { index, _ ->
+                        mTrackAudioIndex.add(index)
+                        trackNum += 1
                     }
-                    else mp?.setAudioChannel(1)
-                }
+//                currentTrack = userda?.currentPlay?.
+                mp?.start()
+//                when (currentTrack?.trim())
+//                {
+//                    "R"  -> mp?.setAudioChannel(2)
+//                    "L"  -> mp?.setAudioChannel(1)
+//                    else ->
+//                    {
+//                        if (trackNum > 1)
+//                        {
+//                            curAudioIndex = currentTrack?.toInt() ?: 0
+//                            mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
+//                        }
+//                        else mp?.setAudioChannel(1)
+//                    }
+//                }
             }
         }
 
@@ -161,6 +184,16 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         super.onCreate()
         presentationHelper.onResume()
+        UserDataHelper.initUserData("Guest")
+        var intent = Intent()
+        intent.action = "com.android.audio_mode"
+        intent.putExtra("audio_mode", 0)
+        sendBroadcast(intent)
+
+        intent = Intent()
+        intent.action = "com.ynh.set_spdif_pass_on_off"
+        intent.putExtra("pass_on", 1)
+        sendBroadcast(intent)
     }
 
     override fun onDestroy()
@@ -182,9 +215,14 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         val presoContext = createPresoContext(display)
         mWindowManager = presoContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val viewBinding = VideoPresentationBinding.inflate(LayoutInflater.from(presoContext))
-        viewBinding.service = this
-        viewBinding.surfaceView.holder.addCallback(object : SurfaceHolder.Callback
+        mBinding = VideoPresentationBinding.inflate(LayoutInflater.from(presoContext))
+        val typeface = Typeface.createFromAsset(resources.assets, "font/xhei.ttf")
+        mBinding!!.lrcView.apply {
+            setTypeFace(typeface)
+            setFontSize(38.0f)
+        }
+        mBinding!!.service = this
+        mBinding!!.surfaceView.holder.addCallback(object : SurfaceHolder.Callback
         {
             override fun surfaceChanged(
                 holder: SurfaceHolder?,
@@ -203,16 +241,16 @@ class PlayerService : Service(), PresentationHelper.Listener
             override fun surfaceCreated(holder: SurfaceHolder?)
             {
                 mainDisplay = holder
-                mPlayer.setSurface(holder!!.surface)
+//                mPlayer.setSurface(holder!!.surface)
             }
 
         })
-        mWindowManager?.addView(viewBinding.root, buildLayoutParams())
+        mWindowManager?.addView(mBinding!!.root, buildLayoutParams())
     }
 
     private fun playNext()
     {
-        profileData?.let { data ->
+        userData?.let { data ->
             data.currentPlay?.let { s ->
                 realm.executeTransaction {
                     data.history.add(0, s)
@@ -233,25 +271,55 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private fun playSong(song: Song)
     {
+        mBinding?.lrcView?.pause()
+        mBinding?.lrcView?.initLrcData()
+        audioRecorder?.stop()
+        displayType.set(2)
         mPlayer.stop()
         mPlayer.reset()
         mainDisplay?.let {
-            if (!song.filePath.isNullOrEmpty())
-            {
-                if (File(song.filePath!!).exists())
-                {
-                    mPlayer.setDataSource(song.filePath)
-                    mPlayer.prepareAsync()
-                }
-                else
-                {
-                    playNext()
-                }
-            }
-            else
-            {
-                playNext()
-            }
+            mPlayer.setSurface(it.surface)
+            val path = File("/mnt/usb_storage/SATA/C/songs")
+            val files = path.listFiles()
+            val r = Random().nextInt(files.size)
+            val file = files[r].absolutePath
+            LogUtils.e(file)
+            mPlayer.setDataSource(file)
+            mPlayer.prepareAsync()
+
+//            if (!song.filePath.isNullOrEmpty())
+//            {
+//                if (File(song.filePath!!).exists())
+//                {
+//                    mainDisplay?.let { mPlayer.setDisplay(it) }
+//                    mPlayer.setDataSource(song.filePath)
+//                    mPlayer.prepareAsync()
+//                }
+//                else
+//                {
+//                    playNext()
+//                }
+//            }
+//            else
+//            {
+//                playNext()
+//            }
+        }
+    }
+
+    /**
+     * 播放背景音乐
+     */
+    private fun playBgm()
+    {
+        readBgm?.let {
+            mPlayer.stop()
+            mPlayer.reset()
+            mPlayer.setDataSource(it.file)
+            mPlayer.prepare()
+            mPlayer.start()
+            EventBus.getDefault().postSticky(BgmPlaying(it))
+            realm.executeTransaction { userData?.currentPlay = null }
         }
     }
 
@@ -290,7 +358,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun playlistChanged(event: PlaylistChangedEvent)
     {
-        if (!mPlayer.isPlaying && event.list.size == 1 && profileData?.currentPlay == null)
+        if (!mPlayer.isPlaying && event.list.size == 1 && userData?.currentPlay == null)
         {
             playNext()
         }
@@ -299,7 +367,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun onProfileDataInit(event: ProfileDataInitEvent)
     {
-        profileData = event.data
+        userData = event.data
         mainDisplay?.let {
             playNext()
         }
@@ -325,8 +393,7 @@ class PlayerService : Service(), PresentationHelper.Listener
                 {
                     mPlayer.pause()
                     audioRecorder?.pause()
-                }
-                else
+                } else
                 {
                     mPlayer.start()
                     audioRecorder?.resume()
@@ -338,12 +405,12 @@ class PlayerService : Service(), PresentationHelper.Listener
             }
             PlayEventType.REPLAY       ->
             {
-                profileData?.currentPlay?.let { playSong(it) }
+                userData?.currentPlay?.let { playSong(it) }
             }
 
             PlayEventType.START_RECORD ->
             {
-                profileData?.currentPlay?.let {
+                userData?.currentPlay?.let {
                     val file = File("/sdcard/AudioBank/AudioRecords")
                     if (!file.exists())
                         file.mkdirs()
@@ -380,26 +447,25 @@ class PlayerService : Service(), PresentationHelper.Listener
             if (isYC)
             {
                 if (accompany == Accompany.YC) return
-            }
-            else
+            } else
             {
                 if (accompany == Accompany.BC) return
             }
-            profileData?.currentPlay?.let {
-                when (it.amTrack)
-                {
-                    "R"  -> mPlayer.setAudioChannel(if (isYC) 1 else 2)
-                    "L"  -> mPlayer.setAudioChannel(if (isYC) 2 else 1)
-                    else ->
-                    {
-//                        if (trackNum > 1)
-//                        {
-//                            curAudioIndex = currentTrack?.toInt() ?: 0
-//                            mPlayer.selectTrack(if (curAudioIndex == 0) 2 else 1)
-//                        } else mPlayer.setAudioChannel(1)
-                    }
-                }
-            }
+//            profileData?.currentPlay?.let {
+//                when (it.amTrack)
+//                {
+//                    "R"  -> mPlayer.setAudioChannel(if (isYC) 1 else 2)
+//                    "L"  -> mPlayer.setAudioChannel(if (isYC) 2 else 1)
+//                    else ->
+//                    {
+////                        if (trackNum > 1)
+////                        {
+////                            curAudioIndex = currentTrack?.toInt() ?: 0
+////                            mPlayer.selectTrack(if (curAudioIndex == 0) 2 else 1)
+////                        } else mPlayer.setAudioChannel(1)
+//                    }
+//                }
+//            }
 //            val tracks =
 //                mPlayer.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
 //            tracks?.let {
@@ -443,6 +509,71 @@ class PlayerService : Service(), PresentationHelper.Listener
         mPlayer.setMinorDisplay(event.holder)
     }
 
+    private var uuid = ""
+
+    @Subscribe
+    fun onStartReading(event: StartRecordingEvent)
+    {
+        displayType.set(1)
+        readItem = event.item
+        readBgm = if (event.item.bgm == null)
+        {
+            Realm.getDefaultInstance().where<ReadBgm>().findFirst()
+        } else
+        {
+            event.item.bgm
+        }
+        playBgm()
+        if (!event.item.lyric.isNullOrBlank())
+        {
+            LogUtils.i(event.item.lyric)
+            val s = LyricsReader()
+            s.loadLrc(File(event.item.lyric))
+            mBinding?.lrcView?.lyricsReader = s
+            mBinding?.lrcView?.play(0)
+        }
+
+        val dir = File("/sdcard/ilang-box/records")
+        if (!dir.exists())
+            dir.mkdirs()
+        uuid = UUID.randomUUID().toString()
+        val f = dir.absolutePath + "/" + uuid + ".mp3"
+        if (audioRecorder != null)
+        {
+            audioRecorder?.stop()
+            audioRecorder = null
+        }
+        audioRecorder = AudioRecorder(
+            AudioRecorder.Format.MP3,
+            File(f)
+        )
+        val record = Record().apply {
+            id = uuid
+            readItem = event.item
+            file = f
+        }
+        record.save()
+        audioRecorder?.start()
+    }
+
+    @Subscribe
+    fun stopReading(event: StopReadEvent)
+    {
+        mPlayer.stop()
+        mPlayer.reset()
+        audioRecorder?.stop()
+        mBinding?.lrcView?.pause()
+
+        val record = Record().query { equalTo("id", uuid) }.first()
+        EventBus.getDefault().post(ReadingEnd(record))
+    }
+
+    @Subscribe
+    fun changeBgm(event: ChangeBgmEvent)
+    {
+        readBgm = event.bgm
+        playBgm()
+    }
 
     fun setPlayVolume(v: Float)
     {

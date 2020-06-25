@@ -16,8 +16,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <SurfaceView
             android:id="@+id/surfaceView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"/>
+
+        <com.android.karaoke.player.widget.ManyLyricsView
+            android:id="@+id/lrcView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="0dp"
@@ -37,163 +55,73 @@
             android:id="@+id/surfaceText"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            app:layout_constraintLeft_toLeftOf="@+id/surfaceView"
-            app:layout_constraintRight_toRightOf="@+id/surfaceView"
-            app:layout_constraintTop_toTopOf="@+id/surfaceView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/currentText"
-            style="@style/RunTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text='@{"Now Playing: "+service.currentPlay.name}'
+            android:text='@{"当前播放: "+service.currentPlay.name}'
+            android:textColor="#F4F3F3"
             android:textSize="22sp"
-            android:visibility="@{service.currentPlay==null?View.INVISIBLE:View.VISIBLE}"
-            app:layout_constraintLeft_toLeftOf="@+id/surfaceView"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surfaceText"
             tools:text="当前播放" />
 
         <TextView
             android:id="@+id/nextText"
-            style="@style/RunTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:textSize="22sp"
-            app:layout_constraintRight_toRightOf="@+id/surfaceView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surfaceText"
             tools:text="下首播放" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/currentText"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@+id/surfaceView"
-            app:layout_constraintTop_toBottomOf="@+id/currentText">
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/score"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="150dp"-->
+        <!--            android:background="@drawable/score_bg"-->
+        <!--            android:visibility="gone"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/surfaceView"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/surfaceView">-->
 
-            <ImageView
-                android:id="@+id/ic_YuanBanChang"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/flag_banchang" />
+        <!--            <ImageView-->
+        <!--                android:id="@+id/imageView4"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="bottom"-->
+        <!--                android:layout_marginBottom="22dp"-->
+        <!--                android:src="@drawable/gm" />-->
 
-            <ImageView
-                android:id="@+id/ic_Service"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/flag_service"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/flag_mute"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/volumeBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="100dp"
-            android:background="@mipmap/volume_falg_backgorund"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <FrameLayout
-                android:layout_width="45.5dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="20dp">
-
-                <TextView
-                    android:id="@+id/txt_volume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textColor="#f6d7aa"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:max="100"
-                android:progressDrawable="@drawable/volume_bar_color" />
-        </FrameLayout>
-
-        <View
-            android:id="@+id/pause_icon"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@mipmap/flag_pause"
-            android:src="@mipmap/flag_pause"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <FrameLayout
-            android:id="@+id/score"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="150dp"
-            android:background="@drawable/score_bg"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"
-            app:layout_constraintEnd_toEndOf="@+id/surfaceView"
-            app:layout_constraintStart_toStartOf="@+id/surfaceView">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="22dp"
-                android:src="@drawable/gm" />
-
-            <ImageView
-                android:id="@+id/imageView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="108dp"
-                android:src="@drawable/df" />
-        </FrameLayout>
-
+        <!--            <ImageView-->
+        <!--                android:id="@+id/imageView5"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_marginStart="16dp"-->
+        <!--                android:layout_marginTop="108dp"-->
+        <!--                android:src="@drawable/df" />-->
+        <!--        </FrameLayout>-->
+        <!--        <com.zlm.hp.lyrics.widget.ManyLyricsView-->
+        <!--            android:id="@+id/lrcView"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:background="@mipmap/langdu_bg"-->
+        <!--            android:visibility="@{service.displayType == 1?View.VISIBLE:View.INVISIBLE}"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

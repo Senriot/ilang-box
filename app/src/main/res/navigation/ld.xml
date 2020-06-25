@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ld"
+    app:startDestination="@id/ldMainFragment">
+
+    <fragment
+        android:id="@+id/ldMainFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LdMainFragment"
+        android:label="LdMainFragment" >
+        <action
+            android:id="@+id/action_ldMainFragment_to_ldContentFragment"
+            app:destination="@id/ldContentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/ldContentFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LdContentFragment"
+        android:label="LdContentFragment">
+        <argument
+            android:name="categroyId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ldContentFragment_to_ldItemDetailFragment"
+            app:destination="@id/ldItemDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/ldItemDetailFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LdItemDetailFragment"
+        android:label="LdItemDetailFragment" >
+        <argument
+            android:name="item"
+            app:argType="com.android.karaoke.common.models.ReadItem" />
+        <action
+            android:id="@+id/action_ldItemDetailFragment_to_ldRecordingFragment"
+            app:destination="@id/ldRecordingFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/ldRecordingFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LdRecordingFragment"
+        android:label="LdRecordingFragment" >
+        <action
+            android:id="@+id/action_ldRecordingFragment_to_ldBgmFragment"
+            app:destination="@id/ldBgmFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="item"
+            app:argType="com.android.karaoke.common.models.ReadItem" />
+    </fragment>
+    <fragment
+        android:id="@+id/ldBgmFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LdBgmFragment"
+        android:label="LdBgmFragment">
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://senriot.com/bgm" />
+    </fragment>
+    <fragment
+        android:id="@+id/readListFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.ReadListFragment"
+        android:label="readListFragment">
+        <deepLink
+            android:id="@+id/deepLink3"
+            app:uri="https://www.senriot.com/ilang-box/readlist" />
+    </fragment>
+</navigation>

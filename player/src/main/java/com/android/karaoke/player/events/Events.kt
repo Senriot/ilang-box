@@ -2,6 +2,9 @@ package com.android.karaoke.player.events
 
 import android.view.Display
 import android.view.SurfaceHolder
+import com.android.karaoke.common.models.ReadBgm
+import com.android.karaoke.common.models.ReadItem
+import com.android.karaoke.common.models.Record
 import java.time.Duration
 
 
@@ -19,6 +22,15 @@ class CurrentPositionEvent(val duration: Int, val currentPosition: Int)
 
 class PlayerStatusEvent(val status: Int)
 
+class StartRecordingEvent(val item: ReadItem)
+
+class StopReadEvent()
+
+class ReadingEnd(val record: Record)
+
+class BgmPlaying(val bgm: ReadBgm)
+
+class ChangeBgmEvent(val bgm: ReadBgm)
 
 enum class PlayEventType
 {

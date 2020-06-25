@@ -3,61 +3,39 @@ package com.android.karaoke.common.models
 
 import io.realm.RealmObject
 import io.realm.RealmList
-import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmField
+import io.realm.annotations.RealmClass
 
-open class Song : RealmObject()
-{
+@RealmClass(name = "RealmSong")
+open class Song : RealmObject() {
 
     @PrimaryKey
-    var id: String? = null
-    var name: String? = null
-
-    @RealmField("input_code")
+    var id: String = ""
+    var name: String = ""
     var inputCode: String? = null
-
-    @RealmField("word_count")
-    var wordCount: Long? = null
-    var language: String? = null
-    var category: String? = null
-    var album: String? = null
-    var singers: String? = null
-
-    @RealmField("artist_names")
-    var artistNames: String? = null
-
-    @RealmField("ac_vol")
-    var acVol: Long? = null
-
-    @RealmField("or_vol")
-    var orVol: Long? = null
-
-    @RealmField("am_track")
-    var amTrack: String? = null
+    var wordCount: Long = 0
+    var singerNames: String? = null
+    var typeId: Long? = null
+    var langId: Long? = null
+    var albumId: Long? = null
+    var accompanyTrack: Long = 0
     var quality: String? = null
-
-    @RealmField("full_code")
     var fullCode: String? = null
-
-    @RealmField("file_name")
     var fileName: String? = null
-
-    @RealmField("file_path")
     var filePath: String? = null
-    var status: String? = null
+    var status: Long? = null
     var hot: Long? = null
-
-    @RealmField("pic_url")
-    var picUrl: String? = null
+    var isNew: Boolean? = null
+    var isRecommend: Boolean? = null
+    var isPublic: Boolean? = null
     var resolution: String? = null
+    var isHd: Boolean? = null
+    var image: String? = null
+    var imageUrl: String? = null
+    var playUrl: String? = null
+    var lang: Dict? = null
+    var album: Album? = null
+    var type: Dict? = null
+    var singers: RealmList<Artist> = RealmList()
 
-    @RealmField("Artists")
-    var artists: RealmList<Artist> = RealmList()
-
-    @Ignore
-    var isFavorites: Boolean = false
-
-    @Ignore
-    var isSelected: Boolean = false
 }

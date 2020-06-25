@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.karaoke.KaraokeMainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.senriot.ilangbox.ui.karaoke.KaraokeMainFragment">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:tag="红歌会"
+                    app:cardBackgroundColor="@color/tt"
+                    app:cardElevation="0dp"
+                    app:layout_column="0"
+                    app:layout_gravity="bottom"
+                    app:layout_row="0"
+                    app:layout_rowSpan="2">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/card_ok1" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:tag="2"
+                    app:cardBackgroundColor="@color/tt"
+                    app:cardElevation="0dp"
+                    app:layout_column="1"
+                    app:layout_columnSpan="2"
+                    app:layout_row="0">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/card_ok2"
+                        android:tag="演唱者" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/card_ok3"
+                    android:tag="3"
+                    app:cardBackgroundColor="@color/tt"
+                    app:cardElevation="0dp"
+                    app:layout_column="3"
+                    app:layout_gravity="bottom"
+                    app:layout_row="0">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/card_ok3"
+                        android:tag="演唱曲目" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/card_ok5"
+                    android:tag="军歌"
+                    app:layout_column="1"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/card_ok4"
+                    android:tag="民歌"
+                    app:layout_column="2"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:id="@+id/imageButton6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/card_ok6"
+                    android:tag="经典永流传"
+                    app:layout_column="3"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:id="@+id/imageButton8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/card_ok7"
+                    android:tag="抒情"
+                    app:layout_column="4"
+                    app:layout_gravity="bottom"
+                    app:layout_row="0"
+                    app:layout_rowSpan="2" />
+
+            </androidx.gridlayout.widget.GridLayout>
+        </HorizontalScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

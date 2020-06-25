@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.android.karaoke.common.models.ReadCategory" />
+    </data>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@{item.name}"
+        android:textAlignment="center"
+        android:textSize="10sp"
+        tools:text="红色经典">
+
+    </TextView>
+</layout>

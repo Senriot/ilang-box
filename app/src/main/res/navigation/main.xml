@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/xueXiFragment">
+
+    <fragment
+        android:id="@+id/xueXiFragment"
+        android:name="com.senriot.ilangbox.ui.xuexi.XueXiFragment"
+        android:label="XueXiFragment" />
+    <fragment
+        android:id="@+id/langDuFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.LangDuFragment"
+        android:label="LangDuFragment" />
+    <fragment
+        android:id="@+id/karaokeFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.KaraokeFragment"
+        android:label="KaraokeFragment" />
+</navigation>
