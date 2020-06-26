@@ -113,4 +113,5 @@ dependencies {
     // Lottie Animation Library
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
+    implementation 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1'
 }

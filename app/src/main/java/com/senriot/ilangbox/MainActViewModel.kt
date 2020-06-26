@@ -1,5 +1,6 @@
 package com.senriot.ilangbox
 
+import android.inputmethodservice.KeyboardView
 import androidx.databinding.ObservableField
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.event.MainNavChangedEvent
@@ -18,6 +19,9 @@ class MainActViewModel : AbstractViewModel()
         EventBus.getDefault().register(this)
     }
 
+    val keyboard = R.xml.letter
+    var searchText = ObservableField<String>().apply { set("") }
+
     private val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
 
     val curDate = ObservableField<String>()
@@ -25,11 +29,11 @@ class MainActViewModel : AbstractViewModel()
     val backgroundUri = ObservableField<String>("res://com.senriot.ilangbox/" + R.mipmap.xuexi_bg)
 
     val timer = Observable.interval(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .subscribe {
-                val date = df.format(System.currentTimeMillis())
-                curDate.set(date)
-            }
+        .subscribeOn(Schedulers.io())
+        .subscribe {
+            val date = df.format(System.currentTimeMillis())
+            curDate.set(date)
+        }
 
     @Subscribe
     fun pageChanged(event: MainNavChangedEvent)
@@ -42,5 +46,66 @@ class MainActViewModel : AbstractViewModel()
             else           -> -1
         }
         backgroundUri.set("res://com.senriot.ilangbox/${uri}")
+    }
+
+
+    val onKeyboardActionListener = object : KeyboardView.OnKeyboardActionListener
+    {
+        override fun swipeRight()
+        {
+        }
+
+        override fun onPress(primaryCode: Int)
+        {
+        }
+
+        override fun onRelease(primaryCode: Int)
+        {
+        }
+
+        override fun swipeLeft()
+        {
+        }
+
+        override fun swipeUp()
+        {
+        }
+
+        override fun swipeDown()
+        {
+        }
+
+        override fun onKey(primaryCode: Int, keyCodes: IntArray?)
+        {
+            when (primaryCode)
+            {
+                -5   -> onDelete()
+                -4   -> onClear()
+                else ->
+                {
+                    val s = primaryCode.toChar().toString()
+                    var text = searchText.get()
+                    text += s
+                    searchText.set(text)
+                }
+            }
+        }
+
+        override fun onText(text: CharSequence?)
+        {
+        }
+    }
+
+    private fun onDelete()
+    {
+        val text = searchText.get()!!
+
+        if (text.isNotEmpty())
+            searchText.set(text.substring(IntRange(0, text.length - 2)))
+    }
+
+    private fun onClear()
+    {
+        searchText.set("")
     }
 }

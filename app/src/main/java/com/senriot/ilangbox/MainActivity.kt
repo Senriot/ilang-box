@@ -16,9 +16,13 @@ import com.android.karaoke.common.realm.userConfig
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
 import com.apkfuns.logutils.LogUtils
+import com.kingfisherphuoc.quickactiondialog.AlignmentFlag
+import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
+import com.senriot.ilangbox.ui.input.InputFragment
+import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
 import com.senriot.ilangbox.ui.xuexi.XueXiFragment
@@ -166,6 +170,19 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     fun showMediaList(view: View)
     {
         mediaListFragment.show(supportFragmentManager, "mediaList")
+    }
+
+    fun showInputView(view: View)
+    {
+//        InputPopupWindow(this, vm).showOnAnchor(
+//            view,
+//            RelativePopupWindow.VerticalPosition.ALIGN_TOP,
+//            RelativePopupWindow.HorizontalPosition.ALIGN_RIGHT, 0, 80, true
+//        )
+        val f = InputFragment()
+        f.setAnchorView(view)
+        f.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_RIGHT or AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM)
+        f.show(supportFragmentManager,"input")
     }
 
     private fun hideNavBar(hide: Boolean)

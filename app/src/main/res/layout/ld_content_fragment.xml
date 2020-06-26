@@ -22,6 +22,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackground"
+            android:onClick="showInputView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/btn_search" />
@@ -58,8 +59,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                app:itemBinding="@{vm.itemBinding}"
-                app:items="@{vm.items}"
                 app:layout_constraintBottom_toTopOf="@+id/imageButton7"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

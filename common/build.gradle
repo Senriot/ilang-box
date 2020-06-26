@@ -24,6 +24,10 @@ android {
         }
     }
 
+    sourceSets {
+        main.jniLibs.srcDirs += "libs"
+    }
+
 }
 ext {
     koin_version= "2.1.4"

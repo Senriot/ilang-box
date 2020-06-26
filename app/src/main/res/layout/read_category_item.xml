@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="item"
             type="com.android.karaoke.common.models.ReadCategory" />
+
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.langdu.LdContentViewModel" />
     </data>
 
     <TextView
@@ -14,6 +18,7 @@
         android:layout_height="44dp"
         android:layout_marginEnd="20dp"
         android:gravity="center"
+        android:onClick="@{()->vm.categorySelected(item)}"
         android:padding="4dp"
         android:text="@{item.name}"
         android:textAlignment="center"

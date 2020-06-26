@@ -28,5 +28,6 @@ class LdContentFragment :
         vm.curSelectedId = args.categroyId
         nav.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         list.layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+        list.adapter = vm.itemsAdapter
     }
 }
