@@ -76,7 +76,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:onClick="karaokeCardClick"
                     android:src="@mipmap/card_ok3"
-                    android:tag="3"
+                    android:tag="演唱曲目"
                     app:cardBackgroundColor="@color/tt"
                     app:cardElevation="0dp"
                     app:layout_column="3"

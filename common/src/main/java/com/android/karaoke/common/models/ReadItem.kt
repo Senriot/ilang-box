@@ -63,7 +63,9 @@ open class ReadItem(
      */
     var readCount: Int? = null,
 
-    var bgm: ReadBgm? = null
+    var bgm: ReadBgm? = null,
+
+    var py: String? = null
 ) : RealmObject(), Serializable
 {
     companion object

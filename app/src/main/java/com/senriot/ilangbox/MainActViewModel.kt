@@ -1,15 +1,25 @@
 package com.senriot.ilangbox
 
-import android.inputmethodservice.KeyboardView
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.databinding.Bindable
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
+import com.android.karaoke.player.DspHelper
+import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.event.MainNavChangedEvent
+import com.senriot.ilangbox.event.SearchTextChangedEvent
+import com.wwengine.hw.PaintView
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.input_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 class MainActViewModel : AbstractViewModel()
 {
@@ -19,8 +29,35 @@ class MainActViewModel : AbstractViewModel()
         EventBus.getDefault().register(this)
     }
 
-    val keyboard = R.xml.letter
     var searchText = ObservableField<String>().apply { set("") }
+    var charArray = ObservableArrayList<Char>()
+
+    private var paintView: PaintView? = null
+    private var searchKeyword by Delegates.observable("", onChange = { _, oldValue, newValue ->
+        if (oldValue != newValue)
+        {
+            searchText.set(newValue)
+            EventBus.getDefault().post(SearchTextChangedEvent(newValue))
+        }
+    })
+    val hwListener: PaintView.OnResultListener = PaintView.OnResultListener { view, result ->
+        paintView = view
+        charArray.clear()
+        charArray.addAll(result.toSet())
+    }
+
+    /**
+     * 手写板选中单字
+     */
+    fun hwSelected(v: View)
+    {
+        val textView = v as TextView
+        if (!textView.text.toString().isBlank())
+        {
+            searchKeyword = "${searchKeyword}${textView.text}"
+            paintView?.resetRecognize()
+        }
+    }
 
     private val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
 
@@ -49,63 +86,23 @@ class MainActViewModel : AbstractViewModel()
     }
 
 
-    val onKeyboardActionListener = object : KeyboardView.OnKeyboardActionListener
+    fun onDelete()
     {
-        override fun swipeRight()
-        {
-        }
 
-        override fun onPress(primaryCode: Int)
-        {
-        }
-
-        override fun onRelease(primaryCode: Int)
-        {
-        }
-
-        override fun swipeLeft()
-        {
-        }
-
-        override fun swipeUp()
-        {
-        }
-
-        override fun swipeDown()
-        {
-        }
-
-        override fun onKey(primaryCode: Int, keyCodes: IntArray?)
-        {
-            when (primaryCode)
-            {
-                -5   -> onDelete()
-                -4   -> onClear()
-                else ->
-                {
-                    val s = primaryCode.toChar().toString()
-                    var text = searchText.get()
-                    text += s
-                    searchText.set(text)
-                }
-            }
-        }
-
-        override fun onText(text: CharSequence?)
-        {
-        }
+        if (searchKeyword.isNotEmpty())
+            searchKeyword =
+                searchKeyword.removeRange(searchKeyword.length - 1, searchKeyword.length)
     }
 
-    private fun onDelete()
+    fun onClear()
     {
-        val text = searchText.get()!!
-
-        if (text.isNotEmpty())
-            searchText.set(text.substring(IntRange(0, text.length - 2)))
+        searchKeyword = ""
     }
 
-    private fun onClear()
+    fun pyInput(view: View)
     {
-        searchText.set("")
+        val txt = (view as Button).text
+        searchKeyword = "${searchKeyword}$txt"
+        LogUtils.e(searchKeyword)
     }
 }

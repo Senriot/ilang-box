@@ -29,6 +29,16 @@ class KaraokeViewModel : AbstractViewModel()
         EventBus.getDefault().post(PlayerControlEvent(PlayEventType.CHANNEL, isBC))
     }
 
+    fun volUp()
+    {
+        EventBus.getDefault().post(PlayerControlEvent(PlayEventType.VOLUME, 1))
+    }
+
+    fun volDown()
+    {
+        EventBus.getDefault().post(PlayerControlEvent(PlayEventType.VOLUME, 0))
+    }
+
     fun onReplay()
     {
         EventBus.getDefault().post(PlayerControlEvent(PlayEventType.REPLAY, null))

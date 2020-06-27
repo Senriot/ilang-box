@@ -14,52 +14,44 @@ import java.io.InputStream;
 /**
  * Created by Allen on 15/8/31.
  */
-public class PaintView extends View
-{
+public class PaintView extends View {
     private Path mPath;
     private Paint mPaint;
     private float mX, mY;
     private static final float TOUCH_TOLERANCE = 4;
-    private static char[]  mResult;
+    private static char[] mResult;
     private static short[] mTracks;
-    private static int     mCount;
+    private static int mCount;
 
     private OnResultListener listener;
 
-    public OnResultListener getListener()
-    {
+    public OnResultListener getListener() {
         return listener;
     }
 
-    public void setListener(OnResultListener listener)
-    {
+    public void setListener(OnResultListener listener) {
         this.listener = listener;
     }
 
-    public PaintView(Context context)
-    {
+    public PaintView(Context context) {
         this(context, null);
     }
 
-    public PaintView(Context context, AttributeSet attrs)
-    {
+    public PaintView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PaintView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public PaintView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initialize();
     }
 
     @Override
-    protected void onDetachedFromWindow()
-    {
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -71,13 +63,11 @@ public class PaintView extends View
         mPaint.setStrokeWidth(6);
 
         byte[] hwData = readData(getContext().getAssets(), "hwdata.bin");
-        if (hwData == null)
-        {
+        if (hwData == null) {
             return;
         }
 
-        if (WWHandWrite.hwInit(hwData, 0) != 0)
-        {
+        if (WWHandWrite.hwInit(hwData, 0) != 0) {
             return;
         }
 
@@ -86,26 +76,21 @@ public class PaintView extends View
         mCount = 0;
     }
 
-    private static byte[] readData(AssetManager am, String name)
-    {
-        try
-        {
+    private static byte[] readData(AssetManager am, String name) {
+        try {
             InputStream is = am.open(name);
-            if (is == null)
-            {
+            if (is == null) {
                 return null;
             }
 
             int length = is.available();
-            if (length <= 0)
-            {
+            if (length <= 0) {
                 return null;
             }
 
             byte[] buf = new byte[length];
 
-            if (is.read(buf, 0, length) == -1)
-            {
+            if (is.read(buf, 0, length) == -1) {
                 return null;
             }
 
@@ -113,21 +98,17 @@ public class PaintView extends View
 
             return buf;
 
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             return null;
         }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
 
-        switch (event.getAction())
-        {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 onTouchStart(x, y);
                 invalidate();
@@ -146,84 +127,66 @@ public class PaintView extends View
         return true;
     }
 
-    private void onTouchStart(float x, float y)
-    {
-        try
-        {
+    private void onTouchStart(float x, float y) {
+        try {
             mPath.moveTo(x, y);
             mX = x;
             mY = y;
 
             mTracks[mCount++] = (short) x;
             mTracks[mCount++] = (short) y;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void onTouchMove(float x, float y)
-    {
-        try
-        {
+    private void onTouchMove(float x, float y) {
+        try {
             float dx = Math.abs(x - mX);
             float dy = Math.abs(y - mY);
-            if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE)
-            {
+            if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
                 mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
                 mX = x;
                 mY = y;
             }
             mTracks[mCount++] = (short) x;
             mTracks[mCount++] = (short) y;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void onTouchUp()
-    {
-        try
-        {
+    private void onTouchUp() {
+        try {
             mPath.lineTo(mX, mY);
 
             mTracks[mCount++] = -1;
             mTracks[mCount++] = 0;
             onRecognize();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void onRecognize()
-    {
-        try
-        {
+    private void onRecognize() {
+        try {
             short[] mTracksTemp;
-            int     countTemp = mCount;
+            int countTemp = mCount;
 
             mTracksTemp = mTracks.clone();
             mTracksTemp[countTemp++] = -1;
             mTracksTemp[countTemp++] = -1;
 
             WWHandWrite.hwRecognize(mTracksTemp, mResult, 10, 0xFFFF);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public void resetRecognize()
-    {
+    public void resetRecognize() {
         mCount = 0;
         mResult = new char[256];
         {
@@ -233,19 +196,16 @@ public class PaintView extends View
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
-    {
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawPath(mPath, mPaint);
-        if (this.listener != null)
-        {
-            listener.onResult(mResult);
+        if (this.listener != null) {
+            listener.onResult(this, mResult);
         }
 
     }
 
-    public interface OnResultListener
-    {
-        void onResult(char[] restlt);
+    public interface OnResultListener {
+        void onResult(PaintView view, char[] restlt);
     }
 }

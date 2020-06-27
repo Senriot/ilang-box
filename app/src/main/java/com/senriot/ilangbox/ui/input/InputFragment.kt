@@ -48,19 +48,19 @@ class InputFragment : QuickActionDialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        val keyboard = view.findViewById<KeyboardView>(R.id.keyboardView)
-//        blurLayout = view.findViewById(R.id.blurLayout)
-        keyboard.keyboard = Keyboard(context, R.xml.letter)
-        keyboard.setOnKeyboardActionListener(onKeyboardActionListener)
-        btnDel.setOnClickListener { this.onDelete() }
-        paintView.listener = PaintView.OnResultListener { result ->
-            LogUtils.e(result)
-            txtResult1.text = result[0].toString()
-            txtResult2.text = result[1].toString()
-            txtResult3.text = result[2].toString()
-            txtResult4.text = result[3].toString()
-            txtResult5.text = result[4].toString()
-        }
+//        val keyboard = view.findViewById<KeyboardView>(R.id.keyboardView)
+////        blurLayout = view.findViewById(R.id.blurLayout)
+//        keyboard.keyboard = Keyboard(context, R.xml.letter)
+//        keyboard.setOnKeyboardActionListener(onKeyboardActionListener)
+//        btnDel.setOnClickListener { this.onDelete() }
+//        paintView.listener = PaintView.OnResultListener { result ->
+//            LogUtils.e(result)
+//            txtResult1.text = result[0].toString()
+//            txtResult2.text = result[1].toString()
+//            txtResult3.text = result[2].toString()
+//            txtResult4.text = result[3].toString()
+//            txtResult5.text = result[4].toString()
+//        }
 
         btnClear.setOnClickListener {
             paintView.resetRecognize()

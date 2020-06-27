@@ -2,6 +2,7 @@ package com.senriot.ilangbox.ui.langdu
 
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
@@ -20,6 +21,7 @@ import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import kotlin.properties.Delegates
 
 class LdContentViewModel : AbstractViewModel()
 {
@@ -35,7 +37,12 @@ class LdContentViewModel : AbstractViewModel()
         super.onCleared()
     }
 
-    var curSelectedId = "1"
+    var curSelectedId: String by Delegates.observable("1", { _, old, new ->
+        val items =
+            Realm.getDefaultInstance().where<ReadItem>().equalTo("category.id", new)
+                .sort(ReadItem.COL_ID).findAll()
+        itemsAdapter.updateData(items)
+    })
 
     val categories by lazy {
         Realm.getDefaultInstance().where<ReadCategory>().sort(ReadCategory.COL_ID).findAll()
@@ -50,6 +57,13 @@ class LdContentViewModel : AbstractViewModel()
 
     val categoryAdapter = object : BindingRecyclerViewAdapter<ReadCategory>()
     {
+
+        init
+        {
+            setHasStableIds(true)
+        }
+
+
         override fun onBindBinding(
             binding: ViewDataBinding,
             variableId: Int,
@@ -58,18 +72,19 @@ class LdContentViewModel : AbstractViewModel()
             item: ReadCategory?
         )
         {
+
+            super.onBindBinding(binding, variableId, layoutRes, position, item)
             binding.root.setOnClickListener {
                 curSelectedId = item!!.id
                 notifyDataSetChanged()
             }
             if (curSelectedId == item!!.id)
             {
-                (binding.root as TextView).textSize = 22.0F
+                (binding.root as TextView).textSize = 20.0F
             } else
             {
                 (binding.root as TextView).textSize = 18.0F
             }
-            super.onBindBinding(binding, variableId, layoutRes, position, item)
         }
     }
 

@@ -15,13 +15,16 @@ import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.MainActViewModel
 import com.senriot.ilangbox.R
+import com.senriot.ilangbox.databinding.InputFragmentBinding
+import kotlinx.android.synthetic.main.input_fragment.*
+import org.koin.core.KoinComponent
 import kotlin.math.hypot
 import kotlin.math.max
 
 class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
-    RelativePopupWindow(context)
+    RelativePopupWindow(context), KoinComponent
 {
-    private val mBinding: ViewDataBinding;
+    private val mBinding: InputFragmentBinding;
 
     init
     {
@@ -38,7 +41,21 @@ class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
         isFocusable = true
         isOutsideTouchable = true
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        mBinding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == R.id.rbPinYin)
+            {
+                mBinding.keyboardView.visibility = View.VISIBLE
+                mBinding.hwView.visibility = View.GONE
+            } else
+            {
+                mBinding.keyboardView.visibility = View.GONE
+                mBinding.hwView.visibility = View.VISIBLE
+            }
+        }
+        mBinding.btnClear.setOnClickListener { mBinding.paintView.resetRecognize() }
     }
+
 
     override fun showOnAnchor(
         anchor: View,
@@ -51,6 +68,13 @@ class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
     {
         super.showOnAnchor(anchor, vertPos, horizPos, x, y, fitInScreen)
 //        circularReveal(anchor)
+        mBinding.blurLayout.startBlur()
+    }
+
+    override fun dismiss()
+    {
+        mBinding.blurLayout.pauseBlur()
+        super.dismiss()
     }
 
     private fun circularReveal(anchor: View)

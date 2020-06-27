@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/mqtt" />
             <option value="$PROJECT_DIR$/player" />
+            <option value="$PROJECT_DIR$/serialport" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

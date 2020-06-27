@@ -9,7 +9,10 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
-import android.view.*
+import android.view.Display
+import android.view.LayoutInflater
+import android.view.SurfaceHolder
+import android.view.WindowManager
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
@@ -88,6 +91,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         }
     }
 
+
     private val mediaPlayerListeners = object : MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener,
         MediaPlayer.OnBufferingUpdateListener,
@@ -132,32 +136,31 @@ class PlayerService : Service(), PresentationHelper.Listener
         {
             if (displayType.get() == 1)
             {
-
+                DspHelper.sendHex("484D00020200010501AA")
             } else
             {
-
+                DspHelper.sendHex("484D00020200010307AA")
                 mTrackAudioIndex.clear()
                 mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
                     ?.forEachIndexed { index, _ ->
                         mTrackAudioIndex.add(index)
                         trackNum += 1
                     }
-//                currentTrack = userda?.currentPlay?.
+                currentTrack = userData?.currentPlay?.track
                 mp?.start()
-//                when (currentTrack?.trim())
-//                {
-//                    "R"  -> mp?.setAudioChannel(2)
-//                    "L"  -> mp?.setAudioChannel(1)
-//                    else ->
-//                    {
-//                        if (trackNum > 1)
-//                        {
-//                            curAudioIndex = currentTrack?.toInt() ?: 0
-//                            mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
-//                        }
-//                        else mp?.setAudioChannel(1)
-//                    }
-//                }
+                when (currentTrack?.trim())
+                {
+                    "R"  -> mp?.setAudioChannel(2)
+                    "L"  -> mp?.setAudioChannel(1)
+                    else ->
+                    {
+                        if (trackNum > 1)
+                        {
+                            curAudioIndex = currentTrack?.toInt() ?: 0
+                            mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
+                        } else mp?.setAudioChannel(1)
+                    }
+                }
             }
         }
 
@@ -194,11 +197,17 @@ class PlayerService : Service(), PresentationHelper.Listener
         intent.action = "com.ynh.set_spdif_pass_on_off"
         intent.putExtra("pass_on", 1)
         sendBroadcast(intent)
+        if (!DspHelper.isOpen)
+        {
+            DspHelper.open()
+            DspHelper.sendHex("484D0001000004AA")
+        }
     }
 
     override fun onDestroy()
     {
         timer.dispose()
+        DspHelper.close()
         super.onDestroy()
     }
 
@@ -279,12 +288,11 @@ class PlayerService : Service(), PresentationHelper.Listener
         mPlayer.reset()
         mainDisplay?.let {
             mPlayer.setSurface(it.surface)
-            val path = File("/mnt/usb_storage/SATA/C/songs")
-            val files = path.listFiles()
-            val r = Random().nextInt(files.size)
-            val file = files[r].absolutePath
-            LogUtils.e(file)
-            mPlayer.setDataSource(file)
+//            val path = File("/mnt/usb_storage/SATA/C/songs")
+//            val files = path.listFiles()
+//            val r = Random().nextInt(files.size)
+//            val file = files[r].absolutePath
+            mPlayer.setDataSource("/mnt/usb_storage/SATA/C/songs/" + song.file_name)
             mPlayer.prepareAsync()
 
 //            if (!song.filePath.isNullOrEmpty())
@@ -385,6 +393,14 @@ class PlayerService : Service(), PresentationHelper.Listener
             }
             PlayEventType.VOLUME       ->
             {
+                LogUtils.e(event.data)
+                if (event.data == 0)
+                {
+                    DspHelper.sendHex("484D000502002D032CAA")
+                } else
+                {
+                    DspHelper.sendHex("484D000502002B032AAA")
+                }
             }
             PlayEventType.PAUSE        ->
             {
@@ -451,55 +467,55 @@ class PlayerService : Service(), PresentationHelper.Listener
             {
                 if (accompany == Accompany.BC) return
             }
-//            profileData?.currentPlay?.let {
-//                when (it.amTrack)
+//            userData?.currentPlay?.let {
+//                when (it.track)
 //                {
 //                    "R"  -> mPlayer.setAudioChannel(if (isYC) 1 else 2)
 //                    "L"  -> mPlayer.setAudioChannel(if (isYC) 2 else 1)
 //                    else ->
 //                    {
-////                        if (trackNum > 1)
-////                        {
-////                            curAudioIndex = currentTrack?.toInt() ?: 0
-////                            mPlayer.selectTrack(if (curAudioIndex == 0) 2 else 1)
-////                        } else mPlayer.setAudioChannel(1)
+//                        if (trackNum > 1)
+//                        {
+//                            curAudioIndex = currentTrack?.toInt() ?: 0
+//                            mPlayer.selectTrack(if (curAudioIndex == 0) 2 else 1)
+//                        } else mPlayer.setAudioChannel(1)
 //                    }
 //                }
 //            }
-//            val tracks =
-//                mPlayer.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
-//            tracks?.let {
-//                if (it.isNotEmpty())
-//                {
-//                    when (it.size)
-//                    {
-//                        1    ->
-//                        {
-//                            accompany = if (accompany == Accompany.BC)
-//                            {
-//                                mPlayer.setAudioChannel(2)
-//                                Accompany.YC
-//                            } else
-//                            {
-//                                mPlayer.setAudioChannel(1)
-//                                Accompany.BC
-//                            }
-//                        }
-//                        else ->
-//                        {
-//                            accompany = if (accompany == Accompany.BC)
-//                            {
-//                                mPlayer.selectTrack(1)
-//                                Accompany.YC
-//                            } else
-//                            {
-//                                mPlayer.selectTrack(2)
-//                                Accompany.BC
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            val tracks =
+                mPlayer.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
+            tracks?.let {
+                if (it.isNotEmpty())
+                {
+                    when (it.size)
+                    {
+                        1    ->
+                        {
+                            accompany = if (accompany == Accompany.BC)
+                            {
+                                mPlayer.setAudioChannel(2)
+                                Accompany.YC
+                            } else
+                            {
+                                mPlayer.setAudioChannel(1)
+                                Accompany.BC
+                            }
+                        }
+                        else ->
+                        {
+                            accompany = if (accompany == Accompany.BC)
+                            {
+                                mPlayer.selectTrack(1)
+                                Accompany.YC
+                            } else
+                            {
+                                mPlayer.selectTrack(2)
+                                Accompany.BC
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

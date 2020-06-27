@@ -5,17 +5,16 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
-@RealmClass(name = "RealmDict")
+@RealmClass(name = "ok_dict")
 open class Dict : RealmObject() {
 
     @PrimaryKey
     var id: Long = 0
-    var name: String = ""
-    var key: Long? = null
-    var parentId: Long? = null
-    var sortNo: Long? = null
-    var image: String? = null
-    var updateDate: Long? = null
+    var code: String = ""
+    var key: String = ""
+    var value: String? = null
+    var sort: String? = null
     var remark: String? = null
+    var pid: Long? = null
 
 }

@@ -50,8 +50,7 @@ object UserDataHelper
             if (userData?.favorites?.contains(s) == true)
             {
                 userData?.favorites?.remove(s)
-            }
-            else
+            } else
                 userData?.favorites?.add(s)
         }
     }
@@ -70,7 +69,7 @@ object UserDataHelper
     {
         realm.executeTransaction {
             val s = it.copyToRealmOrUpdate(song)
-            if (s.filePath != null && userData?.playlist?.contains(s) != true)
+            if (userData?.playlist?.contains(s) != true)
             {
                 userData?.playlist?.add(s)
             }
@@ -83,15 +82,13 @@ object UserDataHelper
         userData?.let { params ->
             realm.executeTransaction {
                 val s = it.copyToRealmOrUpdate(song)
-                if (s.filePath != null)
-                    if (params.playlist.contains(s))
-                    {
-                        params.playlist.remove(s)
-                    }
-                    else
-                    {
-                        params.playlist.add(s)
-                    }
+                if (params.playlist.contains(s))
+                {
+                    params.playlist.remove(s)
+                } else
+                {
+                    params.playlist.add(s)
+                }
             }
         }
     }
@@ -127,7 +124,7 @@ object UserDataHelper
     }
 
     fun currentPlayIsFavorite(): Boolean =
-            userData?.favorites?.find { it.id == userData?.currentPlay?.id } != null
+        userData?.favorites?.find { it.id == userData?.currentPlay?.id } != null
 
     @JvmStatic
     fun removePlaylistItem(song: Song)
@@ -156,8 +153,7 @@ object UserDataHelper
                     params.playlist.remove(item)
                     params.playlist.add(0, item)
                 }
-            }
-            else
+            } else
             {
                 realm.executeTransaction {
                     it.copyToRealmOrUpdate(item)

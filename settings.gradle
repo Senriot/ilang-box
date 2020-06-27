@@ -3,3 +3,4 @@ rootProject.name = "ilang-box"
 include ':player'
 include ':common'
 include ':mqtt'
+include ':serialport'

@@ -123,7 +123,7 @@ class PresentationHelper(private val ctxt: Context, private val listener: Listen
             }
             else
             {
-                val display = displays[1]
+                val display = displays[0]
 
                 if (display != null && display.isValid)
                 {

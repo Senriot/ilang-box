@@ -98,6 +98,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{()->vm.volDown()}"
                 android:padding="8dp"
                 android:src="@mipmap/ok_btn6" />
 
@@ -108,6 +109,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{()->vm.volUp()}"
                 android:padding="8dp"
                 android:src="@mipmap/ok_btn7" />
 
@@ -119,8 +121,8 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:padding="8dp"
-                app:onCheckedChange="@{vm.pause}"
-                android:src="@drawable/button_play_selector" />
+                android:src="@drawable/button_play_selector"
+                app:onCheckedChange="@{vm.pause}" />
 
             <com.dunst.check.CheckableImageButton
                 android:layout_width="wrap_content"
@@ -130,8 +132,8 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:padding="8dp"
-                app:onCheckedChange="@{vm.channel}"
-                android:src="@drawable/button_bc_selector" />
+                android:src="@drawable/button_bc_selector"
+                app:onCheckedChange="@{vm.channel}" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -140,8 +142,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
                 android:onClick="@{()->vm.playNext()}"
+                android:padding="8dp"
                 android:src="@mipmap/ok_btn12" />
 
             <ImageButton

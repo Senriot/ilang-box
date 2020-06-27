@@ -5,14 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android_serialport_api.SerialPortFinder
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.karaoke.common.MvvmActivity
-import com.android.karaoke.common.models.*
-import com.android.karaoke.common.realm.userConfig
+import com.android.karaoke.common.models.Artist
+import com.android.karaoke.common.models.DangZheng
+import com.android.karaoke.common.models.Song
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
 import com.apkfuns.logutils.LogUtils
@@ -31,6 +33,8 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.koin.android.viewmodel.ext.android.viewModel
+import tp.xmaihh.serialport.SerialHelper
+import tp.xmaihh.serialport.bean.ComBean
 
 class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layout.activity_main)
 {
@@ -174,16 +178,76 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun showInputView(view: View)
     {
-//        InputPopupWindow(this, vm).showOnAnchor(
-//            view,
-//            RelativePopupWindow.VerticalPosition.ALIGN_TOP,
-//            RelativePopupWindow.HorizontalPosition.ALIGN_RIGHT, 0, 80, true
-//        )
-        val f = InputFragment()
-        f.setAnchorView(view)
-        f.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_RIGHT or AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM)
-        f.show(supportFragmentManager,"input")
+        InputPopupWindow(this, vm).showOnAnchor(
+            view,
+            RelativePopupWindow.VerticalPosition.ALIGN_TOP,
+            RelativePopupWindow.HorizontalPosition.ALIGN_RIGHT, 0, 80, false
+        )
+//        val f = InputFragment()
+//        f.setAnchorView(view)
+//        f.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_RIGHT or AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM)
+//        f.show(supportFragmentManager, "input")
     }
+
+    fun showProfile(view: View)
+    {
+
+
+        val realm = Realm.getDefaultInstance()
+        val songs = realm.where<Song>().findAll()
+        realm.beginTransaction()
+        songs.forEach { song ->
+            if (!song.artist.isNullOrBlank())
+            {
+                realm.where<Artist>().equalTo("name", song.artist).findFirst()?.let {
+                    song.singer_id = it.id
+                    it.status = 2
+                }
+            }
+        }
+        realm.commitTransaction()
+        LogUtils.e("ok======")
+    }
+//        realm.executeTransaction { it.delete(Song::class.java) }
+//        val dzs = realm.where<DangZheng>().findAll()
+//        realm.beginTransaction()
+//        dzs.forEach {
+//            val song = Song().apply {
+//                id = it.code
+//                name = it.name!!
+//                input_code = it.pinyin
+//                artist = it.artist
+//                track = it.bz
+//                volume = it.vol
+//                file_name = it.code + ".mkv"
+//                hot = 0
+//            }
+//            when (it.type)
+//            {
+//                "军旅" -> song.type_id = 120
+//                "抒情" -> song.type_id = 121
+//                "民歌" -> song.type_id = 48
+//                "经典" -> song.type_id = 44
+//            }
+//
+//            when (it.lang)
+//            {
+//                "其他" -> song.lang_id = 28
+//                "台语" -> song.lang_id = 24
+//                "国语" -> song.lang_id = 22
+//                "粤语" -> song.lang_id = 23
+//                "英语" -> song.lang_id = 27
+//                "韩语" -> song.lang_id = 25
+//            }
+//
+//            realm.copyToRealmOrUpdate(song)
+////            val ss = realm.where<Song>().equalTo("id", it.code).findAll()
+////            ss.forEach { s ->
+////                s.status = 3
+////            }
+//        }
+//        realm.commitTransaction()
+
 
     private fun hideNavBar(hide: Boolean)
     {
