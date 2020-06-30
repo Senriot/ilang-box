@@ -27,9 +27,5 @@ class LdRecordingFragment :
         super.performDataBinding()
         vm.item.set(args.item)
         args.item.bgm?.let { vm.curBgmName.set(it.name) }
-        btnCompletion.setOnClickListener {
-            EventBus.getDefault().post(StopReadEvent())
-
-        }
     }
 }

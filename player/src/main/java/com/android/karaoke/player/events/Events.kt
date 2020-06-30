@@ -26,11 +26,17 @@ class StartRecordingEvent(val item: ReadItem)
 
 class StopReadEvent()
 
-class ReadingEnd(val record: Record)
+class ReadingStop(val record: Record?)
+
+class ReadingStopOfUser()
 
 class BgmPlaying(val bgm: ReadBgm)
 
 class ChangeBgmEvent(val bgm: ReadBgm)
+
+class PlayRecordEvent(val record: Record)
+
+class StopAuditionEvent()
 
 enum class PlayEventType
 {

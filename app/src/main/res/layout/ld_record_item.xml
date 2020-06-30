@@ -8,6 +8,12 @@
         <variable
             name="item"
             type="com.android.karaoke.common.models.Record" />
+
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.langdu.ReadListViewModel" />
+
+        <import type="com.android.karaoke.player.PlayerHelper" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -19,74 +25,76 @@
         app:cardBackgroundColor="#1A070707"
         app:cardElevation="0dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/simpleDraweeView3"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            app:actualImageResource="@mipmap/song_default"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/simpleDraweeView3"
+                android:layout_width="100dp"
+                android:layout_height="0dp"
+                app:actualImageResource="@mipmap/song_default"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@{item.readItem.name}"
-            app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@{item.readItem.name}"
+                app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@{item.readItem.author}"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@{item.readItem.author}"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
+                app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
-        <ImageButton
-            android:id="@+id/imageButton16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:background="?attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_shangchuan" />
+            <ImageButton
+                android:id="@+id/imageButton16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:background="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_shangchuan" />
 
-        <ImageButton
-            android:id="@+id/imageButton21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton16"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_luyin" />
+            <ImageButton
+                android:id="@+id/imageButton21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)->vm.reRecording(v,item)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton16"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_luyin" />
 
-        <ImageButton
-            android:id="@+id/imageButton22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton21"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_shiting" />
+            <ImageButton
+                android:id="@+id/imageButton22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)->vm.playRecord(v,item)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton21"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_shiting" />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

@@ -65,10 +65,10 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="8dp"
                 android:background="@mipmap/ld_btn_default_bg"
                 android:text="默认"
                 android:textSize="24sp" />

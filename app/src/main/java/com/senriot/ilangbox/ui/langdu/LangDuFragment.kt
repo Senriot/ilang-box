@@ -57,6 +57,10 @@ class LangDuFragment :
         super.performDataBinding()
         bgmSeekBar.setOnSeekBarChangeListener(seekBarChangeListener)
         micSeekBar.setOnSeekBarChangeListener(seekBarChangeListener)
+        btnDefault.setOnClickListener {
+            bgmSeekBar.progress = 50
+            micSeekBar.progress = 50
+        }
     }
 
     @Subscribe
@@ -71,25 +75,22 @@ class LangDuFragment :
     {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean)
         {
-            if (fromUser)
+            val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
+            if (seekBar.id == R.id.bgmSeekBar)
             {
-                val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
-                if (seekBar.id == R.id.bgmSeekBar)
-                {
-                    sr.add("03")
-                } else
-                {
-                    sr.add("02")
-                }
-                var sum = 0xff
-                sr.forEach {
-                    sum = sum xor Integer.parseInt(it, 16)
-                }
-                sr.add(Integer.toHexString(sum))
-                sr.add("AA")
-                LogUtils.e(sr.joinToString(""))
-                DspHelper.sendHex(sr.joinToString(""))
+                sr.add("03")
+            } else
+            {
+                sr.add("02")
             }
+            var sum = 0xff
+            sr.forEach {
+                sum = sum xor Integer.parseInt(it, 16)
+            }
+            sr.add(Integer.toHexString(sum))
+            sr.add("AA")
+            LogUtils.e(sr.joinToString(""))
+            DspHelper.sendHex(sr.joinToString(""))
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?)

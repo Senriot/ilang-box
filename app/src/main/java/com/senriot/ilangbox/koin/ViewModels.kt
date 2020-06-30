@@ -23,5 +23,6 @@ object ViewModels {
         viewModel { KaraokeArtistListViewModel() }
         viewModel { KaraokeArtistSongsViewModel() }
         viewModel { ReadListViewModel() }
+        viewModel { AuditionViewModel() }
     }
 }

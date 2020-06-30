@@ -9,6 +9,10 @@
             name="item"
             type="com.android.karaoke.common.models.ReadBgm" />
 
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.langdu.LdBgmViewModel" />
+
         <import type="com.android.karaoke.player.PlayerHelper" />
     </data>
 
@@ -18,7 +22,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="@{()->PlayerHelper.changeBgm(item)}"
+        android:onClick="@{(v)->vm.itemSelected(v,item)}"
         app:cardBackgroundColor="#1a2c77">
 
         <androidx.constraintlayout.widget.ConstraintLayout

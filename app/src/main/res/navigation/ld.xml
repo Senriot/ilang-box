@@ -61,6 +61,9 @@
         <argument
             android:name="item"
             app:argType="com.android.karaoke.common.models.ReadItem" />
+        <action
+            android:id="@+id/action_ldRecordingFragment_to_auditionFragment"
+            app:destination="@id/auditionFragment" />
     </fragment>
     <fragment
         android:id="@+id/ldBgmFragment"
@@ -78,5 +81,23 @@
         <deepLink
             android:id="@+id/deepLink3"
             app:uri="https://www.senriot.com/ilang-box/readlist" />
+        <action
+            android:id="@+id/action_readListFragment_to_ldItemDetailFragment"
+            app:destination="@id/ldItemDetailFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_readListFragment_to_auditionFragment"
+            app:destination="@id/auditionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/auditionFragment"
+        android:name="com.senriot.ilangbox.ui.langdu.AuditionFragment"
+        android:label="AuditionFragment" >
+        <argument
+            android:name="record"
+            app:argType="com.android.karaoke.common.models.Record" />
     </fragment>
 </navigation>

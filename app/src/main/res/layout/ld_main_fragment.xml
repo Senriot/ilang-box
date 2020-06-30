@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="80dp"
         tools:context="com.senriot.ilangbox.ui.langdu.LdMainFragment">
 
         <HorizontalScrollView

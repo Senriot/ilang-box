@@ -1,9 +1,12 @@
 package com.senriot.ilangbox.ui.langdu
 
+import android.view.View
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.navigation.findNavController
 import com.android.karaoke.common.models.ReadItem
-import com.android.karaoke.player.events.BgmPlaying
-import com.android.karaoke.player.events.CurrentPositionEvent
+import com.android.karaoke.common.models.Record
+import com.android.karaoke.player.events.*
 import com.arthurivanets.mvvm.AbstractViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -12,10 +15,11 @@ import java.text.DecimalFormat
 
 class LdRecordingViewModel : AbstractViewModel()
 {
-
-
     val timer = ObservableField<String>("00:00")
     val curBgmName = ObservableField<String>("")
+    val recordCompletion = ObservableBoolean(false)
+    val title = ObservableField("正在录音...")
+    private var record: Record? = null
 
     val item = ObservableField<ReadItem>()
 
@@ -40,8 +44,36 @@ class LdRecordingViewModel : AbstractViewModel()
     }
 
     @Subscribe
+    fun onRecordStop(event: ReadingStop)
+    {
+        record = event.record
+        recordCompletion.set(true)
+        title.set("录音完成")
+    }
+
+    @Subscribe
     fun onBgmPlaying(event: BgmPlaying)
     {
         curBgmName.set(event.bgm.name)
+    }
+
+    fun onCompletion()
+    {
+        recordCompletion.set(true)
+        title.set("录音完成")
+        EventBus.getDefault().post(ReadingStopOfUser())
+    }
+
+    fun playRecord(view: View)
+    {
+        if (record != null)
+        {
+            EventBus.getDefault().post(PlayRecordEvent(record!!))
+            view.findNavController().navigate(
+                LdRecordingFragmentDirections.actionLdRecordingFragmentToAuditionFragment(record!!)
+            )
+//            EventBus.getDefault().post(PlayRecordEvent(record!!))
+
+        }
     }
 }
