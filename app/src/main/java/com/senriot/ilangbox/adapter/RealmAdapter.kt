@@ -8,6 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.karaoke.common.mvvm.BindingConfig
+import com.apkfuns.logutils.LogUtils
 import io.realm.RealmObject
 import com.senriot.ilangbox.BR
 import io.realm.OrderedRealmCollection
@@ -29,6 +30,7 @@ class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdapter.R
         if (items.isNotEmpty())
         {
             val size = items.size
+            LogUtils.e(size)
             val pageCount = row * column
             tolPage = size / pageCount
             if (size % pageCount > 0)

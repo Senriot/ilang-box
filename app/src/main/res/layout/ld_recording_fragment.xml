@@ -19,39 +19,16 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="726dp"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_marginTop="80dp"
-            android:background="@mipmap/ld_recording_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageButton
-                android:id="@+id/imageButton14"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="goBack"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_back_arrow" />
-
-            <ImageButton
-                android:id="@+id/imageButton15"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="goBack"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@mipmap/ic_ld_close" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
             <TextView
                 android:id="@+id/textView4"
@@ -68,7 +45,7 @@
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
@@ -78,11 +55,11 @@
                 android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2"
-                app:srcCompat="@mipmap/recording_state" />
+                app:srcCompat="@mipmap/ld_reading_bg" />
 
             <TextView
                 android:id="@+id/textView6"
@@ -100,53 +77,69 @@
                 android:id="@+id/btnCompletion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{()->vm.onCompletion()}"
                 android:visibility="@{vm.recordCompletion?View.INVISIBLE:View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.507"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6"
-                app:srcCompat="@mipmap/ld_btn_jieshu" />
+                app:srcCompat="@mipmap/ld_reading_end" />
 
             <ImageButton
                 android:id="@+id/imageButton17"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="80dp"
+                android:layout_marginTop="24dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{(v)->vm.playRecord(v)}"
                 android:visibility="@{vm.recordCompletion?View.VISIBLE:View.INVISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@+id/btnCompletion"
-                app:layout_constraintEnd_toStartOf="@+id/btnCompletion"
-                app:layout_constraintTop_toTopOf="@+id/btnCompletion"
+                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintTop_toBottomOf="@+id/textView6"
                 app:srcCompat="@mipmap/ld_btn_shiting" />
 
             <ImageButton
                 android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
+                android:layout_marginEnd="32dp"
                 android:background="?attr/selectableItemBackground"
                 android:visibility="@{vm.recordCompletion?View.VISIBLE:View.INVISIBLE}"
-                app:layout_constraintBottom_toBottomOf="@+id/btnCompletion"
-                app:layout_constraintStart_toEndOf="@+id/btnCompletion"
-                app:layout_constraintTop_toTopOf="@+id/btnCompletion"
+                app:layout_constraintBottom_toBottomOf="@+id/btnRerecord"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton24"
+                app:layout_constraintTop_toTopOf="@+id/btnRerecord"
+                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@mipmap/ld_btn_upload" />
+
+            <ImageButton
+                android:id="@+id/btnRerecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{()->vm.reStart()}"
+                android:visibility="@{vm.recordCompletion?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintEnd_toStartOf="@+id/btnUpload"
+                app:layout_constraintHorizontal_bias="0.124"
+                app:layout_constraintStart_toEndOf="@+id/imageButton17"
+                app:layout_constraintTop_toTopOf="@+id/imageButton17"
+                app:srcCompat="@mipmap/btn_re_read" />
+
+            <ImageButton
+                android:id="@+id/imageButton24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="goBack"
+                android:visibility="@{vm.recordCompletion?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintEnd_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/btnUpload"
+                app:srcCompat="@mipmap/btn_ld_reading_back" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--            <TextView-->
-        <!--                android:id="@+id/textView10"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:drawableStart="@drawable/ic_bgm"-->
-        <!--                android:drawablePadding="8dp"-->
-        <!--                android:text="背景音乐："-->
-        <!--                app:layout_constraintBottom_toBottomOf="@+id/textView7"-->
-        <!--                app:layout_constraintEnd_toStartOf="@+id/textView7"-->
-        <!--                app:layout_constraintTop_toTopOf="@+id/textView7" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

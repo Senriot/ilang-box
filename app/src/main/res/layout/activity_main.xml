@@ -36,7 +36,7 @@
             android:drawableStart="@drawable/xiaoxi"
             android:drawablePadding="10dp"
             android:fontFamily="@font/xhei"
-            android:text="欢迎使用壹浪智能机顶盒"
+            android:text="@{vm.curDate}"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="@{vm.curDate}"
+            android:text="武警昆明支队西山支队"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -84,15 +84,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <RadioButton
-                android:id="@+id/rb_xuexi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/nav_item_selector"
-                android:button="@null"
-                android:text="党政学习"
-                android:textColor="@color/nav_item_color"
-                android:textSize="24sp" />
+<!--            <RadioButton-->
+<!--                android:id="@+id/rb_xuexi"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/nav_item_selector"-->
+<!--                android:button="@null"-->
+<!--                android:text="党政学习"-->
+<!--                android:textColor="@color/nav_item_color"-->
+<!--                android:textSize="24sp" />-->
 
             <RadioButton
                 android:id="@+id/rb_langdu"
@@ -123,7 +123,6 @@
             android:layout_marginEnd="64dp"
             android:background="?attr/selectableItemBackground"
             android:onClick="showLdList"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/ic_list" />

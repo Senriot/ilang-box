@@ -1,5 +1,6 @@
 package com.senriot.ilangbox.ui.langdu
 
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.ViewCompat
@@ -80,10 +81,10 @@ class LdContentViewModel : AbstractViewModel()
             }
             if (curSelectedId == item!!.id)
             {
-                (binding.root as TextView).textSize = 20.0F
+                binding.root.setBackgroundResource(R.drawable.ic_ld_nav_bg)
             } else
             {
-                (binding.root as TextView).textSize = 18.0F
+                binding.root.setBackgroundColor(Color.TRANSPARENT)
             }
         }
     }
@@ -130,7 +131,7 @@ class LdContentViewModel : AbstractViewModel()
     {
         val items = Realm.getDefaultInstance().where<ReadItem>()
             .equalTo("category.id", curSelectedId)
-            .like("name", "?" + event.text + "*")
+            .like("name",  event.text + "*")
             .sort(ReadItem.COL_ID).findAll()
         itemsAdapter.updateData(items)
     }

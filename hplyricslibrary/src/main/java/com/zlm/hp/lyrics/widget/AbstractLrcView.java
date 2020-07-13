@@ -104,8 +104,8 @@ public abstract class AbstractLrcView extends TextureView implements TextureView
      * 默认画笔颜色
      */
     private int[] mPaintColors = new int[]{
-            ColorUtils.parserColor("#555555"),
-            ColorUtils.parserColor("#555555")
+            ColorUtils.parserColor("#ffffff"),
+            ColorUtils.parserColor("#ffffff")
     };
     /**
      * 高亮歌词画笔

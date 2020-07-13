@@ -11,7 +11,7 @@ import org.greenrobot.eventbus.EventBus
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class LdRecordingFragment :
-        MvvmFragment<LdRecordingFragmentBinding, LdRecordingViewModel>(R.layout.ld_recording_fragment)
+    MvvmFragment<LdRecordingFragmentBinding, LdRecordingViewModel>(R.layout.ld_recording_fragment)
 {
 
     override val bindingVariable: Int = BR.vm
@@ -26,6 +26,7 @@ class LdRecordingFragment :
     {
         super.performDataBinding()
         vm.item.set(args.item)
+        vm.title.set(args.item.name)
         args.item.bgm?.let { vm.curBgmName.set(it.name) }
     }
 }

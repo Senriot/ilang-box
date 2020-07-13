@@ -63,7 +63,7 @@ class MainActViewModel : AbstractViewModel()
 
     val curDate = ObservableField<String>()
 
-    val backgroundUri = ObservableField<String>("res://com.senriot.ilangbox/" + R.mipmap.xuexi_bg)
+    val backgroundUri = ObservableField<String>("res://com.senriot.ilangbox/" + R.mipmap.langdu_bg)
 
     val timer = Observable.interval(1, TimeUnit.SECONDS)
         .subscribeOn(Schedulers.io())
@@ -77,7 +77,7 @@ class MainActViewModel : AbstractViewModel()
     {
         val uri = when (event.id)
         {
-            R.id.rb_xuexi  -> R.mipmap.xuexi_bg
+//            R.id.rb_xuexi  -> R.mipmap.xuexi_bg
             R.id.rb_langdu -> R.mipmap.langdu_bg
             R.id.rb_hongge -> R.mipmap.kge_bg
             else           -> -1

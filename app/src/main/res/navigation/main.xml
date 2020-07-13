@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@id/xueXiFragment">
+    app:startDestination="@id/langDuFragment">
 
-    <fragment
-        android:id="@+id/xueXiFragment"
-        android:name="com.senriot.ilangbox.ui.xuexi.XueXiFragment"
-        android:label="XueXiFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/xueXiFragment"-->
+<!--        android:name="com.senriot.ilangbox.ui.xuexi.XueXiFragment"-->
+<!--        android:label="XueXiFragment" />-->
     <fragment
         android:id="@+id/langDuFragment"
         android:name="com.senriot.ilangbox.ui.langdu.LangDuFragment"

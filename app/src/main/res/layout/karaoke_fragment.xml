@@ -67,6 +67,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="openSetting"
                 android:padding="8dp"
                 android:src="@mipmap/ok_btn3" />
 
@@ -77,6 +78,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="showMinorDisplay"
                 android:padding="8dp"
                 android:src="@mipmap/ok_btn4" />
 
@@ -125,6 +127,7 @@
                 app:onCheckedChange="@{vm.pause}" />
 
             <com.dunst.check.CheckableImageButton
+                android:id="@+id/btnAccompany"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

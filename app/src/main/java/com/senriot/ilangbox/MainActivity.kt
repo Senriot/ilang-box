@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
-import android_serialport_api.SerialPortFinder
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
@@ -13,19 +13,17 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.karaoke.common.MvvmActivity
 import com.android.karaoke.common.models.Artist
-import com.android.karaoke.common.models.DangZheng
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
 import com.apkfuns.logutils.LogUtils
-import com.kingfisherphuoc.quickactiondialog.AlignmentFlag
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
-import com.senriot.ilangbox.ui.input.InputFragment
 import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
+import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
 import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
 import com.senriot.ilangbox.ui.xuexi.XueXiFragment
 import io.realm.Realm
@@ -33,8 +31,6 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.koin.android.viewmodel.ext.android.viewModel
-import tp.xmaihh.serialport.SerialHelper
-import tp.xmaihh.serialport.bean.ComBean
 
 class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layout.activity_main)
 {
@@ -59,11 +55,11 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     override fun init(savedInstanceState: Bundle?)
     {
         super.init(savedInstanceState)
-        nav.check(R.id.rb_xuexi)
+        nav.check(R.id.rb_langdu)
         nav.setOnCheckedChangeListener { group, checkedId ->
             val id = when (checkedId)
             {
-                R.id.rb_xuexi  -> R.id.xueXiFragment
+//                R.id.rb_xuexi  -> R.id.xueXiFragment
                 R.id.rb_langdu -> R.id.langDuFragment
                 R.id.rb_hongge -> R.id.karaokeFragment
                 else           -> -1
@@ -254,5 +250,20 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         val intent = Intent("android.intent.action.hideNaviBar")
         intent.putExtra("hide", hide)
         sendBroadcast(intent)
+    }
+
+    private val minorDisplay by lazy { MinorDisplayFragment() }
+
+    fun showMinorDisplay(view: View)
+    {
+        minorDisplay.show(supportFragmentManager, null)
+    }
+
+    fun openSetting(view: View){
+        val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", packageName, null)
+        startActivity(intent)
     }
 }

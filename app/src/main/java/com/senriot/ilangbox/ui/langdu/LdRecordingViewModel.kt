@@ -48,7 +48,6 @@ class LdRecordingViewModel : AbstractViewModel()
     {
         record = event.record
         recordCompletion.set(true)
-        title.set("录音完成")
     }
 
     @Subscribe
@@ -60,8 +59,13 @@ class LdRecordingViewModel : AbstractViewModel()
     fun onCompletion()
     {
         recordCompletion.set(true)
-        title.set("录音完成")
         EventBus.getDefault().post(ReadingStopOfUser())
+    }
+
+    fun reStart()
+    {
+        EventBus.getDefault().post(StartRecordingEvent(item.get()!!))
+        recordCompletion.set(false)
     }
 
     fun playRecord(view: View)
@@ -72,8 +76,6 @@ class LdRecordingViewModel : AbstractViewModel()
             view.findNavController().navigate(
                 LdRecordingFragmentDirections.actionLdRecordingFragmentToAuditionFragment(record!!)
             )
-//            EventBus.getDefault().post(PlayRecordEvent(record!!))
-
         }
     }
 }

@@ -15,7 +15,9 @@ import java.text.DecimalFormat
 
 class AuditionViewModel : AbstractViewModel()
 {
-    val timer = ObservableField<String>("00:00")
+    val timer = ObservableField<String>("00:00:00")
+
+    val title = ObservableField<String>("")
 
     lateinit var item: Record
 
@@ -34,14 +36,21 @@ class AuditionViewModel : AbstractViewModel()
     fun onCurrentPosition(currentPosition: CurrentPositionEvent)
     {
         val time = currentPosition.currentPosition / 1000
+        val hh = DecimalFormat("00").format(time / 60 / 60)
         val mm: String = DecimalFormat("00").format(time / 60)
         val ss: String = DecimalFormat("00").format(time % 60)
-        timer.set("$mm:$ss")
+        timer.set("$hh:$mm:$ss")
     }
 
     fun onCompletion(view: View)
     {
         view.findNavController().popBackStack()
         EventBus.getDefault().post(StopAuditionEvent())
+    }
+
+    fun reRecording(view: View)
+    {
+        view.findNavController()
+            .navigate(ReadListFragmentDirections.actionReadListFragmentToLdItemDetailFragment(item.readItem!!))
     }
 }

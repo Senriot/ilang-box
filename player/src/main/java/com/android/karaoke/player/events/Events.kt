@@ -2,9 +2,11 @@ package com.android.karaoke.player.events
 
 import android.view.Display
 import android.view.SurfaceHolder
+import com.android.karaoke.common.models.DzXueXi
 import com.android.karaoke.common.models.ReadBgm
 import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.models.Record
+import com.android.karaoke.player.Accompany
 import java.time.Duration
 
 
@@ -16,7 +18,7 @@ class ClearPresoEvent(switchToInline: Boolean)
 
 class PlayerControlEvent(val type: PlayEventType, val data: Any? = null)
 
-class MinorDisplayInit(val holder: SurfaceHolder)
+class MinorDisplayInit(val holder: SurfaceHolder?)
 
 class CurrentPositionEvent(val duration: Int, val currentPosition: Int)
 
@@ -37,6 +39,10 @@ class ChangeBgmEvent(val bgm: ReadBgm)
 class PlayRecordEvent(val record: Record)
 
 class StopAuditionEvent()
+
+class StartDzxxEvent(val item: DzXueXi)
+
+class AccompanyChangedEvent(val acc: Accompany)
 
 enum class PlayEventType
 {

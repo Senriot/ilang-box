@@ -14,13 +14,14 @@
     </data>
 
     <TextView
-        android:layout_width="120dp"
-        android:layout_height="44dp"
-        android:layout_marginEnd="8dp"
-        android:background="?attr/selectableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="65dp"
+        android:background="@drawable/ic_ld_nav_bg"
         android:focusable="true"
         android:gravity="center"
+        android:paddingBottom="8dp"
         android:text="@{item.name}"
+        android:minWidth="130dp"
         android:textAlignment="center"
         android:textSize="18sp"
         tools:text="红色经典">

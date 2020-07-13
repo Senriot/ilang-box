@@ -71,7 +71,7 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="8dp"
                 android:text="@{item.info}"
                 android:textColor="@color/md_dark_primary_icon"
                 android:textSize="10sp"

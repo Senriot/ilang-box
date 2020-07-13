@@ -26,6 +26,7 @@ import com.android.karaoke.player.events.*
 import com.android.karaoke.player.recorder.AudioRecorder
 import com.apkfuns.logutils.LogUtils
 import com.vicpin.krealmextensions.query
+import com.vicpin.krealmextensions.queryFirst
 import com.vicpin.krealmextensions.save
 import com.zlm.hp.lyrics.LyricsReader
 import io.reactivex.Observable
@@ -35,8 +36,10 @@ import io.realm.Realm
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
+import java.lang.Exception
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 class PlayerService : Service(), PresentationHelper.Listener
 {
@@ -53,33 +56,86 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var trackNum = 0
     private var currentTrack: String? = null
     private var curAudioIndex: Int = 0
-    private var accompany = Accompany.BC
-    private var audioRecorder: AudioRecorder? = null
-    private var mBinding: VideoPresentationBinding? = null
-    private var readItem: ReadItem? = null
-        set(value)
+    private var accompany by Delegates.observable(Accompany.BC, { _, old, new ->
+        if (old != new)
         {
-            field = value
-            value?.let {
-                displayType.set(1)
-                mBinding?.lrcView?.initLrcData()
-                if (!it.lyric.isNullOrBlank())
+            getTracks()?.let {
+
+                if (it.size > 1)
                 {
-                    val s = LyricsReader()
-                    s.loadLrc(File(it.lyric))
-                    mBinding?.lrcView?.lyricsReader = s
-                }
-                if (it.bgm != null)
+                    if (new == Accompany.YC)
+                    {
+                        mPlayer?.selectTrack(1)
+                    } else
+                    {
+                        mPlayer?.selectTrack(2)
+                    }
+                } else if (it.size == 1)
                 {
-                    playBgm(it.bgm)
+                    mPlayer?.setAudioChannel(if (new == Accompany.BC) 2 else 1)
+                } else
+                {
+
                 }
             }
         }
+    })
+    private var audioRecorder: AudioRecorder? = null
+    private var mBinding: VideoPresentationBinding? = null
+
+    var readItem: ReadItem by Delegates.observable(ReadItem(), { _, old, new ->
+        if (new != old && new.id.isNotEmpty())
+        {
+            displayType.set(1)
+            mBinding?.lrcView?.initLrcData()
+            if (!new.lyric.isNullOrBlank())
+            {
+                val s = LyricsReader()
+                s.loadLrc(File(new.lyric))
+                mBinding?.lrcView?.lyricsReader = s
+            }
+            if (new.bgm != null)
+            {
+                playBgm(new.bgm)
+            }
+        }
+    })
+//    private var readItem: ReadItem? = null
+//        set(value)
+//        {
+//            field = value
+//            value?.let {
+//                displayType.set(1)
+//                mBinding?.lrcView?.initLrcData()
+//                if (!it.lyric.isNullOrBlank())
+//                {
+//                    val s = LyricsReader()
+//                    s.loadLrc(File(it.lyric))
+//                    mBinding?.lrcView?.lyricsReader = s
+//                }
+//                if (it.bgm != null)
+//                {
+//                    playBgm(it.bgm)
+//                }
+//            }
+//        }
     //private var readBgm: ReadBgm? = null
+
+    private var dzxxItem by Delegates.observable(DzXueXi(), { _, old, new ->
+        if (old != new && new.uuid.isNotEmpty())
+        {
+            displayType.set(4)
+            mBinding?.lrcView?.initLrcData()
+            val reader = LyricsReader()
+            reader.loadLrc(File(this.dzContentsPath + "/" + new.contentFile))
+            mBinding?.lrcView?.lyricsReader = reader
+            playDz(new)
+        }
+    })
 
     private var mBaseTimer = SystemClock.elapsedRealtime();
 
-    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌 3:播放录音
+    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌 3:播放录音 4:党政
 
     val currentPlay = ObservableField<Song>()
 
@@ -87,6 +143,23 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private var timer: Disposable? = null
 
+    /**
+     * 党政音频路径
+     */
+    private val dzAudiosPath by lazy {
+        Dict().queryFirst {
+            equalTo("key", "dzxx_audio_path")
+        }!!.value
+    }
+
+    /**
+     * 党政内容路径
+     */
+    private val dzContentsPath by lazy {
+        Dict().queryFirst {
+            equalTo("key", "dzxx_content_path")
+        }!!.value
+    }
 
     fun initTimer(): Disposable?
     {
@@ -141,26 +214,38 @@ class PlayerService : Service(), PresentationHelper.Listener
                     audioRecorder?.stop()
                     mBinding?.lrcView?.pause()
                     EventBus.getDefault().post(ReadingStop(record))
+                    readItem = ReadItem()
                 }
                 displayType.get() == 3 ->
                 {
                     mBinding?.lrcView?.pause()
                 }
+                displayType.get() == 4 ->
+                {
+                    mBinding?.lrcView?.pause()
+                }
                 else                   ->
                 {
-                    EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
-                    audioRecorder?.stop()
-                    audioRecorder = null
-                    userData?.let { data ->
-                        if (data.currentPlay != null)
-                        {
-                            realm.executeTransaction {
-                                data.history.add(0, data.currentPlay)
-                                data.currentPlay = null
+                    try
+                    {
+                        EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
+//                    audioRecorder?.stop()
+//                    audioRecorder = null
+                        userData?.let { data ->
+                            if (data.currentPlay != null)
+                            {
+                                realm.executeTransaction {
+                                    data.history.add(0, data.currentPlay)
+                                    data.currentPlay = null
+                                }
                             }
                         }
+                        playNext()
+                    } catch (e: Exception)
+                    {
+                        e.printStackTrace()
                     }
-                    playNext()
+
                 }
             }
         }
@@ -187,30 +272,47 @@ class PlayerService : Service(), PresentationHelper.Listener
                     initTimer()
                     mp?.start()
                 }
+                displayType.get() == 4 ->
+                {
+                    mBinding?.lrcView?.play(0)
+                    initTimer()
+                    mp?.start()
+                }
                 else                   ->
                 {
-                    DspHelper.sendHex("484D00020200010307AA")
-                    mTrackAudioIndex.clear()
-                    mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
-                        ?.forEachIndexed { index, _ ->
-                            mTrackAudioIndex.add(index)
-                            trackNum += 1
-                        }
-                    currentTrack = userData?.currentPlay?.track
-                    mp?.start()
-                    when (currentTrack?.trim())
+
+//                    mTrackAudioIndex.clear()
+//                    mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
+//                        ?.forEachIndexed { index, _ ->
+//                            mTrackAudioIndex.add(index)
+//                            trackNum += 1
+//                        }
+//                    currentTrack = userData?.currentPlay?.track
+                    try
                     {
-                        "R"  -> mp?.setAudioChannel(2)
-                        "L"  -> mp?.setAudioChannel(1)
-                        else ->
-                        {
-                            if (trackNum > 1)
-                            {
-                                curAudioIndex = currentTrack?.toInt() ?: 0
-                                mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
-                            } else mp?.setAudioChannel(1)
-                        }
+
+                        accompany = Accompany.BC
+                        EventBus.getDefault().post(AccompanyChangedEvent(accompany))
+                        DspHelper.sendHex("484D00020200010307AA")
+                        mp?.start()
+                    } catch (e: Exception)
+                    {
+                        e.printStackTrace()
                     }
+
+//                    when (currentTrack?.trim())
+//                    {
+//                        "R"  -> accompany = Accompany.YC
+//                        "L"  -> accompany = Accompany.BC
+//                        else ->
+//                        {
+//                            if (trackNum > 1)
+//                            {
+//                                curAudioIndex = currentTrack?.toInt() ?: 0
+//                                mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
+//                            } else mp?.setAudioChannel(1)
+//                        }
+//                    }
                 }
             }
         }
@@ -239,15 +341,15 @@ class PlayerService : Service(), PresentationHelper.Listener
         super.onCreate()
         presentationHelper.onResume()
         UserDataHelper.initUserData("Guest")
-        var intent = Intent()
-        intent.action = "com.android.audio_mode"
-        intent.putExtra("audio_mode", 0)
-        sendBroadcast(intent)
-
-        intent = Intent()
-        intent.action = "com.ynh.set_spdif_pass_on_off"
-        intent.putExtra("pass_on", 1)
-        sendBroadcast(intent)
+//        var intent = Intent()
+//        intent.action = "com.android.audio_mode"
+//        intent.putExtra("audio_mode", 0)
+//        sendBroadcast(intent)
+//
+//        intent = Intent()
+//        intent.action = "com.ynh.set_spdif_pass_on_off"
+//        intent.putExtra("pass_on", 1)
+//        sendBroadcast(intent)
         if (!DspHelper.isOpen)
         {
             DspHelper.open()
@@ -337,7 +439,14 @@ class PlayerService : Service(), PresentationHelper.Listener
         displayType.set(2)
         mBinding?.surfaceView?.visibility = View.VISIBLE
         newPlayer("/mnt/usb_storage/SATA/C/songs/" + song.file_name)
-        mPlayer?.prepareAsync()
+        try
+        {
+            mPlayer?.prepareAsync()
+        } catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
 //        mainDisplay?.let {
 //            mPlayer?.setSurface(it.surface)
 //            mPlayer?.setDataSource("/mnt/usb_storage/SATA/C/songs/" + song.file_name)
@@ -377,8 +486,22 @@ class PlayerService : Service(), PresentationHelper.Listener
         }
     }
 
+    /**
+     * 播放党政学习
+     * @param item DzXueXi
+     */
+    private fun playDz(item: DzXueXi)
+    {
+        mBinding?.surfaceView?.visibility = View.INVISIBLE
+        audioRecorder?.stop()
+        newPlayer(dzAudiosPath + "/" + item.audioFile)
+        mPlayer?.prepareAsync()
+        realm.executeTransaction { userData?.currentPlay = null }
+    }
+
     private fun newPlayer(path: String)
     {
+        LogUtils.e(path)
         if (mPlayer != null)
         {
             timer?.dispose()
@@ -431,7 +554,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun playlistChanged(event: PlaylistChangedEvent)
     {
-        if (mPlayer?.isPlaying == false && event.list.size == 1 && userData?.currentPlay == null)
+        if (event.list.size == 1 && userData?.currentPlay == null && readItem.id.isEmpty())
         {
             playNext()
         }
@@ -469,16 +592,20 @@ class PlayerService : Service(), PresentationHelper.Listener
             }
             PlayEventType.PAUSE        ->
             {
-                val b = (event.data as Boolean?) ?: false
-                if (b)
+                if (displayType.get() == 2)
                 {
-                    mPlayer?.pause()
-                    audioRecorder?.pause()
-                } else
-                {
-                    mPlayer?.start()
-                    audioRecorder?.resume()
+                    val b = (event.data as Boolean?) ?: false
+                    if (b)
+                    {
+                        mPlayer?.pause()
+//                    audioRecorder?.pause()
+                    } else
+                    {
+                        mPlayer?.start()
+//                    audioRecorder?.resume()
+                    }
                 }
+
             }
             PlayEventType.CHANNEL      ->
             {
@@ -525,63 +652,14 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         if (mPlayer?.isPlaying == true)
         {
-            if (isYC)
-            {
-                if (accompany == Accompany.YC) return
-            } else
-            {
-                if (accompany == Accompany.BC) return
-            }
-//            userData?.currentPlay?.let {
-//                when (it.track)
-//                {
-//                    "R"  -> mPlayer.setAudioChannel(if (isYC) 1 else 2)
-//                    "L"  -> mPlayer.setAudioChannel(if (isYC) 2 else 1)
-//                    else ->
-//                    {
-//                        if (trackNum > 1)
-//                        {
-//                            curAudioIndex = currentTrack?.toInt() ?: 0
-//                            mPlayer.selectTrack(if (curAudioIndex == 0) 2 else 1)
-//                        } else mPlayer.setAudioChannel(1)
-//                    }
-//                }
-//            }
-            val tracks =
-                mPlayer?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
-            tracks?.let {
-                if (it.isNotEmpty())
-                {
-                    when (it.size)
-                    {
-                        1    ->
-                        {
-                            accompany = if (accompany == Accompany.BC)
-                            {
-                                mPlayer?.setAudioChannel(2)
-                                Accompany.YC
-                            } else
-                            {
-                                mPlayer?.setAudioChannel(1)
-                                Accompany.BC
-                            }
-                        }
-                        else ->
-                        {
-                            accompany = if (accompany == Accompany.BC)
-                            {
-                                mPlayer?.selectTrack(1)
-                                Accompany.YC
-                            } else
-                            {
-                                mPlayer?.selectTrack(2)
-                                Accompany.BC
-                            }
-                        }
-                    }
-                }
-            }
+            if (isYC) accompany == Accompany.YC else accompany == Accompany.BC
         }
+    }
+
+
+    private fun getTracks(): List<MediaPlayer.TrackInfo>?
+    {
+        return mPlayer?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
     }
 
     @Subscribe
@@ -632,6 +710,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         mBinding?.lrcView?.pause()
         EventBus.getDefault().post(ReadingStop(record))
         timer?.dispose()
+        readItem = ReadItem()
 //        val record = Record().query { equalTo("id", uuid) }.first()
 //        EventBus.getDefault().post(ReadingStop(record))
     }
@@ -666,4 +745,16 @@ class PlayerService : Service(), PresentationHelper.Listener
         mBinding?.lrcView?.pause()
         timer?.dispose()
     }
+
+    /**
+     * 开始党政学习
+     * @param event StartDzxxEvent 事件
+     */
+    @Subscribe
+    fun startDzxx(event: StartDzxxEvent)
+    {
+        this.dzxxItem = event.item
+    }
+
+
 }

@@ -39,7 +39,14 @@ object UserDataHelper
             LogUtils.i("播放列表改变 ${t.size}")
             EventBus.getDefault().post(PlaylistChangedEvent(t))
         }
-        userData?.let { EventBus.getDefault().post(ProfileDataInitEvent(it)) }
+        userData?.let {
+            realm.executeTransaction { r ->
+                it.history.clear();
+                it.currentPlay = null;
+                it.playlist.clear()
+            }
+            EventBus.getDefault().post(ProfileDataInitEvent(it))
+        }
     }
 
     @JvmStatic

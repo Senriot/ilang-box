@@ -30,5 +30,6 @@ class AuditionFragment :
     {
         super.postInit()
         vm.item = args.record
+        vm.title.set(args.record.readItem!!.name)
     }
 }
