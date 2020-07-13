@@ -1,5 +1,6 @@
 package com.senriot.ilangbox.ui.langdu
 
+import android.os.Bundle
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
@@ -7,8 +8,10 @@ import androidx.navigation.findNavController
 import com.android.karaoke.common.models.Record
 import com.android.karaoke.player.events.CurrentPositionEvent
 import com.android.karaoke.player.events.ReadingStopOfUser
+import com.android.karaoke.player.events.StartRecordingEvent
 import com.android.karaoke.player.events.StopAuditionEvent
 import com.arthurivanets.mvvm.AbstractViewModel
+import com.senriot.ilangbox.R
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
@@ -50,7 +53,14 @@ class AuditionViewModel : AbstractViewModel()
 
     fun reRecording(view: View)
     {
-        view.findNavController()
-            .navigate(ReadListFragmentDirections.actionReadListFragmentToLdItemDetailFragment(item.readItem!!))
+        EventBus.getDefault().post(StartRecordingEvent(item.readItem!!))
+        val args = Bundle()
+        args.putSerializable("item",item.readItem!!)
+        view.findNavController().navigate(
+           R.id.ldRecordingFragment,args
+        )
+//        EventBus.getDefault().post(StartRecordingEvent(item.get()!!))
+//        view.findNavController()
+//            .navigate(ReadListFragmentDirections.actionReadListFragmentToLdItemDetailFragment(item.readItem!!))
     }
 }

@@ -260,10 +260,6 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     }
 
     fun openSetting(view: View){
-        val intent = Intent()
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-        intent.data = Uri.fromParts("package", packageName, null)
-        startActivity(intent)
+        startActivity( Intent(Settings.ACTION_SETTINGS));
     }
 }

@@ -39,9 +39,14 @@ class LdContentViewModel : AbstractViewModel()
     }
 
     var curSelectedId: String by Delegates.observable("1", { _, old, new ->
-        val items =
-            Realm.getDefaultInstance().where<ReadItem>().equalTo("category.id", new)
-                .sort(ReadItem.COL_ID).findAll()
+
+        val query = Realm.getDefaultInstance().where<ReadItem>()
+        if (new != "0")
+        {
+            query.equalTo("category.id", new)
+        }
+
+        val items = query.sort(ReadItem.COL_ID).findAll()
         itemsAdapter.updateData(items)
     })
 
@@ -90,9 +95,13 @@ class LdContentViewModel : AbstractViewModel()
     }
 
     val itemsAdapter by lazy {
-        val items =
-            Realm.getDefaultInstance().where<ReadItem>().equalTo("category.id", curSelectedId)
-                .sort(ReadItem.COL_ID).findAll()
+        val query = Realm.getDefaultInstance().where<ReadItem>()
+
+        if (curSelectedId != "0")
+        {
+            query.equalTo("category.id", curSelectedId)
+        }
+        val items = query.sort(ReadItem.COL_ID).findAll()
         RecyclerViewRealmAdapter<ReadItem>(
             items,
             BindingConfig(R.layout.read_item, mapOf(Pair(BR.vm, this)))
@@ -129,9 +138,13 @@ class LdContentViewModel : AbstractViewModel()
     @Subscribe
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
-        val items = Realm.getDefaultInstance().where<ReadItem>()
-            .equalTo("category.id", curSelectedId)
-            .like("name",  event.text + "*")
+        val query = Realm.getDefaultInstance().where<ReadItem>()
+        if (curSelectedId != "0")
+        {
+            query.equalTo("category.id", curSelectedId)
+        }
+
+        val items = query.like("name", event.text + "*")
             .sort(ReadItem.COL_ID).findAll()
         itemsAdapter.updateData(items)
     }

@@ -1,9 +1,12 @@
 package com.senriot.ilangbox.ui.karaoke
 
+import android.widget.SeekBar
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.android.karaoke.player.Accompany
+import com.android.karaoke.player.DspHelper
 import com.android.karaoke.player.events.AccompanyChangedEvent
+import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
@@ -45,6 +48,40 @@ class KaraokeFragment :
                 false
             )
         }
+        volSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener
+        {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean)
+            {
+                if (fromUser)
+                {
+                    val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
+                    if (seekBar.id == R.id.bgmSeekBar)
+                    {
+                        sr.add("03")
+                    } else
+                    {
+                        sr.add("02")
+                    }
+                    var sum = 0xff
+                    sr.forEach {
+                        sum = sum xor Integer.parseInt(it, 16)
+                    }
+                    sr.add(Integer.toHexString(sum))
+                    sr.add("AA")
+                    LogUtils.e(sr.joinToString(""))
+                    DspHelper.sendHex(sr.joinToString(""))
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?)
+            {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?)
+            {
+            }
+
+        })
     }
 
     @Subscribe
