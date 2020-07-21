@@ -54,14 +54,8 @@ class KaraokeFragment :
             {
                 if (fromUser)
                 {
-                    val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
-                    if (seekBar.id == R.id.bgmSeekBar)
-                    {
-                        sr.add("03")
-                    } else
-                    {
-                        sr.add("02")
-                    }
+                    val sr =
+                        arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16), "03")
                     var sum = 0xff
                     sr.forEach {
                         sum = sum xor Integer.parseInt(it, 16)
@@ -87,10 +81,7 @@ class KaraokeFragment :
     @Subscribe
     fun onAccompanyChanged(event: AccompanyChangedEvent)
     {
-        if (event.acc == Accompany.BC)
-        {
-            btnAccompany.isChecked = false
-        }
+        btnAccompany.isChecked = event.acc != Accompany.BC
     }
 //    override fun p()
 //    {

@@ -20,7 +20,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
         android:onClick="@{(v)->vm.itemSelected(v,item)}"
-        app:cardBackgroundColor="#1a2c77">
+        app:cardBackgroundColor="#3d4e2d">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

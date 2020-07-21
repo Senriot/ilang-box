@@ -56,27 +56,21 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var trackNum = 0
     private var currentTrack: String? = null
     private var curAudioIndex: Int = 0
-    private var accompany by Delegates.observable(Accompany.BC, { _, old, new ->
-        if (old != new)
-        {
-            getTracks()?.let {
+    private var accompany by Delegates.observable(Accompany.Unknown, { _, old, new ->
+        getTracks()?.let {
 
-                if (it.size > 1)
+            if (it.size > 1)
+            {
+                if (new == Accompany.YC)
                 {
-                    if (new == Accompany.YC)
-                    {
-                        mPlayer?.selectTrack(1)
-                    } else
-                    {
-                        mPlayer?.selectTrack(2)
-                    }
-                } else if (it.size == 1)
-                {
-                    mPlayer?.setAudioChannel(if (new == Accompany.BC) 2 else 1)
+                    mPlayer?.selectTrack(1)
                 } else
                 {
-
+                    mPlayer?.selectTrack(2)
                 }
+            } else
+            {
+                mPlayer?.setAudioChannel(if (new == Accompany.BC) 2 else 1)
             }
         }
     })
@@ -652,7 +646,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         if (mPlayer?.isPlaying == true)
         {
-            if (isYC) accompany == Accompany.YC else accompany == Accompany.BC
+            accompany = if (isYC) Accompany.YC else Accompany.BC
         }
     }
 
