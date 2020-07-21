@@ -375,7 +375,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         val typeface = Typeface.createFromAsset(resources.assets, "font/xhei.ttf")
         mBinding!!.lrcView.apply {
             setTypeFace(typeface)
-            setFontSize(38.0f)
+            setFontSize(30.0f)
         }
         mBinding!!.service = this
         mBinding!!.surfaceView.holder.addCallback(object : SurfaceHolder.Callback
@@ -586,18 +586,23 @@ class PlayerService : Service(), PresentationHelper.Listener
             }
             PlayEventType.PAUSE        ->
             {
-                if (displayType.get() == 2)
+                val b = (event.data as Boolean?) ?: false
+                if (b)
                 {
-                    val b = (event.data as Boolean?) ?: false
-                    if (b)
+                    mPlayer?.pause()
+                    if (displayType.get() != 2)
                     {
-                        mPlayer?.pause()
-//                    audioRecorder?.pause()
-                    } else
-                    {
-                        mPlayer?.start()
-//                    audioRecorder?.resume()
+                        mBinding?.lrcView?.pause()
                     }
+//                    audioRecorder?.pause()
+                } else
+                {
+                    mPlayer?.start()
+                    if (displayType.get() != 2)
+                    {
+                        mBinding?.lrcView?.resume()
+                    }
+//                    audioRecorder?.resume()
                 }
 
             }

@@ -16,7 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:onClick="@{()->vm.startPlay(item)}">
+        android:onClick="@{(v)->vm.startPlay(v,item)}">
 
         <TextView
             android:id="@+id/txtName"

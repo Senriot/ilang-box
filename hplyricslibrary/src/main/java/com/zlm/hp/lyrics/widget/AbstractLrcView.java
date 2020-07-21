@@ -216,7 +216,7 @@ public abstract class AbstractLrcView extends TextureView implements TextureView
     /**
      * 空行高度
      */
-    private float mSpaceLineHeight = 60;
+    private float mSpaceLineHeight = 30;
     /**
      * 歌词字体大小
      */
@@ -225,7 +225,7 @@ public abstract class AbstractLrcView extends TextureView implements TextureView
     /**
      * 左右间隔距离
      */
-    private float mPaddingLeftOrRight = 15;
+    private float mPaddingLeftOrRight = 10;
 
     /**
      * 歌词的最大宽度
@@ -366,7 +366,7 @@ public abstract class AbstractLrcView extends TextureView implements TextureView
                     long updateTime = (endTime - mPlayerStartTime) - mPlayerSpendTime;
                     mPlayerSpendTime = (endTime - mPlayerStartTime);
                     long delayMs = mRefreshTime - updateTime;
-                    Log.e("AbstractLrcView", "oldDelayMs = " + delayMs + " , newDelayMs = " + Math.max(0, delayMs));
+                   // Log.e("AbstractLrcView", "oldDelayMs = " + delayMs + " , newDelayMs = " + Math.max(0, delayMs));
                     mLrcPlayerHandler.postDelayed(mLrcPlayerRunnable, Math.max(0, delayMs));
                 }
             }

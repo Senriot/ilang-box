@@ -13,7 +13,7 @@ import java.io.File
 //class MediaModule
 
 
-@RealmModule(classes = [Song::class, Artist::class, UserData::class, DangZheng::class, Dict::class, Album::class, ReadItem::class, ReadBgm::class, ReadCategory::class, Record::class])
+@RealmModule(classes = [Song::class, Artist::class, UserData::class, DangZheng::class, DzXueXi::class, Dict::class, Album::class, ReadItem::class, ReadBgm::class, ReadCategory::class, Record::class])
 class UserModule
 
 //@RealmModule(classes = [ReadCategory::class, ReadItem::class, ReadBgm::class])
@@ -32,7 +32,7 @@ class UserModule
 val userConfig: RealmConfiguration = RealmConfiguration.Builder().modules(UserModule())
     .directory(File("/sdcard/ilang-box"))
     .name("user.realm")
-    .schemaVersion(11)
+    .schemaVersion(18)
     .build()
 
 

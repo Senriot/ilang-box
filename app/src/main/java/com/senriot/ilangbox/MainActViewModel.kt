@@ -77,7 +77,7 @@ class MainActViewModel : AbstractViewModel()
     {
         val uri = when (event.id)
         {
-//            R.id.rb_xuexi  -> R.mipmap.xuexi_bg
+            R.id.rb_xuexi  -> R.mipmap.xuexi_bg
             R.id.rb_langdu -> R.mipmap.langdu_bg
             R.id.rb_hongge -> R.mipmap.kge_bg
             else           -> -1

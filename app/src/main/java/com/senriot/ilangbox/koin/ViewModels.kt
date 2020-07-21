@@ -3,6 +3,7 @@ package com.senriot.ilangbox.koin
 import com.senriot.ilangbox.MainActViewModel
 import com.senriot.ilangbox.ui.karaoke.*
 import com.senriot.ilangbox.ui.langdu.*
+import com.senriot.ilangbox.ui.xuexi.DzContentViewModel
 import com.senriot.ilangbox.ui.xuexi.XueXiViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -24,5 +25,6 @@ object ViewModels {
         viewModel { KaraokeArtistSongsViewModel() }
         viewModel { ReadListViewModel() }
         viewModel { AuditionViewModel() }
+        viewModel { DzContentViewModel() }
     }
 }

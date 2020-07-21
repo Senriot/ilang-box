@@ -1,5 +1,7 @@
 package com.senriot.ilangbox.ui.xuexi
 
+import android.view.View
+import androidx.navigation.findNavController
 import com.android.karaoke.common.models.Dict
 import com.android.karaoke.common.models.DzXueXi
 import com.android.karaoke.common.mvvm.BindingConfig
@@ -35,8 +37,14 @@ class XueXiViewModel : AbstractViewModel()
         }
     })
 
-    fun startPlay(item: DzXueXi)
+    fun startPlay(view: View, item: DzXueXi)
     {
+        view.findNavController().navigate(
+            XueXiFragmentDirections.actionXueXiFragmentToDzContentFragment(
+                item,
+                if (selectedDict.id <= 0) 123L else selectedDict.id
+            )
+        )
         EventBus.getDefault().post(StartDzxxEvent(item))
     }
 }

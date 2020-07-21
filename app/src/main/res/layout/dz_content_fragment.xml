@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.xuexi.DzContentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.senriot.ilangbox.ui.xuexi.DzContentFragment">
+
+        <FrameLayout
+            android:id="@+id/frameLayout2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="74dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@mipmap/dz_bg"
+            app:layout_constraintBottom_toTopOf="@+id/imageButton14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正在学习"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@{vm.item.name}"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text='@{"时长："+vm.item.duration}'
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="goBack"
+                android:src="@mipmap/ld_btn_back" />
+        </FrameLayout>
+
+        <com.dunst.check.CheckableImageButton
+            android:id="@+id/imageButton14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/button_play_selector"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:onCheckedChange="@{vm.pause}" />
+
+        <ImageButton
+            android:id="@+id/imageButton15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{()->vm.onNext()}"
+            app:layout_constraintStart_toEndOf="@+id/imageButton14"
+            app:layout_constraintTop_toTopOf="@+id/imageButton14"
+            app:srcCompat="@mipmap/dzxx_xiayibian" />
+
+        <ImageButton
+            android:id="@+id/imageButton25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="64dp"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{()->vm.onPrevious()}"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton14"
+            app:layout_constraintTop_toTopOf="@+id/imageButton14"
+            app:srcCompat="@mipmap/dzxx_shangyipian" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

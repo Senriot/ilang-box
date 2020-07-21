@@ -5,10 +5,19 @@
     android:id="@+id/main"
     app:startDestination="@id/langDuFragment">
 
-<!--    <fragment-->
-<!--        android:id="@+id/xueXiFragment"-->
-<!--        android:name="com.senriot.ilangbox.ui.xuexi.XueXiFragment"-->
-<!--        android:label="XueXiFragment" />-->
+    <fragment
+        android:id="@+id/xueXiFragment"
+        android:name="com.senriot.ilangbox.ui.xuexi.XueXiFragment"
+        android:label="XueXiFragment" >
+        <action
+            android:id="@+id/action_xueXiFragment_to_dzContentFragment"
+            app:destination="@id/dzContentFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/langDuFragment"
         android:name="com.senriot.ilangbox.ui.langdu.LangDuFragment"
@@ -17,4 +26,15 @@
         android:id="@+id/karaokeFragment"
         android:name="com.senriot.ilangbox.ui.karaoke.KaraokeFragment"
         android:label="KaraokeFragment" />
+    <fragment
+        android:id="@+id/dzContentFragment"
+        android:name="com.senriot.ilangbox.ui.xuexi.DzContentFragment"
+        android:label="DzContentFragment" >
+        <argument
+            android:name="item"
+            app:argType="com.android.karaoke.common.models.DzXueXi" />
+        <argument
+            android:name="categoryId"
+            app:argType="long" />
+    </fragment>
 </navigation>

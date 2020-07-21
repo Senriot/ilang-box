@@ -59,7 +59,7 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         nav.setOnCheckedChangeListener { group, checkedId ->
             val id = when (checkedId)
             {
-//                R.id.rb_xuexi  -> R.id.xueXiFragment
+                R.id.rb_xuexi  -> R.id.xueXiFragment
                 R.id.rb_langdu -> R.id.langDuFragment
                 R.id.rb_hongge -> R.id.karaokeFragment
                 else           -> -1

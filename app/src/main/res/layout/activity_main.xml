@@ -84,15 +84,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rb_xuexi"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/nav_item_selector"-->
-<!--                android:button="@null"-->
-<!--                android:text="党政学习"-->
-<!--                android:textColor="@color/nav_item_color"-->
-<!--                android:textSize="24sp" />-->
+
 
             <RadioButton
                 android:id="@+id/rb_langdu"
@@ -111,6 +103,16 @@
                 android:background="@drawable/nav_item_selector"
                 android:button="@null"
                 android:text="红歌"
+                android:textColor="@color/nav_item_color"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:id="@+id/rb_xuexi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/nav_item_selector"
+                android:button="@null"
+                android:text="党政学习"
                 android:textColor="@color/nav_item_color"
                 android:textSize="24sp" />
         </RadioGroup>

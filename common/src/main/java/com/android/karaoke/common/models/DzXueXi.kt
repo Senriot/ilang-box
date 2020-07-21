@@ -3,8 +3,10 @@ package com.android.karaoke.common.models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import java.io.Serializable
 
-open class DzXueXi : RealmObject() {
+open class DzXueXi : RealmObject(), Serializable
+{
 
     @PrimaryKey
     var uuid: String = ""
