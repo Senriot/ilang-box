@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import com.google.android.material.circularreveal.CircularRevealCompat
 import com.google.android.material.circularreveal.cardview.CircularRevealCardView
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow
@@ -16,11 +15,12 @@ import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.MainActViewModel
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.InputFragmentBinding
-import kotlinx.android.synthetic.main.input_fragment.*
-import org.koin.core.KoinComponent
+import org.koin.core.component.KoinApiExtension
+import org.koin.core.component.KoinComponent
 import kotlin.math.hypot
 import kotlin.math.max
 
+@OptIn(KoinApiExtension::class)
 class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
     RelativePopupWindow(context), KoinComponent
 {

@@ -31,7 +31,7 @@ class KaraokeArtistListViewModel : AbstractViewModel()
     }
 
     val items by lazy {
-        Realm.getDefaultInstance().where<Artist>().equalTo("status", 2L)
+        Realm.getDefaultInstance().where<Artist>().equalTo("status", "1")
             .sort("hot", Sort.DESCENDING).findAll()
     }
 

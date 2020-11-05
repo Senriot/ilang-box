@@ -88,9 +88,11 @@ class PlayerService : Service(), PresentationHelper.Listener
                 s.loadLrc(File(new.lyric))
                 mBinding?.lrcView?.lyricsReader = s
             }
-            if (new.bgm != null)
+            if (new.bg_music != null)
             {
-                playBgm(new.bgm)
+                realm.where(ReadBgm::class.java).equalTo("id", new.bg_music).findFirst()?.let {
+                    playBgm(it)
+                }
             }
         }
     })
@@ -116,12 +118,12 @@ class PlayerService : Service(), PresentationHelper.Listener
     //private var readBgm: ReadBgm? = null
 
     private var dzxxItem by Delegates.observable(DzXueXi(), { _, old, new ->
-        if (old != new && new.uuid.isNotEmpty())
+        if (old != new && new.id.isNotEmpty())
         {
             displayType.set(4)
             mBinding?.lrcView?.initLrcData()
             val reader = LyricsReader()
-            reader.loadLrc(File(this.dzContentsPath + "/" + new.contentFile))
+            reader.loadLrc(File(this.dzContentsPath + "/" + new.content_file))
             mBinding?.lrcView?.lyricsReader = reader
             playDz(new)
         }
@@ -334,7 +336,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         super.onCreate()
         presentationHelper.onResume()
-        UserDataHelper.initUserData("Guest")
+//        UserDataHelper.initUserData("Guest")
 //        var intent = Intent()
 //        intent.action = "com.android.audio_mode"
 //        intent.putExtra("audio_mode", 0)
@@ -346,8 +348,15 @@ class PlayerService : Service(), PresentationHelper.Listener
 //        sendBroadcast(intent)
         if (!DspHelper.isOpen)
         {
-            DspHelper.open()
-            DspHelper.sendHex("484D0001000004AA")
+            try
+            {
+                DspHelper.open()
+                DspHelper.sendHex("484D0001000004AA")
+            } catch (e: Exception)
+            {
+                e.printStackTrace()
+            }
+
         }
     }
 
@@ -432,7 +441,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         audioRecorder?.stop()
         displayType.set(2)
         mBinding?.surfaceView?.visibility = View.VISIBLE
-        newPlayer("/mnt/usb_storage/SATA/C/songs/" + song.file_name)
+        song.path?.let { newPlayer(it) }
         try
         {
             mPlayer?.prepareAsync()
@@ -474,7 +483,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         bgm?.let {
             mBinding?.surfaceView?.visibility = View.INVISIBLE
             audioRecorder?.stop()
-            newPlayer(it.file)
+            it.filePath?.let { newPlayer(it) }
             mPlayer?.prepareAsync()
             realm.executeTransaction { userData?.currentPlay = null }
         }
@@ -488,7 +497,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         mBinding?.surfaceView?.visibility = View.INVISIBLE
         audioRecorder?.stop()
-        newPlayer(dzAudiosPath + "/" + item.audioFile)
+        newPlayer(dzAudiosPath + "/" + item.audio_file)
         mPlayer?.prepareAsync()
         realm.executeTransaction { userData?.currentPlay = null }
     }
@@ -569,11 +578,11 @@ class PlayerService : Service(), PresentationHelper.Listener
         LogUtils.d(event.type)
         when (event.type)
         {
-            PlayEventType.PLAY_NEXT    -> playNext()
-            PlayEventType.MUTE         ->
+            PlayEventType.PLAY_NEXT -> playNext()
+            PlayEventType.MUTE ->
             {
             }
-            PlayEventType.VOLUME       ->
+            PlayEventType.VOLUME ->
             {
                 LogUtils.e(event.data)
                 if (event.data == 0)
@@ -584,7 +593,7 @@ class PlayerService : Service(), PresentationHelper.Listener
                     DspHelper.sendHex("484D000502002B032AAA")
                 }
             }
-            PlayEventType.PAUSE        ->
+            PlayEventType.PAUSE ->
             {
                 val b = (event.data as Boolean?) ?: false
                 if (b)
@@ -606,11 +615,11 @@ class PlayerService : Service(), PresentationHelper.Listener
                 }
 
             }
-            PlayEventType.CHANNEL      ->
+            PlayEventType.CHANNEL ->
             {
                 changeChanel((event.data ?: false) as Boolean)
             }
-            PlayEventType.REPLAY       ->
+            PlayEventType.REPLAY ->
             {
                 userData?.currentPlay?.let { playSong(it) }
             }
@@ -639,7 +648,7 @@ class PlayerService : Service(), PresentationHelper.Listener
                 }
 
             }
-            PlayEventType.STOP_RECORD  ->
+            PlayEventType.STOP_RECORD ->
             {
                 audioRecorder?.stop()
                 audioRecorder = null

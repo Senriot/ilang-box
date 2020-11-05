@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="457.3dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
@@ -31,68 +31,8 @@
             <RadioGroup
                 android:id="@+id/navBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58.7dp"
                 android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/dz_rb_123"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58.7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dz_rb_selector"
-                    android:button="@null"
-                    android:tag="123"
-                    android:text="习近平主席原声讲话"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/dz_rb_124"
-                    android:layout_width="253dp"
-                    android:layout_height="58.7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dz_rb_selector"
-                    android:button="@null"
-                    android:tag="124"
-                    android:text="习近平主席谈治国理政"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/dz_rb_125"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58.7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dz_rb_selector"
-                    android:button="@null"
-                    android:tag="125"
-                    android:text="十九大报告原声"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/dz_rb_126"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58.7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dz_rb_selector"
-                    android:button="@null"
-                    android:tag="126"
-                    android:text="学习贯彻十九大精神"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
-
-                <RadioButton
-                    android:id="@+id/dz_rb_127"
-                    android:layout_width="wrap_content"
-                    android:layout_height="58.7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/dz_rb_selector"
-                    android:button="@null"
-                    android:tag="127"
-                    android:text="给90后讲讲马克思"
-                    android:textAlignment="center"
-                    android:textSize="18sp" />
             </RadioGroup>
 
             <View
@@ -103,8 +43,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_height="0dp" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

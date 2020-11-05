@@ -7,8 +7,9 @@ import io.realm.annotations.Index
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import java.io.Serializable
+import java.util.*
 
-@RealmClass(name = "ok_singer")
+@RealmClass(name = "ilang_artist")
 open class Artist : RealmObject(), Serializable {
 
     @PrimaryKey
@@ -17,15 +18,11 @@ open class Artist : RealmObject(), Serializable {
     var name: String = ""
     @Index
     var input_code: String? = null
-    var fame: Long? = null
-    var sex: String? = null
-    var nationality: String? = null
-    var type_id: Long? = null
+    var area_id: String? = null
+    var gender: String? = null
     var avatar: String? = null
-    var length: Long? = null
-    var visible: Long? = null
     var birthplace: String? = null
-    var birthday: String? = null
+    var birthday: Date? = null
     var company: String? = null
     var constellation: String? = null
     var info: String? = null
@@ -33,6 +30,6 @@ open class Artist : RealmObject(), Serializable {
     var hot: Long? = null
     var weight: String? = null
     var stature: String? = null
-    var status: Long? = null
+    var status: String? = null
 
 }

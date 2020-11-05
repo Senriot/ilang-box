@@ -2,6 +2,7 @@ package com.android.karaoke.common.models;
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import java.io.Serializable
 
 
@@ -11,76 +12,25 @@ import java.io.Serializable
  * @Date:   2020-06-04
  * @Version: V1.0
  */
-open class ReadItem(
-
-    /**
-     * 主键
-     */
-    @PrimaryKey
-    var id: String = "",
-    /**
-     * 名称
-     */
-    var name: String = "",
-    /**
-     * 作者
-     */
-    var author: String? = null,
-    /**
-     * 分类
-     */
-    var category: ReadCategory? = null,
-    /**
-     * 是否推荐
-     */
-    var recommends: Boolean? = null,
-    /**
-     * 状态
-     */
-    var status: String? = null,
-    /**
-     * 封面
-     */
-    var cover: String? = null,
-    /**
-     * 背景
-     */
-    var bgPic: String? = null,
-    /**
-     * 音乐
-     */
-    var bgMusic: String? = null,
-    /**
-     * 字幕
-     */
-    var lyric: String? = null,
-    /**
-     * 简介
-     */
-    var info: String? = null,
-    /**
-     * 热度
-     */
-    var readCount: Int? = null,
-
-    var bgm: ReadBgm? = null,
-
-    var py: String? = null
-) : RealmObject(), Serializable
+@RealmClass(name = "ilang_ld_item")
+open class ReadItem : RealmObject(), Serializable
 {
-    companion object
-    {
-        const val COL_ID = "id"
-        const val COL_NAME = "name"
-        const val COL_AUTHOR = "author"
-        const val COL_CATEGORY_ID = "category"
-        const val COL_IS_RECOMMENDS = "recommends"
-        const val COL_STATUS = "status"
-        const val COL_COVER = "cover"
-        const val COL_BG_PIC = "bgPic"
-        const val COL_BG_MUSIC = "bgMusic"
-        const val COL_LYRIC = "lyric"
-        const val COL_INFO = "info"
-        const val COL_READ_COUNT = "readCount"
-    }
+
+    @PrimaryKey
+    var id: String = ""
+    var name: String = ""
+    var author: String? = null
+    var category_id: String? = null
+    var recommends: String? = null
+    var status: String? = null
+    var cover: String? = null
+    var bg_pic: String? = null
+    var bg_music: String? = null
+    var lyric: String? = null
+    var lyric_path: String? = null
+    var lyric_filename: String? = null
+    var content: String? = null
+    var read_count: Long? = null
+    var pinyin: String? = null
+
 }

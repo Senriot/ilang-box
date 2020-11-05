@@ -42,11 +42,11 @@ class KaraokeListViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<Song>()
         when (title)
         {
-            "红歌会"   -> query.`in`("type_id", arrayOf(120, 48))
-            "军歌"    -> query.equalTo("type_id", 120L)
-            "民歌"    -> query.equalTo("type_id", 48L)
-            "经典永流传" -> query.equalTo("type_id", 44L)
-            "抒情"    -> query.equalTo("type_id", 121L)
+            "红歌会" -> query.`in`("type_id", arrayOf("120", "48"))
+            "军歌" -> query.equalTo("type_id", "120")
+            "民歌" -> query.equalTo("type_id", "48")
+            "经典永流传" -> query.equalTo("type_id", "44")
+            "抒情" -> query.equalTo("type_id", "121")
             else    ->
             {
             }
@@ -69,11 +69,11 @@ class KaraokeListViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<Song>()
         when (title)
         {
-            "红歌会"   -> query.`in`("type_id", arrayOf(120, 48))
-            "军歌"    -> query.equalTo("type_id", 120L)
-            "民歌"    -> query.equalTo("type_id", 48L)
-            "经典永流传" -> query.equalTo("type_id", 44L)
-            "抒情"    -> query.equalTo("type_id", 121L)
+            "红歌会" -> query.`in`("type_id", arrayOf("120", "48"))
+            "军歌" -> query.equalTo("type_id", "120")
+            "民歌" -> query.equalTo("type_id", "48")
+            "经典永流传" -> query.equalTo("type_id", "44")
+            "抒情" -> query.equalTo("type_id", "121")
             else    ->
             {
             }

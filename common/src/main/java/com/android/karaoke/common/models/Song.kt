@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
 
-@RealmClass(name = "ok_song")
+@RealmClass(name = "ilang_song")
 open class Song : RealmObject()
 {
 
@@ -29,38 +29,37 @@ open class Song : RealmObject()
 
     @PrimaryKey
     var id: String = ""
-
+    var code: String = ""
     @Index
     var name: String = ""
-
     @Index
     var input_code: String? = null
-    var lang_id: Long? = null
-    var length: Long? = null
-
+    var word_count: Long? = null
+    var lang_id: String? = null
+    var type_id: String? = null
+    var album_id: Long? = null
     @Index
     var singer_id: Long? = null
-
-    @RealmField(name = "singer_names")
-    var artist: String? = null
-    var is_mtv: Boolean = false
-    var type_id: Long? = null
-    var track: String? = null
+    var artists_name: String? = null
+    var artist_ids: String? = null
+    var is_mtv: Boolean? = null
+    var am_track: String? = null
+    var or_vol: Long? = null
+    var ac_vol: Long? = null
     var volume: String? = null
     var order: Long? = null
+    var fileName:String? = null
     var path: String? = null
-    var server_name: String? = null
-    var file_name: String? = null
-    var exist: Boolean = false
+    var exist: Boolean? = null
     var cloud: Long? = null
-    var is_new: Boolean = false
-    var is_hd: Boolean = false
-    var is_score: Boolean = false
+    var is_new: Boolean? = null
+    var is_hd: Boolean? = null
+    var is_score: Boolean? = null
     var month: Long? = null
     var ranking: Long? = null
-    var status: Long? = null
-
+    var status: String? = null
     @Index
     var hot: Long? = null
+    var url: String? = null
 
 }

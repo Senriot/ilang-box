@@ -49,7 +49,7 @@ class LangDuFragment :
     override fun postInit()
     {
         super.postInit()
-        Realm.getDefaultInstance().where<ReadCategory>().findAll()
+//        Realm.getDefaultInstance().where<ReadCategory>().findAll()
     }
 
     override fun performDataBinding()

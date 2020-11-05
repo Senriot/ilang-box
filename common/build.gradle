@@ -31,14 +31,14 @@ android {
 
 }
 ext {
-    koin_version= "2.1.4"
+    koin_version= "2.2.0-rc-3"
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.kotlinVersion"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.3.0'
-    api "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     api "com.arthurivanets.mvvm:mvvm-core:1.4.1"
     api "io.reactivex.rxjava2:rxjava:2.2.17"
     api "io.reactivex.rxjava2:rxandroid:2.1.1"
@@ -50,4 +50,7 @@ dependencies {
     api "org.koin:koin-android-scope:$koin_version"
     api "org.koin:koin-android-viewmodel:$koin_version"
     api "com.arthurivanets.rxbus:rxbus:1.1.1"
+    api "com.squareup.retrofit2:retrofit:2.9.0"
+    api "com.squareup.retrofit2:converter-jackson:2.9.0"
+    api 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
 }

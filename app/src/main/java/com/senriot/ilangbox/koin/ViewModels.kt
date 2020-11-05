@@ -1,5 +1,6 @@
 package com.senriot.ilangbox.koin
 
+import com.senriot.ilangbox.InitActViewModel
 import com.senriot.ilangbox.MainActViewModel
 import com.senriot.ilangbox.ui.karaoke.*
 import com.senriot.ilangbox.ui.langdu.*
@@ -26,5 +27,6 @@ object ViewModels {
         viewModel { ReadListViewModel() }
         viewModel { AuditionViewModel() }
         viewModel { DzContentViewModel() }
+        viewModel { InitActViewModel() }
     }
 }

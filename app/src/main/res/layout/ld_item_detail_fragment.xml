@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="@{vm.item.bgm.name}" />
+                android:text="@{vm.item.bg_music}" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="@{vm.item.info}"
+                android:text="@{vm.item.content}"
                 android:textColor="@color/md_dark_primary_icon"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/btnStart"

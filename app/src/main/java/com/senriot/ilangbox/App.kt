@@ -15,8 +15,8 @@ class App : Application() {
         super.onCreate()
         Fresco.initialize(this)
         RxSnappy.init(this)
-        Realm.init(this)
-        Realm.setDefaultConfiguration(userConfig)
+//        Realm.init(this)
+//        Realm.setDefaultConfiguration(userConfig)
         startKoin {
             androidLogger()
 

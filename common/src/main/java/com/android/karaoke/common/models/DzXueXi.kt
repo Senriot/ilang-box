@@ -3,18 +3,25 @@ package com.android.karaoke.common.models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import java.io.Serializable
 
+@RealmClass(name = "ilang_dz_xiexi")
 open class DzXueXi : RealmObject(), Serializable
 {
 
     @PrimaryKey
-    var uuid: String = ""
+    var id: String = ""
     var name: String = ""
+    var pinyin: String? = null
+    var type: String? = null
     var pic: String? = null
-    var audioFile: String = ""
-    var contentFile: String = ""
+    var audio_file: String = ""
+    var content_file: String = ""
+    var read_count: Long? = null
     var duration: String? = null
-    var category: Dict? = null
+    var status: String? = null
+    var bg_pic: String? = null
+    var remark: String? = null
 
 }

@@ -3,6 +3,7 @@ package com.android.karaoke.common.models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 
 open class DangZheng : RealmObject() {
 

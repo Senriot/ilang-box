@@ -13,8 +13,12 @@ import java.io.File
 //class MediaModule
 
 
-@RealmModule(classes = [Song::class, Artist::class, UserData::class, DangZheng::class, DzXueXi::class, Dict::class, Album::class, ReadItem::class, ReadBgm::class, ReadCategory::class, Record::class])
+@RealmModule(classes = [UserData::class,  Record::class])
 class UserModule
+
+
+@RealmModule(classes = [Song::class, Artist::class, DzXueXi::class, Category::class, ReadBgm::class, ReadItem::class])
+class SongsModule
 
 //@RealmModule(classes = [ReadCategory::class, ReadItem::class, ReadBgm::class])
 //class LdModule
@@ -34,6 +38,8 @@ val userConfig: RealmConfiguration = RealmConfiguration.Builder().modules(UserMo
     .name("user.realm")
     .schemaVersion(18)
     .build()
+
+
 
 
 //@SuppressLint("SdCardPath")

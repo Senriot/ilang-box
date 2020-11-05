@@ -5,11 +5,11 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
-@RealmClass(name = "ok_dict")
+@RealmClass(name = "sys_category")
 open class Dict : RealmObject() {
 
     @PrimaryKey
-    var id: Long = 0
+    var id: String = ""
     var code: String = ""
     var key: String = ""
     var value: String? = null

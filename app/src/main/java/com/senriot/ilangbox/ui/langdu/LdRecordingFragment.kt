@@ -27,6 +27,6 @@ class LdRecordingFragment :
         super.performDataBinding()
         vm.item.set(args.item)
         vm.title.set(args.item.name)
-        args.item.bgm?.let { vm.curBgmName.set(it.name) }
+        args.item.bg_music?.let { vm.curBgmName.set(it) }
     }
 }

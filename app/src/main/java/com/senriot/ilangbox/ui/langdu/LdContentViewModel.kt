@@ -7,9 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
-import com.android.karaoke.common.models.CategoryItem
-import com.android.karaoke.common.models.ReadCategory
-import com.android.karaoke.common.models.ReadItem
+import com.android.karaoke.common.models.*
 import com.android.karaoke.common.mvvm.BindingConfig
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
@@ -17,6 +15,7 @@ import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RecyclerViewRealmAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import io.realm.Realm
+import io.realm.Sort
 import io.realm.kotlin.where
 import me.tatarka.bindingcollectionadapter2.BindingRecyclerViewAdapter
 import me.tatarka.bindingcollectionadapter2.ItemBinding
@@ -43,25 +42,26 @@ class LdContentViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<ReadItem>()
         if (new != "0")
         {
-            query.equalTo("category.id", new)
+            query.equalTo("category_id", new)
         }
 
-        val items = query.sort(ReadItem.COL_ID).findAll()
+        val items = query.sort("id").findAll()
         itemsAdapter.updateData(items)
     })
 
     val categories by lazy {
-        Realm.getDefaultInstance().where<ReadCategory>().sort(ReadCategory.COL_ID).findAll()
+        Realm.getDefaultInstance().where<Category>().equalTo("pid", "1287240189223268354")
+            .sort("sort_no", Sort.ASCENDING).findAll()
     }
 
     val categoryBinding by lazy {
-        ItemBinding.of<ReadCategory>(
+        ItemBinding.of<Category>(
             BR.item,
             R.layout.read_category_item
         ).bindExtra(BR.vm, this)
     }
 
-    val categoryAdapter = object : BindingRecyclerViewAdapter<ReadCategory>()
+    val categoryAdapter = object : BindingRecyclerViewAdapter<Category>()
     {
 
         init
@@ -75,7 +75,7 @@ class LdContentViewModel : AbstractViewModel()
             variableId: Int,
             layoutRes: Int,
             position: Int,
-            item: ReadCategory?
+            item: Category?
         )
         {
 
@@ -99,9 +99,9 @@ class LdContentViewModel : AbstractViewModel()
 
         if (curSelectedId != "0")
         {
-            query.equalTo("category.id", curSelectedId)
+            query.equalTo("category_id", curSelectedId)
         }
-        val items = query.sort(ReadItem.COL_ID).findAll()
+        val items = query.sort("id").findAll()
         RecyclerViewRealmAdapter<ReadItem>(
             items,
             BindingConfig(R.layout.read_item, mapOf(Pair(BR.vm, this)))
@@ -130,8 +130,8 @@ class LdContentViewModel : AbstractViewModel()
     {
         this.curSelectedId = item.id
         val items =
-            Realm.getDefaultInstance().where<ReadItem>().equalTo("category.id", curSelectedId)
-                .sort(ReadItem.COL_ID).findAll()
+            Realm.getDefaultInstance().where<ReadItem>().equalTo("category_id", curSelectedId)
+                .sort("id").findAll()
         itemsAdapter.updateData(items)
     }
 
@@ -141,11 +141,11 @@ class LdContentViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<ReadItem>()
         if (curSelectedId != "0")
         {
-            query.equalTo("category.id", curSelectedId)
+            query.equalTo("category_id", curSelectedId)
         }
 
         val items = query.like("name", event.text + "*")
-            .sort(ReadItem.COL_ID).findAll()
+            .sort("id").findAll()
         itemsAdapter.updateData(items)
     }
 }

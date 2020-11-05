@@ -3,14 +3,19 @@ package com.android.karaoke.common.models
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 
-open class ReadBgm : RealmObject() {
+@RealmClass(name = "ilang_ld_bgm")
+open class ReadBgm : RealmObject()
+{
 
     @PrimaryKey
-    var uuid: String = ""
+    var id: String = ""
     var name: String = ""
-    var pic: String? = null
-    var file: String = ""
+    var pinyin: String? = null
+    var url: String? = null
+    var pics: String? = null
+    var file_name: String? = null
     var artist: String? = null
-
+    var filePath: String? = null
 }

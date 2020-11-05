@@ -34,7 +34,7 @@
                 android:id="@+id/simpleDraweeView2"
                 android:layout_width="0dp"
                 android:layout_height="140dp"
-                app:artistUri="@{item.avatar}"
+                app:uri="@{item.avatar}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

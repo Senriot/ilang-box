@@ -34,7 +34,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_1"
-                    android:tag="1"
+                    android:tag="1287241865736908802"
                     app:layout_column="0"
                     app:layout_row="0"
                     app:layout_rowSpan="2" />
@@ -47,7 +47,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_2"
-                    android:tag="2"
+                    android:tag="1287240489355079681"
                     app:layout_column="1"
                     app:layout_columnSpan="2"
                     app:layout_row="0" />
@@ -60,7 +60,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_3"
-                    android:tag="3"
+                    android:tag="1298910089985204226"
                     app:layout_column="3"
                     app:layout_row="0" />
 
@@ -73,7 +73,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_4"
-                    android:tag="4"
+                    android:tag="1298893037723525122"
                     app:layout_column="1"
                     app:layout_row="1" />
 
@@ -86,7 +86,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_5"
-                    android:tag="5"
+                    android:tag="1298910021899067394"
                     app:layout_column="2"
                     app:layout_row="1" />
 
@@ -99,7 +99,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_6"
-                    android:tag="6"
+                    android:tag="1298910178120114178"
                     app:layout_column="3"
                     app:layout_row="1" />
 
@@ -111,7 +111,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showLdContent"
                     android:src="@drawable/ld_card_7"
-                    android:tag="8"
+                    android:tag="1298910296240103426"
                     app:layout_column="4"
                     app:layout_row="0" />
 
