@@ -8,6 +8,7 @@ import com.android.karaoke.common.mvvm.BindingConfig
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RealmAdapter
+import com.senriot.ilangbox.adapter.SongListAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import io.realm.Realm
 import io.realm.Sort
@@ -22,10 +23,11 @@ class KaraokeArtistSongsViewModel : AbstractViewModel()
     val artist = ObservableField<Artist>()
 
     val adapter by lazy {
-        val songs = Realm.getDefaultInstance().where<Song>().equalTo("singer_id", artist.get()!!.id)
-            .sort("hot", Sort.DESCENDING).findAll()
+        val songs =
+            Realm.getDefaultInstance().where<Song>().equalTo("artists.id", artist.get()!!.id)
+                .sort("hot", Sort.DESCENDING).findAll()
 
-        RealmAdapter(songs, BindingConfig(R.layout.ok_song_item, mapOf()), 3, 3)
+        SongListAdapter(songs, BindingConfig(R.layout.ok_song_item, mapOf()), 3, 3)
     }
 
     init

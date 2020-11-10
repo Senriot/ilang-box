@@ -189,20 +189,20 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     {
 
 
-        val realm = Realm.getDefaultInstance()
-        val songs = realm.where<Song>().findAll()
-        realm.beginTransaction()
-        songs.forEach { song ->
-            if (!song.artists_name.isNullOrBlank())
-            {
-                realm.where<Artist>().equalTo("name", song.artists_name).findFirst()?.let {
-                    song.singer_id = it.id
-                    it.status = "2"
-                }
-            }
-        }
-        realm.commitTransaction()
-        LogUtils.e("ok======")
+//        val realm = Realm.getDefaultInstance()
+//        val songs = realm.where<Song>().findAll()
+//        realm.beginTransaction()
+//        songs.forEach { song ->
+//            if (!song.artists_name.isNullOrBlank())
+//            {
+//                realm.where<Artist>().equalTo("name", song.artists_name).findFirst()?.let {
+//                    song.singer_id = it.id
+//                    it.status = "2"
+//                }
+//            }
+//        }
+//        realm.commitTransaction()
+//        LogUtils.e("ok======")
     }
 //        realm.executeTransaction { it.delete(Song::class.java) }
 //        val dzs = realm.where<DangZheng>().findAll()

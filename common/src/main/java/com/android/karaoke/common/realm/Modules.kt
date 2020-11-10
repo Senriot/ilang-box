@@ -1,6 +1,7 @@
 package com.android.karaoke.common.realm
 
 import android.annotation.SuppressLint
+import android.os.Environment
 import com.android.karaoke.common.models.*
 import io.realm.RealmConfiguration
 import io.realm.annotations.RealmModule
@@ -13,7 +14,7 @@ import java.io.File
 //class MediaModule
 
 
-@RealmModule(classes = [UserData::class,  Record::class])
+@RealmModule(classes = [UserData::class, Record::class, Song::class, Artist::class, ReadItem::class, ReadBgm::class])
 class UserModule
 
 
@@ -35,13 +36,17 @@ class SongsModule
 @SuppressLint("SdCardPath")
 val userConfig: RealmConfiguration = RealmConfiguration.Builder().modules(UserModule())
     .directory(File("/sdcard/ilang-box"))
-    .name("user.realm")
-    .schemaVersion(18)
+    .name("user.db")
+    .allowWritesOnUiThread(true)
+    .allowQueriesOnUiThread(true)
     .build()
 
-
-
-
+val songsConfig: RealmConfiguration = RealmConfiguration.Builder().modules(SongsModule())
+    .directory(File(Environment.getExternalStorageDirectory().absolutePath + "/ilang-box"))
+    .allowWritesOnUiThread(true)
+    .allowQueriesOnUiThread(true)
+    .name("db.realm")
+    .build()
 //@SuppressLint("SdCardPath")
 //val ldConfig: RealmConfiguration = RealmConfiguration.Builder().modules(LdModule())
 //        .directory(File("/sdcard/ilang-box"))

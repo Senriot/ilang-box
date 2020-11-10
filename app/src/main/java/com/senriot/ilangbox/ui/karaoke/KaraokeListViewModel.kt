@@ -8,6 +8,7 @@ import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RealmAdapter
+import com.senriot.ilangbox.adapter.SongListAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import io.realm.Realm
 import io.realm.Sort
@@ -59,7 +60,7 @@ class KaraokeListViewModel : AbstractViewModel()
     }
 
     val adapter by lazy {
-        RealmAdapter(items, BindingConfig(R.layout.ok_song_item, mapOf()), 3, 3)
+        SongListAdapter(items, BindingConfig(R.layout.ok_song_item, mapOf()), 3, 3)
     }
 
 

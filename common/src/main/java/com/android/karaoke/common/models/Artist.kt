@@ -19,6 +19,7 @@ open class Artist : RealmObject(), Serializable {
     @Index
     var input_code: String? = null
     var area_id: String? = null
+    var area_text: String? = null
     var gender: String? = null
     var avatar: String? = null
     var birthplace: String? = null

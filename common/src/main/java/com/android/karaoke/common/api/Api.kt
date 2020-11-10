@@ -14,11 +14,11 @@ var retrofit = Retrofit.Builder()
     .build()
 
 
-val dbVerService = retrofit.create(DbVerService::class.java)
+val updateApiService = retrofit.create(UpdateApiService::class.java)
 
-interface DbVerService
+interface UpdateApiService
 {
-    @GET("sysParams/queryByCode?code=ld_db_ver")
-    fun getDbVer(): Observable<Result<DbVer>>
+    @GET("sysParams/queryByCode?code=app_update_info")
+    fun updateInfo(): Observable<Result<UpdateInfo>>
 }
 

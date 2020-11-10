@@ -13,7 +13,7 @@ import io.realm.RealmObject
 import com.senriot.ilangbox.BR
 import io.realm.OrderedRealmCollection
 
-class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdapter.RealmViewHolder>
+open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdapter.RealmViewHolder>
 {
     private val config: BindingConfig
     val row: Int

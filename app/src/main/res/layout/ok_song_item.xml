@@ -9,6 +9,10 @@
             name="item"
             type="com.android.karaoke.common.models.Song" />
 
+        <variable
+            name="downloadVm"
+            type="com.senriot.ilangbox.model.DownloadViewModel" />
+
         <import type="android.view.View" />
 
         <import type="com.android.karaoke.common.realm.UserDataHelper" />
@@ -25,12 +29,13 @@
         app:cardBackgroundColor="#1A070707"
         app:cardElevation="0dp">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/simpleDraweeView2"
+                android:id="@+id/songPic"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 app:actualImageResource="@mipmap/song_default"
@@ -39,52 +44,81 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/songName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@{item.name}"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/simpleDraweeView2"
+                app:layout_constraintStart_toEndOf="@+id/songPic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/artistName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@{item.artists_name}"
                 android:textColor="@color/md_grey_400"
-                app:layout_constraintStart_toStartOf="@+id/textView12"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                app:layout_constraintStart_toStartOf="@+id/songName"
+                app:layout_constraintTop_toBottomOf="@+id/songName" />
 
-            <ImageButton
-                android:id="@+id/imageButton18"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{()-> UserDataHelper.removePlaylistItem(item)}"
-                android:visibility="@{UserDataHelper.isSelected(item)?View.VISIBLE:View.GONE}"
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@mipmap/ic_ok_del" />
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageButton
-                android:id="@+id/imageButton20"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{()-> UserDataHelper.onTop(item)}"
-                android:visibility="@{UserDataHelper.isTop(item)?View.VISIBLE:View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton18"
-                app:srcCompat="@mipmap/ic_ok_top" />
+                <ImageButton
+                    android:id="@+id/btnTop"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="@{()-> UserDataHelper.onTop(item)}"
+                    app:srcCompat="@mipmap/ic_ok_top" />
+
+                <ImageButton
+                    android:id="@+id/btnDel"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="@{()-> UserDataHelper.removePlaylistItem(item)}"
+                    android:visibility="@{UserDataHelper.isSelected(item)?View.VISIBLE:View.GONE}"
+                    app:srcCompat="@mipmap/ic_ok_del" />
+            </LinearLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.devzone.fillprogresslayout.FillProgressLayout
+            android:id="@+id/progressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom|right"
+            app:fpl_backgroundColor="@color/tt"
+            app:fpl_progressColor="@color/search_background"
+            app:progress="@{downloadVm.progress}">
+
+            <!--            <TextView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:text="@{downloadVm.statusText}" />-->
+            <Button
+                android:id="@+id/btnDownload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:text='@{downloadVm!=null?downloadVm.statusText:"云下载"}'
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnTop" />
+        </com.devzone.fillprogresslayout.FillProgressLayout>
     </androidx.cardview.widget.CardView>
 </layout>

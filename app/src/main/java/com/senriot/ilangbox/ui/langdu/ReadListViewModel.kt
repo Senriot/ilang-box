@@ -4,6 +4,7 @@ import android.view.View
 import androidx.navigation.findNavController
 import com.android.karaoke.common.models.Record
 import com.android.karaoke.common.realm.UserDataHelper
+import com.android.karaoke.common.realm.userConfig
 import com.android.karaoke.player.events.PlayRecordEvent
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
@@ -16,7 +17,7 @@ import org.greenrobot.eventbus.EventBus
 class ReadListViewModel : AbstractViewModel()
 {
     val items by lazy {
-        Realm.getDefaultInstance().where<Record>().findAll()
+        Realm.getInstance(userConfig).where<Record>().findAll()
     }
 
     val itemBinding by lazy {

@@ -74,11 +74,14 @@ object UserDataHelper
     @JvmStatic
     fun addPlaylist(song: Song)
     {
-        realm.executeTransaction {
-            val s = it.copyToRealmOrUpdate(song)
-            if (userData?.playlist?.contains(s) != true)
-            {
-                userData?.playlist?.add(s)
+        if (song.exist == true)
+        {
+            realm.executeTransaction {
+                val s = it.copyToRealmOrUpdate(song)
+                if (userData?.playlist?.contains(s) != true)
+                {
+                    userData?.playlist?.add(s)
+                }
             }
         }
     }

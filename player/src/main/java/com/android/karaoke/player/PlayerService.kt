@@ -336,7 +336,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         super.onCreate()
         presentationHelper.onResume()
-//        UserDataHelper.initUserData("Guest")
+        UserDataHelper.initUserData("Guest")
 //        var intent = Intent()
 //        intent.action = "com.android.audio_mode"
 //        intent.putExtra("audio_mode", 0)
@@ -441,7 +441,7 @@ class PlayerService : Service(), PresentationHelper.Listener
         audioRecorder?.stop()
         displayType.set(2)
         mBinding?.surfaceView?.visibility = View.VISIBLE
-        song.path?.let { newPlayer(it) }
+        song.file_path?.let { newPlayer(it) }
         try
         {
             mPlayer?.prepareAsync()
