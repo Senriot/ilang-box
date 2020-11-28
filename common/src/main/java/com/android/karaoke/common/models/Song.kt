@@ -8,6 +8,7 @@ import io.realm.RealmObject
 import io.realm.RealmList
 import io.realm.annotations.*
 import java.text.DecimalFormat
+import java.util.*
 
 @RealmClass(name = "ilang_song")
 open class Song : RealmObject()
@@ -38,4 +39,7 @@ open class Song : RealmObject()
     @Index
     var hot: Long? = null
     var cloud_url: String? = null
+
+    var create_time: Date? = null
+    var update_time: Date? = null
 }

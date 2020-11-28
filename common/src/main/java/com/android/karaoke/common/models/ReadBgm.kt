@@ -4,6 +4,7 @@ package com.android.karaoke.common.models
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import java.util.*
 
 @RealmClass(name = "ilang_ld_bgm")
 open class ReadBgm : RealmObject()
@@ -18,4 +19,7 @@ open class ReadBgm : RealmObject()
     var file_name: String? = null
     var artist: String? = null
     var filePath: String? = null
+    var fileExist: Boolean? = false
+    var create_time: Date? = null
+    var update_time: Date? = null
 }

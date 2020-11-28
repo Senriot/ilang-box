@@ -4,6 +4,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import java.io.Serializable
+import java.util.*
 
 
 /**
@@ -26,11 +27,11 @@ open class ReadItem : RealmObject(), Serializable
     var cover: String? = null
     var bg_pic: String? = null
     var bg_music: String? = null
+    var bgMusic: ReadBgm? = null
     var lyric: String? = null
-    var lyric_path: String? = null
-    var lyric_filename: String? = null
     var content: String? = null
     var read_count: Long? = null
     var pinyin: String? = null
-
+    var create_time: Date? = null
+    var update_time: Date? = null
 }

@@ -13,7 +13,9 @@ import com.devzone.fillprogresslayout.FillProgressLayout
 import com.dunst.check.CheckableButton
 import com.dunst.check.CheckableImageButton
 import com.facebook.drawee.view.SimpleDraweeView
+import com.senriot.ilangbox.ui.weiget.DownloadButton
 import com.senriot.ilangbox.ui.weiget.ScrollPageView
+import java.sql.ClientInfoStatus
 
 object DataBindingAdapter
 {
@@ -161,5 +163,19 @@ object DataBindingAdapter
     fun setProgress(view: FillProgressLayout, progress: Int)
     {
         view.setProgress(progress, false)
+    }
+
+    @BindingAdapter("dbProgress")
+    @JvmStatic
+    fun dbProgress(view: DownloadButton, progress: Int)
+    {
+        view.progress = progress.toFloat()
+    }
+
+    @BindingAdapter("downloadStatus")
+    @JvmStatic
+    fun downloadStatus(view: DownloadButton, status: Int)
+    {
+        view.status = status
     }
 }

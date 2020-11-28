@@ -45,7 +45,7 @@ class LdContentViewModel : AbstractViewModel()
             query.equalTo("category_id", new)
         }
 
-        val items = query.sort("id").findAll()
+        val items = query.sort("create_time", Sort.DESCENDING).findAll()
         itemsAdapter.updateData(items)
     })
 

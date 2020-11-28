@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.android.karaoke.common.models.Song" />
+            type="com.android.karaoke.common.models.SongRecord" />
 
         <variable
             name="index"
@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="1dp"
-        android:background="#1A070707"
-        android:onClick="@{()->UserDataHelper.addPlaylist(item)}">
+        android:background="#1A070707">
 
         <TextView
             android:id="@+id/textView15"
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:text="@{item.name}"
+            android:text="@{item.song.name}"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +40,7 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.artists_name}"
+            android:text="@{item.song.artists_name}"
             android:textColor="@color/md_blue_grey_100"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@+id/textView15"
@@ -54,10 +53,34 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:background="?attr/selectableItemBackground"
-            android:onClick="@{()-> UserDataHelper.removeHistoryItem(item)}"
+            android:onClick="@{()-> UserDataHelper.removeSongRecord(item)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@mipmap/ic_ok_del" />
+
+        <Button
+            android:id="@+id/btnUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/playlist_tab_selector"
+            android:text="上传"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButton18"
+            app:layout_constraintEnd_toStartOf="@+id/imageButton18"
+            app:layout_constraintTop_toTopOf="@+id/imageButton18" />
+
+        <Button
+            android:id="@+id/btnShiTing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/playlist_tab_selector"
+            android:text="试听"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="@+id/btnUpload"
+            app:layout_constraintEnd_toStartOf="@+id/btnUpload"
+            app:layout_constraintTop_toTopOf="@+id/btnUpload" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

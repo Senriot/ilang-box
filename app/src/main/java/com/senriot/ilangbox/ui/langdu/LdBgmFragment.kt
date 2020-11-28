@@ -19,5 +19,6 @@ class LdBgmFragment : MvvmFragment<LdBgmFragmentBinding, LdBgmViewModel>(R.layou
     override fun performDataBinding() {
         super.performDataBinding()
         list.layoutManager = GridLayoutManager(activity, 4, GridLayoutManager.HORIZONTAL, false)
+        list.adapter = vm.adapter
     }
 }

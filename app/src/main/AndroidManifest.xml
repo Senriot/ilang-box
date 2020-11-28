@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.senriot.ilangbox"
     android:sharedUserId="android.uid.system">
+
     <!-- android:sharedUserId="android.uid.system" -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -29,35 +30,37 @@
 
     <application
         android:name=".App"
-        android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--        <activity-->
-        <!--            android:name=".InitActivity"-->
-        <!--            android:label="@string/app_name"-->
-        <!--            android:theme="@style/AppTheme.NoActionBar">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-        <!--                <category android:name="android.intent.category.DEFAULT" />-->
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--                <category android:name="android.intent.category.HOME" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+        <service
+            android:name=".services.MessageService"
+            android:enabled="true" />
+
+        <activity android:name=".LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.HOME" />
             </intent-filter>
+        </activity> <!-- <activity -->
+        <!-- android:name=".InitActivity" -->
+        <!-- android:label="@string/app_name" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- <category android:name="android.intent.category.HOME" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity android:name=".MainActivity">
+
         </activity>
+
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
 
         <meta-data
             android:name="preloaded_fonts"

@@ -7,7 +7,9 @@ import com.android.karaoke.player.events.ChangeBgmEvent
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
+import com.senriot.ilangbox.adapter.LdBgmAdapter
 import io.realm.Realm
+import io.realm.Sort
 import io.realm.kotlin.where
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import org.greenrobot.eventbus.EventBus
@@ -15,6 +17,7 @@ import org.greenrobot.eventbus.EventBus
 class LdBgmViewModel : AbstractViewModel()
 {
     val items by lazy { Realm.getDefaultInstance().where<ReadBgm>().findAll() }
+    val adapter by lazy { LdBgmAdapter(items) }
     val itemBinding by lazy {
         ItemBinding.of<ReadBgm>(
             BR.item,

@@ -46,7 +46,7 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <com.zlm.hp.lyrics.widget.ManyLyricsView
+        <com.android.karaoke.player.widget.lrcview.LrcView
             android:id="@+id/lrcView"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -56,6 +56,9 @@
             android:layout_marginEnd="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="0dp"
+            app:lrcCurrentTextColor="@color/md_blue_900"
+            app:lrcTextSize="22sp"
+            app:lrcNormalTextSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintLeft_toLeftOf="parent"

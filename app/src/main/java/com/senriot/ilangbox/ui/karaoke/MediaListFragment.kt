@@ -7,12 +7,16 @@ import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.karaoke.common.events.PlaylistChangedEvent
+import com.android.karaoke.common.models.SongRecord
 import com.android.karaoke.common.mvvm.BindingConfig
 import com.android.karaoke.common.realm.UserDataHelper
+import com.android.karaoke.common.realm.userConfig
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.HistoryAdapter
 import com.senriot.ilangbox.adapter.PlaylistAdapter
 import com.senriot.ilangbox.adapter.RealmAdapter
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.media_list_dialog.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -27,17 +31,19 @@ class MediaListFragment : DialogFragment()
     }
 
     private val adapter by lazy {
-        PlaylistAdapter(UserDataHelper.userData!!.playlist)
+        PlaylistAdapter(UserDataHelper.userData.playlist)
     }
 
     private val hisAdapter by lazy {
-        HistoryAdapter(UserDataHelper.userData!!.history)
+        val items = Realm.getInstance(userConfig).where<SongRecord>()
+            .equalTo("openId", UserDataHelper.userData.id).findAll()
+        HistoryAdapter(items)
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View?
     {
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -53,8 +59,7 @@ class MediaListFragment : DialogFragment()
             if (checkedId == R.id.rbHistory)
             {
                 list.adapter = hisAdapter
-            }
-            else
+            } else
             {
                 list.adapter = adapter
             }
@@ -73,7 +78,7 @@ class MediaListFragment : DialogFragment()
         val params = dialog?.window?.attributes
         params?.gravity = Gravity.CENTER or Gravity.RIGHT
         params?.height = 750
-        params?.width = 560
+        params?.width = 700
         params?.horizontalMargin = 0.02f
         window?.attributes = params
 //        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

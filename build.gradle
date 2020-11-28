@@ -11,11 +11,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.realm:realm-gradle-plugin:10.0.0"
         classpath "org.koin:koin-gradle-plugin:2.1.4"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath 'com.didi.virtualapk:gradle:0.9.8.6'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

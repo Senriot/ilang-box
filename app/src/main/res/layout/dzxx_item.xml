@@ -9,14 +9,15 @@
             type="com.android.karaoke.common.models.DzXueXi" />
 
         <variable
-            name="vm"
-            type="com.senriot.ilangbox.ui.xuexi.XueXiViewModel" />
+            name="downloadVm"
+            type="com.senriot.ilangbox.model.DownloadViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:onClick="@{(v)->vm.startPlay(v,item)}">
+        android:layout_height="60dp">
 
         <TextView
             android:id="@+id/txtName"
@@ -50,5 +51,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <com.senriot.ilangbox.ui.weiget.DownloadButton
+            android:id="@+id/btnDownload"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            app:dbProgress="@{downloadVm.progress}"
+            app:downloadStatus="@{downloadVm.status}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

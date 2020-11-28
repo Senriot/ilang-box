@@ -26,5 +26,18 @@ open class Record(
     var type: Int = 1, //类别 1 朗读
     var readItem: ReadItem? = null,
     var file: String = "",
+    var updated: Boolean = false,
+    var createDate: Date = Date()
+) : RealmObject(), Serializable
+
+
+open class SongRecord(
+    @PrimaryKey
+    var id: String = "",
+    var song: Song? = null,
+    var openId: String = "",
+    var filePath: String = "",
+    var updated: Boolean = false,
+    var playing: Boolean = false,
     var createDate: Date = Date()
 ) : RealmObject(), Serializable

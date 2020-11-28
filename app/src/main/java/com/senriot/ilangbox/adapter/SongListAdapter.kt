@@ -1,5 +1,7 @@
 package com.senriot.ilangbox.adapter
 
+import android.annotation.SuppressLint
+import android.os.Environment
 import android.view.View
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
@@ -24,6 +26,12 @@ class SongListAdapter(
 {
     private val downloadManager = DownloadManager.getInstance()
 
+    init
+    {
+        setHasStableIds(true)
+    }
+
+    @SuppressLint("SdCardPath")
     override fun onBindViewHolder(holder: RealmViewHolder, position: Int)
     {
         super.onBindViewHolder(holder, position)
@@ -32,10 +40,10 @@ class SongListAdapter(
 
         var itemTask = downloadManager.getTask(item.id)
         binding.buttons.visibility = if (item.exist == true) View.VISIBLE else View.GONE
-        binding.progressLayout.visibility = if (item.exist == true) View.GONE else View.VISIBLE
+        binding.btnDownload.visibility = if (item.exist == true) View.GONE else View.VISIBLE
         if (itemTask != null)
         {
-            val downloadViewModel = DownloadViewModel(item.id)
+            val downloadViewModel = DownloadViewModel(item.id, 0)
             holder.binding.setVariable(BR.downloadVm, downloadViewModel)
         } else
         {
@@ -46,12 +54,13 @@ class SongListAdapter(
             if (itemTask == null)
             {
                 itemTask = DownloadTask(
-                    TaskEntity.Builder().downloadId(item.id).filePath("/sdcard/ilang-box")
+                    TaskEntity.Builder().downloadId(item.id)
+                        .filePath(item.file_path)
                         .fileName(item.file_name)
-                        .url("http://music.ilangbar.com:9000/ilang/appdata/db.realm").build()
+                        .url("http://aogevod.com:9000/group1/ilang/songs/90096705.mkv").build()
                 )
                 downloadManager.addTask(itemTask)
-                val vm = DownloadViewModel(item.id)
+                val vm = DownloadViewModel(item.id, 0)
                 binding.setVariable(BR.downloadVm, vm)
             } else
             {

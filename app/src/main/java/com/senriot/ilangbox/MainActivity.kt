@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.karaoke.common.MvvmActivity
+import com.android.karaoke.common.api.Auth
 import com.android.karaoke.common.models.Artist
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.player.PlayerService
@@ -21,11 +22,14 @@ import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
+import com.senriot.ilangbox.services.MessageService
 import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
 import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
 import com.senriot.ilangbox.ui.xuexi.XueXiFragment
+import com.snappydb.DBFactory
+import com.snappydb.SnappydbException
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
@@ -47,6 +51,8 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     override val bindingVariable: Int = BR.vm
 
+    private val snappy by lazy { DBFactory.open(this) }
+
     override fun createViewModel(): MainActViewModel
     {
         return vm
@@ -59,7 +65,7 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         nav.setOnCheckedChangeListener { group, checkedId ->
             val id = when (checkedId)
             {
-                R.id.rb_xuexi  -> R.id.xueXiFragment
+                R.id.rb_xuexi -> R.id.xueXiFragment
                 R.id.rb_langdu -> R.id.langDuFragment
                 R.id.rb_hongge -> R.id.karaokeFragment
                 else           -> -1
@@ -80,7 +86,17 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
             }
             EventBus.getDefault().post(MainNavChangedEvent(checkedId))
         }
-        startPlayerService()
+        try
+        {
+            val auth = snappy.get("authInfo", Auth::class.java)
+            btnProfile.setImageURI(auth.user.headImgUrl)
+        } catch (e: SnappydbException)
+        {
+            e.printStackTrace()
+        }
+
+//        startPlayerService()
+//        startService(Intent(this, MessageService::class.java))
     }
 
     override fun onSupportNavigateUp(): Boolean
@@ -149,6 +165,7 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         bindService(Intent(this, PlayerService::class.java), conn, Context.BIND_AUTO_CREATE)
     }
 
+
     fun karaokeCardClick(view: View)
     {
         val nc = findNavController(view.id)
@@ -187,7 +204,7 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun showProfile(view: View)
     {
-
+        startActivity(Intent(this, LoginActivity::class.java))
 
 //        val realm = Realm.getDefaultInstance()
 //        val songs = realm.where<Song>().findAll()
@@ -259,7 +276,8 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         minorDisplay.show(supportFragmentManager, null)
     }
 
-    fun openSetting(view: View){
-        startActivity( Intent(Settings.ACTION_SETTINGS));
+    fun openSetting(view: View)
+    {
+        startActivity(Intent(Settings.ACTION_SETTINGS));
     }
 }

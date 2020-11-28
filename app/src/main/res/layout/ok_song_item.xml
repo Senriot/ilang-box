@@ -94,31 +94,44 @@
                     app:srcCompat="@mipmap/ic_ok_del" />
             </LinearLayout>
 
+            <com.senriot.ilangbox.ui.weiget.DownloadButton
+                android:id="@+id/btnDownload"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                app:dbProgress="@{downloadVm.progress}"
+                app:downloadStatus="@{downloadVm.status}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.devzone.fillprogresslayout.FillProgressLayout
-            android:id="@+id/progressLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|right"
-            app:fpl_backgroundColor="@color/tt"
-            app:fpl_progressColor="@color/search_background"
-            app:progress="@{downloadVm.progress}">
 
-            <!--            <TextView-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:text="@{downloadVm.statusText}" />-->
-            <Button
-                android:id="@+id/btnDownload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:text='@{downloadVm!=null?downloadVm.statusText:"云下载"}'
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnTop" />
-        </com.devzone.fillprogresslayout.FillProgressLayout>
+
+
+<!--        <com.devzone.fillprogresslayout.FillProgressLayout-->
+<!--            android:id="@+id/progressLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="bottom|right"-->
+<!--            app:fpl_backgroundColor="@color/tt"-->
+<!--            app:fpl_progressColor="@color/search_background"-->
+<!--            app:progress="@{downloadVm.progress}">-->
+
+<!--            &lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:text="@{downloadVm.statusText}" />&ndash;&gt;-->
+<!--            <com.senriot.ilangbox.ui.weiget.DownloadButton-->
+<!--                android:id="@+id/btnDownload"-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                app:dbProgress="@{downloadVm.progress}"-->
+<!--                app:downloadStatus="@{downloadVm.status}"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/btnTop" />-->
+<!--        </com.devzone.fillprogresslayout.FillProgressLayout>-->
     </androidx.cardview.widget.CardView>
 </layout>

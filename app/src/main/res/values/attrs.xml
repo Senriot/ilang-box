@@ -5,4 +5,7 @@
         <attr name="row" format="integer" />
         <attr name="column" format="integer" />
     </declare-styleable>
+    <declare-styleable name="DownloadButton">
+        <attr name="dbProgress" format="float" />
+    </declare-styleable>
 </resources>

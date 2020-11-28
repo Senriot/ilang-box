@@ -1,26 +1,32 @@
 package com.senriot.ilangbox.model
 
+import android.os.Environment
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
+import com.android.karaoke.common.models.DzXueXi
+import com.android.karaoke.common.models.ReadBgm
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.realm.songsConfig
 import com.apkfuns.logutils.LogUtils
+import com.senriot.ilangbox.BR
 import com.yuan.library.dmanager.download.DownloadManager
 import com.yuan.library.dmanager.download.DownloadTask
 import com.yuan.library.dmanager.download.DownloadTaskListener
+import com.yuan.library.dmanager.download.TaskEntity
 import com.yuan.library.dmanager.download.TaskStatus.*
 import io.realm.Realm
 import io.realm.kotlin.where
 import java.text.DecimalFormat
 
 
-class DownloadViewModel(private val downloadId: String, private val flag: Int = 0) :
+class DownloadViewModel(val downloadId: String, private val flag: Int = 0) :
     DownloadTaskListener
 {
 
     private val itemTask: DownloadTask = DownloadManager.getInstance().getTask(downloadId)
     private val mDownloadManager = DownloadManager.getInstance()
     val statusText = ObservableField("云下载")
+    val status = ObservableInt(-1)
     val progress = ObservableInt()
 
     init
@@ -36,7 +42,9 @@ class DownloadViewModel(private val downloadId: String, private val flag: Int = 
             {
                 val isPause: Boolean = mDownloadManager.isPauseTask(taskEntity.taskId)
                 val isFinish: Boolean = mDownloadManager.isFinishTask(taskEntity.taskId)
-                statusText.set(if (isFinish) "删除" else if (!isPause) "云下载" else "继续")
+//                statusText.set(if (isFinish) "删除" else if (!isPause) "云下载" else "继续")
+                if (isPause)
+                    status.set(2)
             }
             TASK_STATUS_QUEUE ->
             {
@@ -49,10 +57,12 @@ class DownloadViewModel(private val downloadId: String, private val flag: Int = 
             TASK_STATUS_DOWNLOADING ->
             {
                 statusText.set("暂停")
+                status.set(1)
             }
             TASK_STATUS_PAUSE ->
             {
                 statusText.set("继续")
+                status.set(2)
             }
             TASK_STATUS_FINISH ->
             {
@@ -61,10 +71,12 @@ class DownloadViewModel(private val downloadId: String, private val flag: Int = 
             TASK_STATUS_REQUEST_ERROR ->
             {
                 statusText.set("重试")
+                status.set(3)
             }
             TASK_STATUS_STORAGE_ERROR ->
             {
                 statusText.set("重试")
+                status.set(3)
             }
         }
     }
@@ -78,39 +90,62 @@ class DownloadViewModel(private val downloadId: String, private val flag: Int = 
     override fun onConnecting(downloadTask: DownloadTask?)
     {
         statusText.set("连接中")
+        LogUtils.d(downloadTask)
     }
 
     override fun onStart(downloadTask: DownloadTask)
     {
-
         val percent =
             getPercent(downloadTask.taskEntity.completedSize, downloadTask.taskEntity.totalSize)
         LogUtils.d("下载进度 $percent")
         progress.set(percent.toInt())
         statusText.set("暂停")
-
+        status.set(1)
     }
 
     override fun onPause(downloadTask: DownloadTask?)
     {
         statusText.set("继续")
+        status.set(2)
     }
 
     override fun onCancel(downloadTask: DownloadTask?)
     {
         progress.set(0)
+        status.set(0)
     }
 
     override fun onFinish(downloadTask: DownloadTask?)
     {
+        LogUtils.d(downloadTask)
         progress.set(0)
-        DownloadManager.getInstance().cancelTask(downloadTask)
-        if (flag == 0)
+        status.set(0)
+//        DownloadManager.getInstance().cancelTask(downloadTask)
+        val realm = Realm.getInstance(songsConfig)
+        when (flag)
         {
-            val realm = Realm.getInstance(songsConfig)
-            realm.executeTransaction { r ->
-                r.where<Song>().equalTo("id", downloadId).findFirst()?.let {
-                    it.exist = true
+            0 ->
+            {
+                realm.executeTransaction { r ->
+                    r.where<Song>().equalTo("id", downloadId).findFirst()?.let {
+                        it.exist = true
+                    }
+                }
+            }
+            2 ->
+            {
+                realm.executeTransaction { r ->
+                    r.where<ReadBgm>().equalTo("id", downloadId).findFirst()?.let {
+                        it.fileExist = true
+                    }
+                }
+            }
+            3 ->
+            {
+                realm.executeTransaction { r ->
+                    r.where<DzXueXi>().equalTo("id", downloadId).findFirst()?.let {
+                        it.exist = true
+                    }
                 }
             }
         }
@@ -129,5 +164,10 @@ class DownloadViewModel(private val downloadId: String, private val flag: Int = 
             return df1.format(fen)
         }
         return "0"
+    }
+
+    fun downloadBgm(bgm: ReadBgm)
+    {
+
     }
 }

@@ -51,9 +51,9 @@ class LrcUtils {
             return null;
         }
 
-        File mainLrcFile = lrcFiles[0];
-        File secondLrcFile = lrcFiles[1];
-        List<LrcEntry> mainEntryList = parseLrc(mainLrcFile);
+        File                          mainLrcFile     = lrcFiles[0];
+        File                          secondLrcFile   = lrcFiles[1];
+        List<LrcEntry> mainEntryList   = parseLrc(mainLrcFile);
         List<LrcEntry> secondEntryList = parseLrc(secondLrcFile);
 
         if (mainEntryList != null && secondEntryList != null) {
@@ -103,9 +103,9 @@ class LrcUtils {
             return null;
         }
 
-        String mainLrcText = lrcTexts[0];
-        String secondLrcText = lrcTexts[1];
-        List<LrcEntry> mainEntryList = parseLrc(mainLrcText);
+        String                        mainLrcText     = lrcTexts[0];
+        String                        secondLrcText   = lrcTexts[1];
+        List<LrcEntry> mainEntryList   = parseLrc(mainLrcText);
         List<LrcEntry> secondEntryList = parseLrc(secondLrcText);
 
         if (mainEntryList != null && secondEntryList != null) {
@@ -133,7 +133,7 @@ class LrcUtils {
         }
 
         List<LrcEntry> entryList = new ArrayList<>();
-        String[] array = lrcText.split("\\n");
+        String[]                      array     = lrcText.split("\\n");
         for (String line : array) {
             List<LrcEntry> list = parseLine(line);
             if (list != null && !list.isEmpty()) {
@@ -190,7 +190,7 @@ class LrcUtils {
         }
 
         String times = lineMatcher.group(1);
-        String text = lineMatcher.group(3);
+        String                        text      = lineMatcher.group(3);
         List<LrcEntry> entryList = new ArrayList<>();
 
         // [00:17.65]

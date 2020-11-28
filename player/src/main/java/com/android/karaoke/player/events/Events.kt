@@ -2,10 +2,7 @@ package com.android.karaoke.player.events
 
 import android.view.Display
 import android.view.SurfaceHolder
-import com.android.karaoke.common.models.DzXueXi
-import com.android.karaoke.common.models.ReadBgm
-import com.android.karaoke.common.models.ReadItem
-import com.android.karaoke.common.models.Record
+import com.android.karaoke.common.models.*
 import com.android.karaoke.player.Accompany
 import java.time.Duration
 
@@ -37,6 +34,12 @@ class BgmPlaying(val bgm: ReadBgm)
 class ChangeBgmEvent(val bgm: ReadBgm)
 
 class PlayRecordEvent(val record: Record)
+
+class PlaySongRecordEvent(val songRecord: SongRecord)
+
+class StopPlaySongRecordEvent(val songRecord: SongRecord)
+
+class SongRecordPlaying(val songRecord: SongRecord)
 
 class StopAuditionEvent()
 

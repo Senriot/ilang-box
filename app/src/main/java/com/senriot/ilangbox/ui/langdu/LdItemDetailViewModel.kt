@@ -31,7 +31,7 @@ class LdItemDetailViewModel : AbstractViewModel()
     {
         val i = item.get()
         Realm.getDefaultInstance().executeTransaction {
-            i?.bg_music = event.bgm.id
+            i?.bgMusic = event.bgm
         }
     }
 

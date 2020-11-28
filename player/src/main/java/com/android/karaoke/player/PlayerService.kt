@@ -1,5 +1,6 @@
 package com.android.karaoke.player
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -9,8 +10,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
+import android.os.Environment
 import android.os.IBinder
 import android.os.SystemClock
+import android.util.Base64
 import android.view.*
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.graphics.drawable.DrawableCompat
@@ -37,6 +40,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.lang.Exception
+import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -51,7 +55,8 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private var mWindowManager: WindowManager? = null
     private var mainDisplay: SurfaceHolder? = null
-    private var userData: UserData? = null
+
+    //    private var userData: UserData? = null
     private val mTrackAudioIndex = Vector<Int>()
     private var trackNum = 0
     private var currentTrack: String? = null
@@ -64,11 +69,13 @@ class PlayerService : Service(), PresentationHelper.Listener
                 if (new == Accompany.YC)
                 {
                     mPlayer?.selectTrack(1)
-                } else
+                }
+                else
                 {
                     mPlayer?.selectTrack(2)
                 }
-            } else
+            }
+            else
             {
                 mPlayer?.setAudioChannel(if (new == Accompany.BC) 2 else 1)
             }
@@ -77,56 +84,55 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var audioRecorder: AudioRecorder? = null
     private var mBinding: VideoPresentationBinding? = null
 
+
     var readItem: ReadItem by Delegates.observable(ReadItem(), { _, old, new ->
         if (new != old && new.id.isNotEmpty())
         {
             displayType.set(1)
-            mBinding?.lrcView?.initLrcData()
+//            mBinding?.lrcView?.loadLrc()
             if (!new.lyric.isNullOrBlank())
             {
-                val s = LyricsReader()
-                s.loadLrc(File(new.lyric))
-                mBinding?.lrcView?.lyricsReader = s
+                val lrc =
+                    Base64.decode(new.lyric, Base64.NO_WRAP).toString(Charset.defaultCharset())
+                mBinding?.lrcView?.loadLrc(lrc)
+//                val s = LyricsReader()
+//                s.loadLrc(
+//                    new.lyric,
+//                    File("${Environment.getDataDirectory().absolutePath}/${new.id}.lrc"),
+//                    new.id + ".lrc"
+//                )
+//                mBinding?.lrcView?.lyricsReader = s
             }
-            if (new.bg_music != null)
-            {
-                realm.where(ReadBgm::class.java).equalTo("id", new.bg_music).findFirst()?.let {
-                    playBgm(it)
-                }
-            }
+            new.bgMusic?.let { playBgm(it) }
         }
     })
-//    private var readItem: ReadItem? = null
-//        set(value)
-//        {
-//            field = value
-//            value?.let {
-//                displayType.set(1)
-//                mBinding?.lrcView?.initLrcData()
-//                if (!it.lyric.isNullOrBlank())
-//                {
-//                    val s = LyricsReader()
-//                    s.loadLrc(File(it.lyric))
-//                    mBinding?.lrcView?.lyricsReader = s
-//                }
-//                if (it.bgm != null)
-//                {
-//                    playBgm(it.bgm)
-//                }
-//            }
-//        }
-    //private var readBgm: ReadBgm? = null
 
     private var dzxxItem by Delegates.observable(DzXueXi(), { _, old, new ->
         if (old != new && new.id.isNotEmpty())
         {
             displayType.set(4)
-            mBinding?.lrcView?.initLrcData()
-            val reader = LyricsReader()
-            reader.loadLrc(File(this.dzContentsPath + "/" + new.content_file))
-            mBinding?.lrcView?.lyricsReader = reader
+            val lrc =
+                Base64.decode(new.subtitle, Base64.NO_WRAP).toString(Charset.defaultCharset())
+            mBinding?.lrcView?.loadLrc(lrc)
+//            mBinding?.lrcView?.initLrcData()
+//            val reader = LyricsReader()
+//            reader.loadLrc(
+//                new.subtitle,
+//                File("${Environment.getDataDirectory().absolutePath}/${new.id}.lrc"),
+//                new.id + ".lrc"
+//            )
+//            mBinding?.lrcView?.lyricsReader = reader
             playDz(new)
         }
+    })
+
+    private var curSong by Delegates.observable(Song(), { _, old, new ->
+        audioRecorder?.stop()
+        displayType.set(2)
+        mBinding?.surfaceView?.visibility = View.VISIBLE
+        val path = "file://${new.file_path}${new.file_name}"
+        LogUtils.d("播放 $new")
+        newPlayer(path)
     })
 
     private var mBaseTimer = SystemClock.elapsedRealtime();
@@ -137,32 +143,20 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private var record: Record? = null
 
+    private var songRecord: SongRecord? = null
+    private var curSongRecord: SongRecord? = null
+
     private var timer: Disposable? = null
-
-    /**
-     * 党政音频路径
-     */
-    private val dzAudiosPath by lazy {
-        Dict().queryFirst {
-            equalTo("key", "dzxx_audio_path")
-        }!!.value
-    }
-
-    /**
-     * 党政内容路径
-     */
-    private val dzContentsPath by lazy {
-        Dict().queryFirst {
-            equalTo("key", "dzxx_content_path")
-        }!!.value
-    }
 
     fun initTimer(): Disposable?
     {
-        timer = Observable.interval(1, TimeUnit.SECONDS)
+        LogUtils.d("初始化计时器")
+        timer = Observable.interval(300, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .subscribe {
+
                 mPlayer?.let {
+                    mBinding?.lrcView?.updateTime(it.currentPosition.toLong())
                     EventBus.getDefault()
                         .post(CurrentPositionEvent(it.duration, it.currentPosition))
                 }
@@ -197,6 +191,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean
         {
+            LogUtils.e("播放错误 $what $extra")
             return false
         }
 
@@ -208,17 +203,22 @@ class PlayerService : Service(), PresentationHelper.Listener
                 displayType.get() == 1 ->
                 {
                     audioRecorder?.stop()
-                    mBinding?.lrcView?.pause()
+//                    mBinding?.lrcView?.pause()
                     EventBus.getDefault().post(ReadingStop(record))
                     readItem = ReadItem()
                 }
                 displayType.get() == 3 ->
                 {
-                    mBinding?.lrcView?.pause()
+//                    mBinding?.lrcView?.pause()
                 }
                 displayType.get() == 4 ->
                 {
-                    mBinding?.lrcView?.pause()
+//                    mBinding?.lrcView?.pause()
+                }
+                displayType.get() == 5 ->
+                {
+                    curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
+                    curSongRecord = null
                 }
                 else                   ->
                 {
@@ -227,17 +227,19 @@ class PlayerService : Service(), PresentationHelper.Listener
                         EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
 //                    audioRecorder?.stop()
 //                    audioRecorder = null
-                        userData?.let { data ->
-                            if (data.currentPlay != null)
-                            {
-                                realm.executeTransaction {
-                                    data.history.add(0, data.currentPlay)
-                                    data.currentPlay = null
-                                }
+                        val data = UserDataHelper.userData
+                        if (data.currentPlay != null)
+                        {
+                            realm.executeTransaction {
+                                it.copyToRealmOrUpdate(songRecord)
+//                                    data.history.add(0, data.currentPlay)
+                                songRecord = null
+                                data.currentPlay = null
                             }
                         }
                         playNext()
-                    } catch (e: Exception)
+                    }
+                    catch (e: Exception)
                     {
                         e.printStackTrace()
                     }
@@ -252,46 +254,52 @@ class PlayerService : Service(), PresentationHelper.Listener
 
         override fun onPrepared(mp: MediaPlayer?)
         {
+            if (displayType.get() != 5)
+            {
+                curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
+                curSongRecord = null
+            }
             when
             {
                 displayType.get() == 1 ->
                 {
                     DspHelper.sendHex("484D00020200010501AA")
                     startLdReading(readItem)
-                    mBinding?.lrcView?.play(0)
+//                    mBinding?.lrcView?.play(0)
                     initTimer()
                     mp?.start()
                 }
                 displayType.get() == 3 ->
                 {
-                    mBinding?.lrcView?.play(0)
+//                    mBinding?.lrcView?.play(0)
                     initTimer()
                     mp?.start()
                 }
                 displayType.get() == 4 ->
                 {
-                    mBinding?.lrcView?.play(0)
+//                    mBinding?.lrcView?.play(0)
                     initTimer()
                     mp?.start()
                 }
+                displayType.get() == 5 ->
+                {
+//                    mBinding?.lrcView?.play(0)
+                    initTimer()
+                    mp?.start()
+                    curSongRecord?.let { i -> realm.executeTransaction { i.playing = true } }
+                }
                 else                   ->
                 {
-
-//                    mTrackAudioIndex.clear()
-//                    mp?.trackInfo?.filter { it.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO }
-//                        ?.forEachIndexed { index, _ ->
-//                            mTrackAudioIndex.add(index)
-//                            trackNum += 1
-//                        }
-//                    currentTrack = userData?.currentPlay?.track
                     try
                     {
-
+                        mBinding?.lrcView?.loadLrc("")
+                        startRecordSong(curSong)
                         accompany = Accompany.BC
                         EventBus.getDefault().post(AccompanyChangedEvent(accompany))
                         DspHelper.sendHex("484D00020200010307AA")
                         mp?.start()
-                    } catch (e: Exception)
+                    }
+                    catch (e: Exception)
                     {
                         e.printStackTrace()
                     }
@@ -336,7 +344,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         super.onCreate()
         presentationHelper.onResume()
-        UserDataHelper.initUserData("Guest")
+//        UserDataHelper.initUserData("Guest")
 //        var intent = Intent()
 //        intent.action = "com.android.audio_mode"
 //        intent.putExtra("audio_mode", 0)
@@ -352,7 +360,8 @@ class PlayerService : Service(), PresentationHelper.Listener
             {
                 DspHelper.open()
                 DspHelper.sendHex("484D0001000004AA")
-            } catch (e: Exception)
+            }
+            catch (e: Exception)
             {
                 e.printStackTrace()
             }
@@ -381,10 +390,9 @@ class PlayerService : Service(), PresentationHelper.Listener
         val presoContext = createPresoContext(display)
         mWindowManager = presoContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mBinding = VideoPresentationBinding.inflate(LayoutInflater.from(presoContext))
-        val typeface = Typeface.createFromAsset(resources.assets, "font/xhei.ttf")
+//        val typeface = Typeface.createFromAsset(resources.assets, "font/xhei.ttf")
         mBinding!!.lrcView.apply {
-            setTypeFace(typeface)
-            setFontSize(30.0f)
+            setLabel("")
         }
         mBinding!!.service = this
         mBinding!!.surfaceView.holder.addCallback(object : SurfaceHolder.Callback
@@ -415,64 +423,24 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private fun playNext()
     {
-        userData?.let { data ->
-            data.currentPlay?.let { s ->
-                realm.executeTransaction {
-                    data.history.add(0, s)
-                    data.currentPlay = null
-                }
-            }
-            if (data.playlist.isNotEmpty())
-            {
-                realm.beginTransaction()
-                val item = data.playlist.removeAt(0)
-                data.currentPlay = item
-                realm.commitTransaction()
-                playSong(item)
-                currentPlay.set(item)
+        val data = UserDataHelper.userData
+
+        if (data.currentPlay != null)
+        {
+            realm.executeTransaction {
+                it.copyToRealmOrUpdate(songRecord)
+                data.currentPlay = null
             }
         }
-    }
-
-    private fun playSong(song: Song)
-    {
-        mBinding?.lrcView?.pause()
-        mBinding?.lrcView?.initLrcData()
-        audioRecorder?.stop()
-        displayType.set(2)
-        mBinding?.surfaceView?.visibility = View.VISIBLE
-        song.file_path?.let { newPlayer(it) }
-        try
+        if (data.playlist.isNotEmpty())
         {
-            mPlayer?.prepareAsync()
-        } catch (e: Exception)
-        {
-            e.printStackTrace()
+            realm.beginTransaction()
+            val item = data.playlist.removeAt(0)
+            data.currentPlay = item
+            realm.commitTransaction()
+            curSong = item
+            currentPlay.set(item)
         }
-
-//        mainDisplay?.let {
-//            mPlayer?.setSurface(it.surface)
-//            mPlayer?.setDataSource("/mnt/usb_storage/SATA/C/songs/" + song.file_name)
-//            mPlayer?.prepareAsync()
-
-//            if (!song.filePath.isNullOrEmpty())
-//            {
-//                if (File(song.filePath!!).exists())
-//                {
-//                    mainDisplay?.let { mPlayer.setDisplay(it) }
-//                    mPlayer.setDataSource(song.filePath)
-//                    mPlayer.prepareAsync()
-//                }
-//                else
-//                {
-//                    playNext()
-//                }
-//            }
-//            else
-//            {
-//                playNext()
-//            }
-//        }
     }
 
     /**
@@ -483,9 +451,16 @@ class PlayerService : Service(), PresentationHelper.Listener
         bgm?.let {
             mBinding?.surfaceView?.visibility = View.INVISIBLE
             audioRecorder?.stop()
-            it.filePath?.let { newPlayer(it) }
-            mPlayer?.prepareAsync()
-            realm.executeTransaction { userData?.currentPlay = null }
+
+            if (!it.filePath.isNullOrBlank() && File(it.filePath).exists())
+            {
+                newPlayer("file://${bgm.filePath}${bgm.file_name}")
+            }
+            else
+            {
+                it.url?.let { newPlayer(it) }
+            }
+            realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
         }
     }
 
@@ -495,11 +470,12 @@ class PlayerService : Service(), PresentationHelper.Listener
      */
     private fun playDz(item: DzXueXi)
     {
+        LogUtils.d(item)
         mBinding?.surfaceView?.visibility = View.INVISIBLE
         audioRecorder?.stop()
-        newPlayer(dzAudiosPath + "/" + item.audio_file)
-        mPlayer?.prepareAsync()
-        realm.executeTransaction { userData?.currentPlay = null }
+        newPlayer("file://${item.audioPath}${item.audioFileName}")
+//        mPlayer?.prepareAsync()
+        realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
     }
 
     private fun newPlayer(path: String)
@@ -511,7 +487,7 @@ class PlayerService : Service(), PresentationHelper.Listener
             mPlayer?.stop()
             mPlayer?.release()
         }
-        mPlayer = MediaPlayer.create(this, Uri.parse("file://$path"), mainDisplay)
+        mPlayer = MediaPlayer.create(this, Uri.parse(path), mainDisplay)
         mPlayer?.apply {
             setOnErrorListener(mediaPlayerListeners)
             setOnCompletionListener(mediaPlayerListeners)
@@ -557,7 +533,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun playlistChanged(event: PlaylistChangedEvent)
     {
-        if (event.list.size == 1 && userData?.currentPlay == null && readItem.id.isEmpty())
+        if (event.list.size == 1 && UserDataHelper.userData.currentPlay == null && readItem.id.isEmpty())
         {
             playNext()
         }
@@ -566,7 +542,6 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun onProfileDataInit(event: ProfileDataInitEvent)
     {
-        userData = event.data
         mainDisplay?.let {
             playNext()
         }
@@ -588,7 +563,8 @@ class PlayerService : Service(), PresentationHelper.Listener
                 if (event.data == 0)
                 {
                     DspHelper.sendHex("484D000502002D032CAA")
-                } else
+                }
+                else
                 {
                     DspHelper.sendHex("484D000502002B032AAA")
                 }
@@ -601,15 +577,16 @@ class PlayerService : Service(), PresentationHelper.Listener
                     mPlayer?.pause()
                     if (displayType.get() != 2)
                     {
-                        mBinding?.lrcView?.pause()
+//                        mBinding?.lrcView?.pause()
                     }
 //                    audioRecorder?.pause()
-                } else
+                }
+                else
                 {
                     mPlayer?.start()
                     if (displayType.get() != 2)
                     {
-                        mBinding?.lrcView?.resume()
+//                        mBinding?.lrcView?.resume()
                     }
 //                    audioRecorder?.resume()
                 }
@@ -621,12 +598,12 @@ class PlayerService : Service(), PresentationHelper.Listener
             }
             PlayEventType.REPLAY ->
             {
-                userData?.currentPlay?.let { playSong(it) }
+                UserDataHelper.userData.currentPlay?.let { curSong = it }
             }
 
             PlayEventType.START_RECORD ->
             {
-                userData?.currentPlay?.let {
+                UserDataHelper.userData.currentPlay?.let {
                     val file = File("/sdcard/AudioBank/AudioRecords")
                     if (!file.exists())
                         file.mkdirs()
@@ -643,7 +620,7 @@ class PlayerService : Service(), PresentationHelper.Listener
                         AudioRecorder.Format.MP3,
                         File(file.absolutePath + "/" + fileName)
                     )
-                    playSong(it)
+                    curSong = it
                     audioRecorder?.start()
                 }
 
@@ -687,7 +664,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     private fun startLdReading(item: ReadItem?)
     {
         if (item == null) return
-        val dir = File("/sdcard/ilang-box/records")
+        val dir = File("/mnt/usb_storage/SATA/C/langdu/records")
         if (!dir.exists())
             dir.mkdirs()
         uuid = UUID.randomUUID().toString()
@@ -706,7 +683,31 @@ class PlayerService : Service(), PresentationHelper.Listener
             readItem = item
             file = f
         }
-        record!!.save()
+        Realm.getInstance(userConfig).executeTransaction {
+            val i = it.copyToRealmOrUpdate(record)
+            UserDataHelper.userData.records.add(i)
+        }
+        audioRecorder?.start()
+    }
+
+    private fun startRecordSong(song: Song)
+    {
+        val dir = File("/mnt/usb_storage/SATA/C/langdu/songs/records")
+        if (!dir.exists())
+            dir.mkdirs()
+        uuid = UUID.randomUUID().toString()
+        val f = dir.absolutePath + "/" + uuid + ".mp3"
+        if (audioRecorder != null)
+        {
+            audioRecorder?.stop()
+            audioRecorder = null
+        }
+        audioRecorder = AudioRecorder(
+            AudioRecorder.Format.MP3,
+            File(f)
+        )
+        songRecord = SongRecord(id = uuid, song, UserDataHelper.userData.id, f)
+//        Realm.getInstance(userConfig).executeTransaction { it.copyToRealmOrUpdate(songRecord) }
         audioRecorder?.start()
     }
 
@@ -715,7 +716,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         mPlayer?.stop()
         audioRecorder?.stop()
-        mBinding?.lrcView?.pause()
+//        mBinding?.lrcView?.pause()
         EventBus.getDefault().post(ReadingStop(record))
         timer?.dispose()
         readItem = ReadItem()
@@ -727,20 +728,26 @@ class PlayerService : Service(), PresentationHelper.Listener
     fun playRecord(event: PlayRecordEvent)
     {
         displayType.set(3)
-        mBinding?.lrcView?.initLrcData()
         audioRecorder?.stop()
         timer?.dispose()
         //初始化歌词
         if (!event.record.readItem?.lyric.isNullOrBlank())
         {
-            val s = LyricsReader()
-            s.loadLrc(File(event.record.readItem!!.lyric))
-            mBinding?.lrcView?.lyricsReader = s
+            val lrc = Base64.decode(event.record.readItem?.lyric, Base64.NO_WRAP)
+                .toString(Charset.defaultCharset())
+            mBinding?.lrcView?.loadLrc(lrc)
+//            val s = LyricsReader()
+//            s.loadLrc(
+//                event.record.readItem!!.lyric,
+//                File("${Environment.getDataDirectory().absolutePath}/${event.record.readItem!!.id}.lrc"),
+//                event.record.readItem!!.id + ".lrc"
+//            )
+//            mBinding?.lrcView?.lyricsReader = s
         }
         mBinding?.surfaceView?.visibility = View.INVISIBLE
         newPlayer(event.record.file)
-        mPlayer?.prepareAsync()
-        realm.executeTransaction { userData?.currentPlay = null }
+//        mPlayer?.prepareAsync()
+        realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
     }
 
     /**
@@ -750,7 +757,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     fun stopAudition(event: StopAuditionEvent)
     {
         mPlayer?.stop()
-        mBinding?.lrcView?.pause()
+//        mBinding?.lrcView?.pause()
         timer?.dispose()
     }
 
@@ -764,5 +771,36 @@ class PlayerService : Service(), PresentationHelper.Listener
         this.dzxxItem = event.item
     }
 
+    /**
+     * 播放歌曲录音
+     */
+    @Subscribe
+    fun startPlaySongRecord(event: PlaySongRecordEvent)
+    {
+        displayType.set(5)
+        audioRecorder?.stop()
+        timer?.dispose()
+        mBinding?.surfaceView?.visibility = View.INVISIBLE
+        curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
+        curSongRecord = event.songRecord
+        newPlayer("file://${event.songRecord.filePath}")
+//        mPlayer?.prepareAsync()
+        realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
+    }
 
+    /**
+     * 停止试听歌曲录音
+     */
+    @Subscribe
+    fun stopPlaySongRecord(event: StopPlaySongRecordEvent)
+    {
+        realm.executeTransaction { event.songRecord.playing = false }
+        mPlayer?.stop()
+        timer?.dispose()
+    }
+
+    companion object
+    {
+        const val DISPLAY_TYPE_SONG = 0
+    }
 }

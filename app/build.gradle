@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -13,7 +12,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.4"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -59,6 +58,12 @@ android {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
+
+    aaptOptions {
+        // 使用小于0x80的packageId需要添加 '--allow-reserved-package-id'
+        // additionalParameters '--allow-reserved-package-id', '--package-id', '0x72',
+        additionalParameters '--package-id', '0x80'
+    }
 }
 
 dependencies {
@@ -71,7 +76,7 @@ dependencies {
     implementation(project(":player"))
     implementation 'tp.xmaihh:serialport:2.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "com.arthurivanets.mvvm:mvvm-core:1.4.1"
@@ -104,7 +109,6 @@ dependencies {
     implementation 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
     implementation 'com.daasuu:FPSAnimator:0.2.4.0'
     implementation 'io.alterac.blurkit:blurkit:1.1.0'
-    implementation 'io.supercharge:rxsnappy:0.4.0'
     // Material Dialog Library
     implementation 'com.shreyaspatil:MaterialDialog:2.1'
 
@@ -117,4 +121,9 @@ dependencies {
     implementation 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1'
     implementation('com.github.pwittchen:reactivenetwork-rx2:3.0.8')
     implementation 'com.github.JDevZone:FillProgressLayout:0.0.6'
+    implementation 'com.dsiner.lib:common:1.0.0'
+    implementation 'com.github.brkckr:CircularProgressBar:1.0.1'
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
 }

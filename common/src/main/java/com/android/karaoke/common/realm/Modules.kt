@@ -14,7 +14,7 @@ import java.io.File
 //class MediaModule
 
 
-@RealmModule(classes = [UserData::class, Record::class, Song::class, Artist::class, ReadItem::class, ReadBgm::class])
+@RealmModule(classes = [UserData::class, Record::class, Song::class, Artist::class, ReadItem::class, ReadBgm::class, SongRecord::class])
 class UserModule
 
 
@@ -35,16 +35,17 @@ class SongsModule
 
 @SuppressLint("SdCardPath")
 val userConfig: RealmConfiguration = RealmConfiguration.Builder().modules(UserModule())
-    .directory(File("/sdcard/ilang-box"))
+    .directory(File("/sdcard/ilang-box/realm"))
     .name("user.db")
     .allowWritesOnUiThread(true)
     .allowQueriesOnUiThread(true)
     .build()
 
 val songsConfig: RealmConfiguration = RealmConfiguration.Builder().modules(SongsModule())
-    .directory(File(Environment.getExternalStorageDirectory().absolutePath + "/ilang-box"))
+    .directory(File(Environment.getExternalStorageDirectory().absolutePath + "/ilang-box/realm"))
     .allowWritesOnUiThread(true)
     .allowQueriesOnUiThread(true)
+    .encryptionKey("NjjmeL3YRYgg5ChMhDkj1jOiToFx47X8OSqfJ9BawBamdhIE1ktlcuOdL0Ip56UJ".toByteArray())
     .name("db.realm")
     .build()
 //@SuppressLint("SdCardPath")
