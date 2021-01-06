@@ -407,7 +407,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@{String.valueOf(vm.charArray[0])}"
-                        android:onClick="@{(view) -> vm.hwSelected(view)}"
+                        android:onClick="@{(v) -> vm.hwSelected(v)}"
                         android:textSize="24sp"
                         tools:text="啊" />
 
@@ -418,7 +418,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@{String.valueOf(vm.charArray[1])}"
-                        android:onClick="@{(view) -> vm.hwSelected(view)}"
+                        android:onClick="@{(v) -> vm.hwSelected(v)}"
                         android:textSize="24sp"
                         tools:text="啊" />
 
@@ -429,7 +429,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@{String.valueOf(vm.charArray[2])}"
-                        android:onClick="@{(view) -> vm.hwSelected(view)}"
+                        android:onClick="@{(v) -> vm.hwSelected(v)}"
                         android:textSize="24sp"
                         tools:text="啊" />
 
@@ -440,7 +440,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@{String.valueOf(vm.charArray[3])}"
-                        android:onClick="@{(view) -> vm.hwSelected(view)}"
+                        android:onClick="@{(v) -> vm.hwSelected(v)}"
                         android:textSize="24sp"
                         tools:text="啊" />
 
@@ -451,7 +451,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@{String.valueOf(vm.charArray[4])}"
-                        android:onClick="@{(view) -> vm.hwSelected(view)}"
+                        android:onClick="@{(v) -> vm.hwSelected(v)}"
                         android:textSize="24sp"
                         tools:text="啊" />
 

@@ -21,12 +21,16 @@ open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdap
     var tolPage: Int = 0
     var currentPage: Int = 0
 
+    init
+    {
+        this.setHasStableIds(true)
+    }
+
     constructor(items: OrderedRealmCollection<T>, config: BindingConfig, row: Int, column: Int) : super(items, true,true)
     {
         this.config = config
         this.row = row
         this.column = column
-        setHasStableIds(true)
         if (items.isNotEmpty())
         {
             val size = items.size
@@ -37,10 +41,14 @@ open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdap
             {
                 tolPage += 1
             }
-            else
+            if (size < pageCount)
             {
                 tolPage = 1
             }
+//            else if (tolPage )
+//            {
+//                tolPage = 1
+//            }
         }
     }
 
@@ -56,7 +64,7 @@ open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdap
             {
                 tolPage += 1
             }
-            else
+            if (size < pageCount)
             {
                 tolPage = 1
             }
@@ -171,4 +179,5 @@ open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdap
         transformIndex += curPageIndex * pageCount
         return transformIndex
     }
+
 }

@@ -1,6 +1,5 @@
 package com.senriot.ilangbox.ui.xuexi
 
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,20 +7,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.karaoke.common.models.Category
-import com.android.karaoke.common.models.Dict
 import com.android.karaoke.common.models.DzXueXi
-import com.android.karaoke.common.mvvm.BindingConfig
 import com.android.karaoke.player.events.StartDzxxEvent
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
-import com.senriot.ilangbox.adapter.LdBgmAdapter
-import com.senriot.ilangbox.adapter.RealmAdapter
 import com.senriot.ilangbox.adapter.RealmRecyclerViewAdapter
-import com.senriot.ilangbox.adapter.RecyclerViewRealmAdapter
 import com.senriot.ilangbox.databinding.DzxxItemBinding
-import com.senriot.ilangbox.databinding.LdBgmItemBinding
 import com.senriot.ilangbox.model.DownloadViewModel
 import com.yuan.library.dmanager.download.DownloadManager
 import com.yuan.library.dmanager.download.DownloadTask
@@ -42,7 +35,7 @@ class XueXiViewModel : AbstractViewModel()
 
     val adapter by lazy {
         val items =
-            Realm.getDefaultInstance().where<DzXueXi>()
+            Realm.getDefaultInstance().where<DzXueXi>().equalTo("type", "1277623003445903361")
                 .findAll()
 //        RecyclerViewRealmAdapter(items, BindingConfig(R.layout.dzxx_item, mapOf(Pair(BR.vm, this))))
         object : RealmRecyclerViewAdapter<DzXueXi, DzItemViewHolder>(items, true)
@@ -68,19 +61,21 @@ class XueXiViewModel : AbstractViewModel()
                 val item = getItem(position)!!
                 holder.binding.setVariable(BR.item, item)
                 var itemTask = DownloadManager.getInstance().getTask(item.id)
+                val file = File(item.audioPath + item.audioFileName)
                 holder.binding.btnDownload.visibility =
-                    if (item.exist == true) View.GONE else View.VISIBLE
+                    if (file.exists()) View.GONE else View.VISIBLE
                 if (itemTask != null)
                 {
                     val dvm = DownloadViewModel(item.id, 3)
                     holder.binding.setVariable(BR.downloadVm, dvm)
-                } else
+                }
+                else
                 {
                     holder.binding.setVariable(BR.downloadVm, null)
                 }
                 holder.binding.root.setOnClickListener {
                     LogUtils.d(it)
-                    if (item.exist == true)
+                    if (file.exists())
                         EventBus.getDefault().post(StartDzxxEvent(item))
                 }
                 holder.binding.btnDownload.setOnClickListener {
@@ -95,13 +90,14 @@ class XueXiViewModel : AbstractViewModel()
                             TaskEntity.Builder().downloadId(item.id)
                                 .filePath(item.audioPath)
                                 .fileName(item.audioFileName)
-                                .url("http://aogevod.com:9000/group1/ilang/ld/bgm/吕秀龄-逆伦.mp3")
+                                .url(item.audioUrl)
                                 .build()
                         )
                         downloadManager.addTask(itemTask)
                         val vm = DownloadViewModel(item.id, 3)
                         holder.binding.setVariable(BR.downloadVm, vm)
-                    } else
+                    }
+                    else
                     {
                         val taskEntity = itemTask.taskEntity
                         when (taskEntity.taskStatus)
@@ -155,13 +151,18 @@ class XueXiViewModel : AbstractViewModel()
 
     fun startPlay(view: View, item: DzXueXi)
     {
+        val file = File(item.audioPath + item.audioFileName)
+        if (file.exists())
+        {
+            EventBus.getDefault().post(StartDzxxEvent(item))
+        }
 //        view.findNavController().navigate(
 //            XueXiFragmentDirections.actionXueXiFragmentToDzContentFragment(
 //                item,
 //                if (selectedDict.id <= 0) 123L else selectedDict.id
 //            )
 //        )
-        if (item.exist == true)
-            EventBus.getDefault().post(StartDzxxEvent(item))
+//        if (item.exist == true)
+//            EventBus.getDefault().post(StartDzxxEvent(item))
     }
 }

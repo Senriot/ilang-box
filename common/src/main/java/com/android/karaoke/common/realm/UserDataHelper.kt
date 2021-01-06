@@ -1,5 +1,6 @@
 package com.android.karaoke.common.realm
 
+import android.view.View
 import com.android.karaoke.common.events.FavoritesChangedEvent
 import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.events.ProfileDataInitEvent
@@ -17,43 +18,64 @@ object UserDataHelper
 {
     private val realm = Realm.getInstance(userConfig)
 
+    var userId = "guest"
 
-    lateinit var userData: UserData
+//    lateinit var userData: UserData
 
-    @JvmStatic
-    fun initUserData(userId: String?)
-    {
-        val id = userId ?: "guest"
 
-        var data = realm.where<UserData>().equalTo("id", id).findFirst()
-        if (data == null)
-        {
-            data = UserData(id)
-            realm.executeTransaction {
-                userData = realm.copyToRealmOrUpdate(data)
-            }
-        } else
-        {
-            userData = data
-        }
-        userData.favorites.addChangeListener { t, _ ->
-            LogUtils.i("收藏改变 ${t.size}")
+    val userData by lazy {
+        var data = UserData(userId)
+        realm.executeTransaction {  data = realm.copyToRealmOrUpdate(data) }
+        data.favorites.addChangeListener { t, _ ->
             EventBus.getDefault().post(FavoritesChangedEvent())
         }
-
-        userData.playlist.addChangeListener { t, _ ->
-            LogUtils.i("播放列表改变 ${t.size}")
+        data.playlist.addChangeListener { t, _ ->
             EventBus.getDefault().post(PlaylistChangedEvent(t))
         }
-        userData.let {
-            realm.executeTransaction { _ ->
-                it.history.clear();
-                it.currentPlay = null;
-                it.playlist.clear()
-            }
-            EventBus.getDefault().post(ProfileDataInitEvent(it))
-        }
+        EventBus.getDefault().post(ProfileDataInitEvent(data))
+        data
     }
+
+
+//    @JvmStatic
+//    fun initUserData(uid: String?)
+//    {
+//        this.userId = uid ?: "guest"
+//
+//        var data = realm.where<UserData>().equalTo("id", userId).findFirst()
+//        if (data == null)
+//        {
+//            data = UserData(userId)
+//            realm.executeTransaction {
+//                realm.copyToRealmOrUpdate(data)
+//            }
+//        }
+//        userData = realm.where<UserData>().equalTo("id", userId).findFirst()!!
+//        userData.favorites.addChangeListener { t, _ ->
+//            LogUtils.i("收藏改变 ${t.size}")
+//            EventBus.getDefault().post(FavoritesChangedEvent())
+//        }
+//
+//        userData.playlist.addChangeListener { t, _ ->
+//            LogUtils.i("播放列表改变 ${t.size}")
+//            EventBus.getDefault().post(PlaylistChangedEvent(t))
+//        }
+//        userData.let {
+//            realm.executeTransaction { _ ->
+//                try
+//                {
+//                    it.history.clear();
+//                    it.currentPlay = null;
+//                    it.playlist.clear()
+//                }
+//                catch (e: Exception)
+//                {
+//                    e.printStackTrace()
+//                }
+//            }
+//            EventBus.getDefault().post(ProfileDataInitEvent(it))
+//        }
+//    }
 
     @JvmStatic
     fun setFavorites(song: Song)
@@ -63,7 +85,8 @@ object UserDataHelper
             if (userData.favorites.contains(s))
             {
                 userData.favorites.remove(s)
-            } else
+            }
+            else
                 userData.favorites.add(s)
         }
     }
@@ -78,7 +101,8 @@ object UserDataHelper
     fun addPlaylist(song: Song)
     {
         LogUtils.e("选中歌曲 $song")
-        if (song.exist == true)
+        val file = File(song.file_path + song.file_name)
+        if (file.exists())
         {
             realm.executeTransaction {
                 val s = it.copyToRealmOrUpdate(song)
@@ -98,7 +122,8 @@ object UserDataHelper
             if (userData.playlist.contains(s))
             {
                 userData.playlist.remove(s)
-            } else
+            }
+            else
             {
                 userData.playlist.add(s)
             }
@@ -148,9 +173,27 @@ object UserDataHelper
     }
 
     @JvmStatic
-    fun removeSongRecord(item: SongRecord)
+    fun removeSongRecord(v: View, item: SongRecord)
     {
-        realm.executeTransaction { item.deleteFromRealm() }
+        try
+        {
+            realm.executeTransaction {
+                try
+                {
+                    item.deleteFromRealm()
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+        }
+
     }
 
     @JvmStatic
@@ -163,7 +206,8 @@ object UserDataHelper
                     params.playlist.remove(item)
                     params.playlist.add(0, item)
                 }
-            } else
+            }
+            else
             {
                 realm.executeTransaction {
                     it.copyToRealmOrUpdate(item)
@@ -177,5 +221,11 @@ object UserDataHelper
     fun hasUpload(item: Record): Boolean
     {
         return userData.id != "Guest" && !item.updated
+    }
+
+    @JvmStatic
+    fun delRecord(item: Record)
+    {
+        realm.executeTransaction { userData.records.remove(item) }
     }
 }

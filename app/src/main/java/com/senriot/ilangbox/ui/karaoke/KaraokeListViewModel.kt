@@ -43,16 +43,16 @@ class KaraokeListViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<Song>()
         when (title)
         {
-            "红歌会" -> query.`in`("type_id", arrayOf("120", "48"))
-            "军歌" -> query.equalTo("type_id", "120")
-            "民歌" -> query.equalTo("type_id", "48")
-            "经典永流传" -> query.equalTo("type_id", "44")
-            "抒情" -> query.equalTo("type_id", "121")
+            "红歌会" -> query.`in`("type_id", arrayOf("40", "1296433966084857857"))
+            "军歌" -> query.equalTo("type_id", "40")
+            "民歌" -> query.equalTo("type_id", "36")
+            "经典永流传" -> query.equalTo("type_id", "1335216172127023105")
+            "抒情" -> query.equalTo("type_id", "1335216313290518529")
             else    ->
             {
             }
         }
-        query.findAll()
+        query.sort("hot", Sort.DESCENDING).findAll()
     }
 
     val itemBinding by lazy {
@@ -70,19 +70,26 @@ class KaraokeListViewModel : AbstractViewModel()
         val query = Realm.getDefaultInstance().where<Song>()
         when (title)
         {
-            "红歌会" -> query.`in`("type_id", arrayOf("120", "48"))
-            "军歌" -> query.equalTo("type_id", "120")
-            "民歌" -> query.equalTo("type_id", "48")
-            "经典永流传" -> query.equalTo("type_id", "44")
-            "抒情" -> query.equalTo("type_id", "121")
+            "红歌会" -> query.`in`("type_id", arrayOf("40", "1296433966084857857"))
+            "军歌" -> query.equalTo("type_id", "40")
+            "民歌" -> query.equalTo("type_id", "36")
+            "经典永流传" -> query.equalTo("type_id", "1335216172127023105")
+            "抒情" -> query.equalTo("type_id", "1335216313290518529")
             else    ->
             {
             }
         }
-        val songs = query.beginGroup().like("name", event.text + "*").or()
-            .like("input_code", event.text + "*")
-            .endGroup()
-            .findAll()
+
+        if (event.text.isNotEmpty())
+        {
+            query.beginGroup().like("name", event.text + "*").or()
+                .like("input_code", event.text + "*")
+                .endGroup()
+                //.sort(arrayOf("word_count", "hot"), arrayOf(Sort.ASCENDING, Sort.DESCENDING))
+//                .findAllAsync()
+        }
+//        val songs = query.sort("word_count").findAllAsync()
+        val songs = query.findAllAsync()
         adapter.updateData(songs)
     }
 }

@@ -87,7 +87,8 @@ class LdContentViewModel : AbstractViewModel()
             if (curSelectedId == item!!.id)
             {
                 binding.root.setBackgroundResource(R.drawable.ic_ld_nav_bg)
-            } else
+            }
+            else
             {
                 binding.root.setBackgroundColor(Color.TRANSPARENT)
             }
@@ -139,12 +140,18 @@ class LdContentViewModel : AbstractViewModel()
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
         val query = Realm.getDefaultInstance().where<ReadItem>()
-        if (curSelectedId != "0")
-        {
-            query.equalTo("category_id", curSelectedId)
-        }
+//        if (curSelectedId != "0")
+//        {
+//            query.equalTo("category_id", curSelectedId)
+//        }
 
-        val items = query.like("name", event.text + "*")
+        val items = query.beginGroup()
+            .like("name", event.text + "*")
+            .or()
+            .like("pinyin", event.text + "*")
+            .or()
+            .like("author", event.text + "*")
+            .endGroup()
             .sort("id").findAll()
         itemsAdapter.updateData(items)
     }

@@ -28,5 +28,6 @@ class ReadListFragment : MvvmFragment<ReadListFragmentBinding, ReadListViewModel
     {
         super.performDataBinding()
         list.layoutManager = LinearLayoutManager(activity)
+        list.adapter = vm.adapter
     }
 }

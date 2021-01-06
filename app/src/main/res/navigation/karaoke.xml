@@ -54,4 +54,12 @@
             android:name="artist"
             app:argType="com.android.karaoke.common.models.Artist" />
     </fragment>
+    <fragment
+        android:id="@+id/soundEffectFragment"
+        android:name="com.senriot.ilangbox.ui.karaoke.SoundEffectFragment"
+        android:label="SoundEffectFragment">
+        <deepLink
+            android:id="@+id/deepLink4"
+            app:uri="https://www.senriot.com/ilang-box/soundEffect" />
+    </fragment>
 </navigation>

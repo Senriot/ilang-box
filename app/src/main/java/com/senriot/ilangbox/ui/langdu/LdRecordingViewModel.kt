@@ -4,8 +4,10 @@ import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.navigation.findNavController
+import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.RecordVO
+import com.android.karaoke.common.api.UploadResult
 import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.models.Record
 import com.android.karaoke.common.realm.UserDataHelper
@@ -13,6 +15,9 @@ import com.android.karaoke.common.realm.userConfig
 import com.android.karaoke.player.events.*
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
+import com.drake.net.Post
+import com.drake.net.utils.scopeNet
+import com.yanzhenjie.kalle.FormBody
 import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -37,15 +42,28 @@ class LdRecordingViewModel : AbstractViewModel()
 
     val item = ObservableField<ReadItem>()
 
-    init
+//    init
+//    {
+//        EventBus.getDefault().register(this)
+//    }
+//
+//    override fun onCleared()
+//    {
+//        super.onCleared()
+//        EventBus.getDefault().unregister(this)
+//    }
+
+    override fun onStart()
     {
+        super.onStart()
         EventBus.getDefault().register(this)
     }
 
-    override fun onCleared()
+    override fun onStop()
     {
-        super.onCleared()
         EventBus.getDefault().unregister(this)
+        super.onStop()
+
     }
 
     @Subscribe
@@ -102,30 +120,60 @@ class LdRecordingViewModel : AbstractViewModel()
     {
         if (UserDataHelper.userData.id != "Guest")
         {
+
+
             record?.let { item ->
-                GlobalScope.launch(Dispatchers.Main) {
-                    val file = File(item.file)
-                    val requestFile: RequestBody =
-                        RequestBody.create(MediaType.parse("application/otcet-stream"), file)
-                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-                    val resp = Api.recordApiService.upload(body).await()
-                    if (resp.success)
+                val file = File(item.file)
+                scopeNet {
+                    val result = Post<String>("http://aogevod.com/group1/upload", absolutePath = true) {
+                        val form = FormBody.newBuilder()
+                            .param("output", "json")
+                            .file("file", file)
+                            .build()
+                        form.onProgress { origin, progress -> LogUtils.i("上传进度 $progress") }
+                        body(form)
+                    }.await()
+                    LogUtils.d("上传结果 $result")
+                    val info = JSON.parseObject(result, UploadResult::class.java)
+                    val recordVO = RecordVO(
+                        openId = UserDataHelper.userData.id,
+                        langduId = item.readItem!!.id,
+                        url = info.url,
+                        recordType = "1"
+                    )
+
+                    val s = Api.recordApiService.add(recordVO).await()
+                    LogUtils.d(s)
+                    if (s.success)
                     {
-                        val recordVO = RecordVO(
-                            openid = UserDataHelper.userData.id,
-                            itemid = item.readItem!!.id,
-                            url = resp.result!!.url,
-                            recordType = "1"
-                        )
-                        val s = Api.recordApiService.add(recordVO).await()
-                        LogUtils.d(s)
-                        if (s.success)
-                        {
-                            Realm.getInstance(userConfig).executeTransaction { item.updated = true }
-                            hasUpload.set(false)
-                        }
+                        Realm.getInstance(userConfig).executeTransaction { item.updated = true }
+                        hasUpload.set(false)
                     }
                 }
+
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    val file = File(item.file)
+//                    val requestFile: RequestBody =
+//                        RequestBody.create(MediaType.parse("application/otcet-stream"), file)
+//                    val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+//                    val resp = Api.recordApiService.upload(body).await()
+//                    if (resp.success)
+//                    {
+//                        val recordVO = RecordVO(
+//                            openId = UserDataHelper.userData.id,
+//                            langduId = item.readItem!!.id,
+//                            url = resp.result!!.url,
+//                            recordType = "1"
+//                        )
+//                        val s = Api.recordApiService.add(recordVO).await()
+//                        LogUtils.d(s)
+//                        if (s.success)
+//                        {
+//                            Realm.getInstance(userConfig).executeTransaction { item.updated = true }
+//                            hasUpload.set(false)
+//                        }
+//                    }
+//                }
             }
         }
 

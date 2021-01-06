@@ -1,10 +1,9 @@
 package com.senriot.ilangbox.adapter
 
-import android.os.Environment
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.karaoke.common.models.ReadBgm
@@ -48,12 +47,15 @@ class LdBgmAdapter(private val items: OrderedRealmCollection<ReadBgm>) :
     {
         val item = getItem(position)!!
         holder.binding.setVariable(BR.item, item)
+        val file = File(item.filePath + item.file_name)
+        holder.binding.btnDownload.visibility = if (file.exists()) View.GONE else View.VISIBLE
         var itemTask = DownloadManager.getInstance().getTask(item.id)
         if (itemTask != null)
         {
             val dvm = DownloadViewModel(item.id, 2)
             holder.binding.setVariable(BR.downloadVm, dvm)
-        } else
+        }
+        else
         {
             holder.binding.setVariable(BR.downloadVm, null)
         }
@@ -69,12 +71,13 @@ class LdBgmAdapter(private val items: OrderedRealmCollection<ReadBgm>) :
                     TaskEntity.Builder().downloadId(item.id)
                         .filePath(item.filePath)
                         .fileName(item.file_name)
-                        .url("http://aogevod.com:9000/group1/ilang/ld/bgm/吕秀龄-逆伦.mp3").build()
+                        .url(item.url).build()
                 )
                 downloadManager.addTask(itemTask)
                 val vm = DownloadViewModel(item.id, 2)
                 holder.binding.setVariable(BR.downloadVm, vm)
-            } else
+            }
+            else
             {
                 val taskEntity = itemTask.taskEntity
                 when (taskEntity.taskStatus)
@@ -95,7 +98,7 @@ class LdBgmAdapter(private val items: OrderedRealmCollection<ReadBgm>) :
         holder.binding.bgmRoot.setOnClickListener {
             LogUtils.d("选中背景音乐")
             LogUtils.d(item)
-            if (item.fileExist == true)
+            if (file.exists())
             {
                 EventBus.getDefault().post(ChangeBgmEvent(item))
                 it.findNavController().popBackStack()

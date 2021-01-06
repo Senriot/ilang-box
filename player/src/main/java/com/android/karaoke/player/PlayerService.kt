@@ -1,22 +1,17 @@
 package com.android.karaoke.player
 
-import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
-import android.graphics.Typeface
-import android.graphics.drawable.BitmapDrawable
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
-import android.os.Environment
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Base64
 import android.view.*
 import androidx.appcompat.view.ContextThemeWrapper
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.android.karaoke.common.events.PlaylistChangedEvent
@@ -28,10 +23,6 @@ import com.android.karaoke.player.databinding.VideoPresentationBinding
 import com.android.karaoke.player.events.*
 import com.android.karaoke.player.recorder.AudioRecorder
 import com.apkfuns.logutils.LogUtils
-import com.vicpin.krealmextensions.query
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
-import com.zlm.hp.lyrics.LyricsReader
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -39,7 +30,6 @@ import io.realm.Realm
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
-import java.lang.Exception
 import java.nio.charset.Charset
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -61,6 +51,23 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var trackNum = 0
     private var currentTrack: String? = null
     private var curAudioIndex: Int = 0
+
+    private var displayType by Delegates.observable(0, { _, oldValue, newValue ->
+        if (oldValue != newValue)
+        {
+            when (newValue)
+            {
+                DISPLAY_TYPE_LANGDU -> DspHelper.sendHex("484D00020200010501AA")
+                DISPLAY_TYPE_SONG   -> DspHelper.sendHex("484D00020200010307AA")
+                else                ->
+                {
+
+                }
+            }
+
+        }
+    })
+
     private var accompany by Delegates.observable(Accompany.Unknown, { _, old, new ->
         getTracks()?.let {
 
@@ -88,20 +95,12 @@ class PlayerService : Service(), PresentationHelper.Listener
     var readItem: ReadItem by Delegates.observable(ReadItem(), { _, old, new ->
         if (new != old && new.id.isNotEmpty())
         {
-            displayType.set(1)
-//            mBinding?.lrcView?.loadLrc()
+            displayType = DISPLAY_TYPE_LANGDU
             if (!new.lyric.isNullOrBlank())
             {
                 val lrc =
                     Base64.decode(new.lyric, Base64.NO_WRAP).toString(Charset.defaultCharset())
                 mBinding?.lrcView?.loadLrc(lrc)
-//                val s = LyricsReader()
-//                s.loadLrc(
-//                    new.lyric,
-//                    File("${Environment.getDataDirectory().absolutePath}/${new.id}.lrc"),
-//                    new.id + ".lrc"
-//                )
-//                mBinding?.lrcView?.lyricsReader = s
             }
             new.bgMusic?.let { playBgm(it) }
         }
@@ -110,34 +109,27 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var dzxxItem by Delegates.observable(DzXueXi(), { _, old, new ->
         if (old != new && new.id.isNotEmpty())
         {
-            displayType.set(4)
+            displayType = DISPLAY_TYPE_DANGZHENG
             val lrc =
                 Base64.decode(new.subtitle, Base64.NO_WRAP).toString(Charset.defaultCharset())
             mBinding?.lrcView?.loadLrc(lrc)
-//            mBinding?.lrcView?.initLrcData()
-//            val reader = LyricsReader()
-//            reader.loadLrc(
-//                new.subtitle,
-//                File("${Environment.getDataDirectory().absolutePath}/${new.id}.lrc"),
-//                new.id + ".lrc"
-//            )
-//            mBinding?.lrcView?.lyricsReader = reader
             playDz(new)
         }
     })
 
     private var curSong by Delegates.observable(Song(), { _, old, new ->
         audioRecorder?.stop()
-        displayType.set(2)
+        displayType = DISPLAY_TYPE_SONG
         mBinding?.surfaceView?.visibility = View.VISIBLE
         val path = "file://${new.file_path}${new.file_name}"
         LogUtils.d("播放 $new")
         newPlayer(path)
     })
 
+
     private var mBaseTimer = SystemClock.elapsedRealtime();
 
-    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌 3:播放录音 4:党政
+//    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌 3:播放录音 4:党政
 
     val currentPlay = ObservableField<Song>()
 
@@ -198,41 +190,29 @@ class PlayerService : Service(), PresentationHelper.Listener
         override fun onCompletion(mp: MediaPlayer?)
         {
             timer?.dispose()
-            when
+            when (displayType)
             {
-                displayType.get() == 1 ->
+                DISPLAY_TYPE_LANGDU ->
                 {
                     audioRecorder?.stop()
-//                    mBinding?.lrcView?.pause()
                     EventBus.getDefault().post(ReadingStop(record))
                     readItem = ReadItem()
                 }
-                displayType.get() == 3 ->
-                {
-//                    mBinding?.lrcView?.pause()
-                }
-                displayType.get() == 4 ->
-                {
-//                    mBinding?.lrcView?.pause()
-                }
-                displayType.get() == 5 ->
+                DISPLAY_TYPE_SONGRECORD ->
                 {
                     curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
                     curSongRecord = null
                 }
-                else                   ->
+                DISPLAY_TYPE_SONG ->
                 {
                     try
                     {
                         EventBus.getDefault().post(PlayerStatusEvent(PLAYER_STATUS_COMPLETION))
-//                    audioRecorder?.stop()
-//                    audioRecorder = null
                         val data = UserDataHelper.userData
                         if (data.currentPlay != null)
                         {
                             realm.executeTransaction {
                                 it.copyToRealmOrUpdate(songRecord)
-//                                    data.history.add(0, data.currentPlay)
                                 songRecord = null
                                 data.currentPlay = null
                             }
@@ -245,6 +225,10 @@ class PlayerService : Service(), PresentationHelper.Listener
                     }
 
                 }
+                else                    ->
+                {
+
+                }
             }
         }
 
@@ -254,41 +238,28 @@ class PlayerService : Service(), PresentationHelper.Listener
 
         override fun onPrepared(mp: MediaPlayer?)
         {
-            if (displayType.get() != 5)
+
+            if (displayType != DISPLAY_TYPE_SONGRECORD)
             {
                 curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
                 curSongRecord = null
             }
-            when
+
+            when (displayType)
             {
-                displayType.get() == 1 ->
+                DISPLAY_TYPE_SONGRECORD ->
                 {
-                    DspHelper.sendHex("484D00020200010501AA")
-                    startLdReading(readItem)
-//                    mBinding?.lrcView?.play(0)
-                    initTimer()
-                    mp?.start()
-                }
-                displayType.get() == 3 ->
-                {
-//                    mBinding?.lrcView?.play(0)
-                    initTimer()
-                    mp?.start()
-                }
-                displayType.get() == 4 ->
-                {
-//                    mBinding?.lrcView?.play(0)
-                    initTimer()
-                    mp?.start()
-                }
-                displayType.get() == 5 ->
-                {
-//                    mBinding?.lrcView?.play(0)
                     initTimer()
                     mp?.start()
                     curSongRecord?.let { i -> realm.executeTransaction { i.playing = true } }
                 }
-                else                   ->
+                DISPLAY_TYPE_LANGDU ->
+                {
+                    startLdReading(readItem)
+                    initTimer()
+                    mp?.start()
+                }
+                DISPLAY_TYPE_SONG ->
                 {
                     try
                     {
@@ -296,29 +267,85 @@ class PlayerService : Service(), PresentationHelper.Listener
                         startRecordSong(curSong)
                         accompany = Accompany.BC
                         EventBus.getDefault().post(AccompanyChangedEvent(accompany))
-                        DspHelper.sendHex("484D00020200010307AA")
                         mp?.start()
                     }
                     catch (e: Exception)
                     {
                         e.printStackTrace()
                     }
-
-//                    when (currentTrack?.trim())
-//                    {
-//                        "R"  -> accompany = Accompany.YC
-//                        "L"  -> accompany = Accompany.BC
-//                        else ->
-//                        {
-//                            if (trackNum > 1)
-//                            {
-//                                curAudioIndex = currentTrack?.toInt() ?: 0
-//                                mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
-//                            } else mp?.setAudioChannel(1)
-//                        }
-//                    }
+                }
+                else                    ->
+                {
+                    initTimer()
+                    mp?.start()
                 }
             }
+
+//            if (displayType.get() != 5)
+//            {
+//                curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
+//                curSongRecord = null
+//            }
+//            when
+//            {
+//                displayType.get() == 1 ->
+//                {
+//                    DspHelper.sendHex("484D00020200010501AA")
+//                    startLdReading(readItem)
+////                    mBinding?.lrcView?.play(0)
+//                    initTimer()
+//                    mp?.start()
+//                }
+//                displayType.get() == 3 ->
+//                {
+////                    mBinding?.lrcView?.play(0)
+//                    initTimer()
+//                    mp?.start()
+//                }
+//                displayType.get() == 4 ->
+//                {
+////                    mBinding?.lrcView?.play(0)
+//                    initTimer()
+//                    mp?.start()
+//                }
+//                displayType.get() == 5 ->
+//                {
+////                    mBinding?.lrcView?.play(0)
+//                    initTimer()
+//                    mp?.start()
+//                    curSongRecord?.let { i -> realm.executeTransaction { i.playing = true } }
+//                }
+//                else                   ->
+//                {
+//                    try
+//                    {
+//                        mBinding?.lrcView?.loadLrc("")
+//                        startRecordSong(curSong)
+//                        accompany = Accompany.BC
+//                        EventBus.getDefault().post(AccompanyChangedEvent(accompany))
+//                        DspHelper.sendHex("484D00020200010307AA")
+//                        mp?.start()
+//                    }
+//                    catch (e: Exception)
+//                    {
+//                        e.printStackTrace()
+//                    }
+//
+////                    when (currentTrack?.trim())
+////                    {
+////                        "R"  -> accompany = Accompany.YC
+////                        "L"  -> accompany = Accompany.BC
+////                        else ->
+////                        {
+////                            if (trackNum > 1)
+////                            {
+////                                curAudioIndex = currentTrack?.toInt() ?: 0
+////                                mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
+////                            } else mp?.setAudioChannel(1)
+////                        }
+////                    }
+//                }
+//            }
         }
 
         override fun onSeekComplete(mp: MediaPlayer?)
@@ -344,16 +371,6 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         super.onCreate()
         presentationHelper.onResume()
-//        UserDataHelper.initUserData("Guest")
-//        var intent = Intent()
-//        intent.action = "com.android.audio_mode"
-//        intent.putExtra("audio_mode", 0)
-//        sendBroadcast(intent)
-//
-//        intent = Intent()
-//        intent.action = "com.ynh.set_spdif_pass_on_off"
-//        intent.putExtra("pass_on", 1)
-//        sendBroadcast(intent)
         if (!DspHelper.isOpen)
         {
             try
@@ -575,19 +592,19 @@ class PlayerService : Service(), PresentationHelper.Listener
                 if (b)
                 {
                     mPlayer?.pause()
-                    if (displayType.get() != 2)
-                    {
+//                    if (displayType.get() != 2)
+//                    {
 //                        mBinding?.lrcView?.pause()
-                    }
+//                    }
 //                    audioRecorder?.pause()
                 }
                 else
                 {
                     mPlayer?.start()
-                    if (displayType.get() != 2)
-                    {
+//                    if (displayType.get() != 2)
+//                    {
 //                        mBinding?.lrcView?.resume()
-                    }
+//                    }
 //                    audioRecorder?.resume()
                 }
 
@@ -692,7 +709,7 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private fun startRecordSong(song: Song)
     {
-        val dir = File("/mnt/usb_storage/SATA/C/langdu/songs/records")
+        val dir = File("/mnt/usb_storage/SATA/C/songs/records")
         if (!dir.exists())
             dir.mkdirs()
         uuid = UUID.randomUUID().toString()
@@ -727,7 +744,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun playRecord(event: PlayRecordEvent)
     {
-        displayType.set(3)
+        displayType = DISPLAY_TYPE_LDRECORD
         audioRecorder?.stop()
         timer?.dispose()
         //初始化歌词
@@ -777,7 +794,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun startPlaySongRecord(event: PlaySongRecordEvent)
     {
-        displayType.set(5)
+        displayType = DISPLAY_TYPE_SONGRECORD
         audioRecorder?.stop()
         timer?.dispose()
         mBinding?.surfaceView?.visibility = View.INVISIBLE
@@ -801,6 +818,11 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     companion object
     {
-        const val DISPLAY_TYPE_SONG = 0
+        //1：朗读 2:K歌 3:播放录音 4:党政
+        const val DISPLAY_TYPE_LANGDU = 1
+        const val DISPLAY_TYPE_SONG = 2
+        const val DISPLAY_TYPE_LDRECORD = 3
+        const val DISPLAY_TYPE_SONGRECORD = 4
+        const val DISPLAY_TYPE_DANGZHENG = 5
     }
 }

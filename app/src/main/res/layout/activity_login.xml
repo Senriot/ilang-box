@@ -13,10 +13,8 @@
         android:layout_height="140dp"
         android:layout_marginStart="350dp"
         android:layout_marginTop="200dp"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_guest_login" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -24,10 +22,9 @@
         android:layout_height="140dp"
         android:layout_marginTop="200dp"
         android:layout_marginEnd="350dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_guest_login" />
+        app:srcCompat="@mipmap/ic_guest_login"/>
 
     <ImageButton
         android:id="@+id/imageButton26"

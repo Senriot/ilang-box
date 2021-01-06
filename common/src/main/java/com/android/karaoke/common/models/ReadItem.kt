@@ -1,8 +1,10 @@
 package com.android.karaoke.common.models;
 
+import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 import java.util.*
 
@@ -13,8 +15,9 @@ import java.util.*
  * @Date:   2020-06-04
  * @Version: V1.0
  */
+@Parcelize
 @RealmClass(name = "ilang_ld_item")
-open class ReadItem : RealmObject(), Serializable
+open class ReadItem : RealmObject(), Parcelable
 {
 
     @PrimaryKey

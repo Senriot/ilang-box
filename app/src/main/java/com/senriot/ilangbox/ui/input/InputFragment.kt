@@ -1,5 +1,6 @@
 package com.senriot.ilangbox.ui.input
 
+import android.content.DialogInterface
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
 import android.os.Bundle
@@ -76,7 +77,8 @@ class InputFragment : QuickActionDialogFragment()
             {
                 keyboardView.visibility = View.VISIBLE
                 hwView.visibility = View.GONE
-            } else
+            }
+            else
             {
                 keyboardView.visibility = View.GONE
                 hwView.visibility = View.VISIBLE
@@ -135,8 +137,8 @@ class InputFragment : QuickActionDialogFragment()
         {
             when (primaryCode)
             {
-                -5   -> onDelete()
-                -4   -> onClear()
+                -5 -> onDelete()
+                -4 -> onClear()
                 else ->
                 {
                     val s = primaryCode.toChar().toString()

@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.RecordVO
+import com.android.karaoke.common.api.UploadResult
 import com.android.karaoke.common.models.Record
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.models.SongRecord
@@ -16,9 +18,14 @@ import com.android.karaoke.common.realm.userConfig
 import com.android.karaoke.player.events.PlaySongRecordEvent
 import com.android.karaoke.player.events.StopPlaySongRecordEvent
 import com.apkfuns.logutils.LogUtils
+import com.drake.net.Post
+import com.drake.net.utils.scopeDialog
+import com.drake.net.utils.scopeNet
+import com.drake.net.utils.scopeNetLife
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.HistoryItemBinding
+import com.yanzhenjie.kalle.FormBody
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
@@ -87,33 +94,31 @@ class HistoryAdapter(items: OrderedRealmCollection<SongRecord>) :
             holder.binding.btnUpload.text = "上传中..."
             holder.binding.btnUpload.isEnabled = false
             val file = File(item.filePath)
-            val requestFile: RequestBody =
-                RequestBody.create(MediaType.parse("application/otcet-stream"), file)
-            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-            GlobalScope.launch(Dispatchers.Main) {
-                try
+            scopeNet {
+                val result = Post<String>("http://aogevod.com/group1/upload", absolutePath = true) {
+                    val form = FormBody.newBuilder()
+                        .param("output", "json")
+                        .file("file", file)
+                        .build()
+                    form.onProgress { origin, progress -> LogUtils.i("上传进度 $progress") }
+                    body(form)
+                }.await()
+                LogUtils.d("上传结果 $result")
+                val info = JSON.parseObject(result, UploadResult::class.java)
+                if (info.retcode == 0)
                 {
-                    val resp = Api.recordApiService.upload(body).await()
-                    if (resp.success)
+                    val recordVO = RecordVO(
+                        openId = UserDataHelper.userData.id,
+                        songId = item.song!!.id,
+                        url = info.url,
+                        recordType = "2"
+                    )
+                    val s = Api.recordApiService.add(recordVO).await()
+                    LogUtils.d(s)
+                    if (s.success)
                     {
-                        val recordVO = RecordVO(
-                            openid = UserDataHelper.userData.id,
-                            itemid = item.song!!.id,
-                            url = resp.result!!.url,
-                            recordType = "2"
-                        )
-                        val s = Api.recordApiService.add(recordVO).await()
-                        LogUtils.d(s)
-                        if (s.success)
-                        {
-                            Realm.getInstance(userConfig).executeTransaction { item.updated = true }
-                            notifyItemChanged(position)
-                        }
-                        else
-                        {
-                            holder.binding.btnUpload.text = "上传"
-                            holder.binding.btnUpload.isEnabled = true
-                        }
+                        Realm.getInstance(userConfig).executeTransaction { item.updated = true }
+                        notifyItemChanged(position)
                     }
                     else
                     {
@@ -121,12 +126,55 @@ class HistoryAdapter(items: OrderedRealmCollection<SongRecord>) :
                         holder.binding.btnUpload.isEnabled = true
                     }
                 }
-                catch (e: Exception)
+                else
                 {
                     holder.binding.btnUpload.text = "上传"
                     holder.binding.btnUpload.isEnabled = true
                 }
+            }.catch {
+                holder.binding.btnUpload.text = "上传"
+                holder.binding.btnUpload.isEnabled = true
             }
+//            val requestFile: RequestBody =
+//                RequestBody.create(MediaType.parse("application/otcet-stream"), file)
+//            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+//            GlobalScope.launch(Dispatchers.Main) {
+//                try
+//                {
+//                    val resp = Api.recordApiService.upload(body).await()
+//                    if (resp.success)
+//                    {
+//                        val recordVO = RecordVO(
+//                            openid = UserDataHelper.userData.id,
+//                            itemid = item.song!!.id,
+//                            url = resp.result!!.url,
+//                            recordType = "2"
+//                        )
+//                        val s = Api.recordApiService.add(recordVO).await()
+//                        LogUtils.d(s)
+//                        if (s.success)
+//                        {
+//                            Realm.getInstance(userConfig).executeTransaction { item.updated = true }
+//                            notifyItemChanged(position)
+//                        }
+//                        else
+//                        {
+//                            holder.binding.btnUpload.text = "上传"
+//                            holder.binding.btnUpload.isEnabled = true
+//                        }
+//                    }
+//                    else
+//                    {
+//                        holder.binding.btnUpload.text = "上传"
+//                        holder.binding.btnUpload.isEnabled = true
+//                    }
+//                }
+//                catch (e: Exception)
+//                {
+//                    holder.binding.btnUpload.text = "上传"
+//                    holder.binding.btnUpload.isEnabled = true
+//                }
+//            }
 
         }
     }

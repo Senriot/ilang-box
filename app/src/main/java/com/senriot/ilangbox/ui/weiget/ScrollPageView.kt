@@ -7,20 +7,22 @@ import android.widget.FrameLayout
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apkfuns.logutils.LogUtils
 import com.senriot.ilangbox.MainActivity
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RealmAdapter
+import kotlin.math.log
 
 class ScrollPageView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) :
-        FrameLayout(
-                context,
-                attrs,
-                defStyleAttr
-        ), PageView.PageViewListener
+    FrameLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ), PageView.PageViewListener
 {
     override fun onPrevious()
     {
@@ -83,6 +85,24 @@ class ScrollPageView @JvmOverloads constructor(
             override fun onChanged()
             {
                 super.onChanged()
+//                LogUtils.e("数据改变")
+//                pageCount = adapter.tolPage
+
+                if (!adapter.data.isNullOrEmpty())
+                {
+                    val size = adapter.data!!.size
+                    val pageCount = row * column
+                    var tolPage = size / pageCount
+                    if (size % pageCount > 0)
+                    {
+                        tolPage += 1
+                    }
+                    if (size < pageCount)
+                    {
+                        tolPage = 1
+                    }
+                    adapter.tolPage = tolPage
+                }
                 pageCount = adapter.tolPage
             }
         })

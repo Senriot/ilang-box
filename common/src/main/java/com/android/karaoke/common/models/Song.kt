@@ -1,19 +1,19 @@
 // Please note : @LinkingObjects and default values are not represented in the schema and thus will not be part of the generated models
 package com.android.karaoke.common.models
 
-import androidx.databinding.ObservableInt
-import com.yuan.library.dmanager.download.DownloadManager
-import com.yuan.library.dmanager.download.DownloadTask
-import io.realm.RealmObject
 import io.realm.RealmList
-import io.realm.annotations.*
-import java.text.DecimalFormat
+import io.realm.RealmObject
+import io.realm.annotations.Index
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import java.util.*
 
 @RealmClass(name = "ilang_song")
 open class Song : RealmObject()
 {
     @PrimaryKey
+    var inded: Int = 0
+
     var id: String = ""
     var code: String = ""
 

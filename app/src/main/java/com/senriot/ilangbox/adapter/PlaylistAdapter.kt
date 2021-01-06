@@ -10,7 +10,8 @@ import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import io.realm.OrderedRealmCollection
 
-class PlaylistAdapter(items: OrderedRealmCollection<Song>) : RealmRecyclerViewAdapter<Song, PlaylistAdapter.RealmViewHolder>(items, true, true)
+class PlaylistAdapter(items: OrderedRealmCollection<Song>) :
+    RealmRecyclerViewAdapter<Song, PlaylistAdapter.RealmViewHolder>(items, true, true)
 {
     class RealmViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,19 +24,19 @@ class PlaylistAdapter(items: OrderedRealmCollection<Song>) : RealmRecyclerViewAd
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RealmViewHolder
     {
         val binding: ViewDataBinding =
-                DataBindingUtil.inflate(
-                        LayoutInflater.from(parent.context),
-                        R.layout.playlist_item,
-                        parent,
-                        false
-                )
+            DataBindingUtil.inflate(
+                LayoutInflater.from(parent.context),
+                R.layout.playlist_item,
+                parent,
+                false
+            )
 
         return RealmViewHolder(binding)
     }
 
     override fun getItemId(position: Int): Long
     {
-        return getItem(position)?.id?.toLong()?:0L
+        return getItem(position)?.id?.hashCode()?.toLong() ?: 0L
     }
 
     override fun onBindViewHolder(holder: RealmViewHolder, position: Int)

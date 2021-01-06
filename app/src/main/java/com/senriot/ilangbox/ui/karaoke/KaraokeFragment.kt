@@ -1,5 +1,6 @@
 package com.senriot.ilangbox.ui.karaoke
 
+import android.net.Uri
 import android.widget.SeekBar
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -48,40 +49,24 @@ class KaraokeFragment :
                 false
             )
         }
-        volSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener
-        {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean)
-            {
-                if (fromUser)
-                {
-                    val sr =
-                        arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16), "03")
-                    var sum = 0xff
-                    sr.forEach {
-                        sum = sum xor Integer.parseInt(it, 16)
-                    }
-                    sr.add(Integer.toHexString(sum))
-                    sr.add("AA")
-                    LogUtils.e(sr.joinToString(""))
-                    DspHelper.sendHex(sr.joinToString(""))
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?)
-            {
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?)
-            {
-            }
-
-        })
     }
 
     @Subscribe
     fun onAccompanyChanged(event: AccompanyChangedEvent)
     {
         btnAccompany.isChecked = event.acc != Accompany.BC
+    }
+
+    override fun performDataBinding()
+    {
+        super.performDataBinding()
+        btnSoundEffect.setOnClickListener {
+            val host = childFragmentManager.findFragmentById(R.id.okNavHost) as NavHostFragment
+            if (host.navController.currentDestination?.label != "SoundEffectFragment")
+            {
+                host.navController.navigate(Uri.parse("https://www.senriot.com/ilang-box/soundEffect"))
+            }
+        }
     }
 //    override fun p()
 //    {

@@ -18,7 +18,7 @@ open class DzXueXi : RealmObject(), Serializable
     var pinyin: String? = null
     var type: String? = null
     var pic: String? = null
-    var content_file: String = ""
+    var content_file: String? = null
     var subtitle: String? = null
     var read_count: Long? = null
     var duration: String? = null
@@ -32,6 +32,9 @@ open class DzXueXi : RealmObject(), Serializable
 
     @RealmField(name = "audio_file_name")
     var audioFileName: String? = null
+
+    @RealmField(name = "audio_url")
+    var audioUrl: String? = null
 
     var exist: Boolean? = null
 

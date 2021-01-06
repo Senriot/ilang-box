@@ -36,8 +36,8 @@ class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
         )
         mBinding.setVariable(BR.vm, vm)
         contentView = mBinding.root
-        width = 522
-        height = 669
+        width = 520
+        height = 672
         isFocusable = true
         isOutsideTouchable = true
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -68,6 +68,7 @@ class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
     {
         super.showOnAnchor(anchor, vertPos, horizPos, x, y, fitInScreen)
 //        circularReveal(anchor)
+        vm.inputWindowIsShow = true
         mBinding.blurLayout.startBlur()
     }
 
@@ -107,6 +108,7 @@ class InputPopupWindow(context: Context, private val vm: MainActViewModel) :
             }
         }
     }
+
 
     companion object
     {

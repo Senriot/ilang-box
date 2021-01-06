@@ -28,5 +28,6 @@ object ViewModels {
         viewModel { AuditionViewModel() }
         viewModel { DzContentViewModel() }
         viewModel { InitActViewModel() }
+        viewModel { SoundEffectViewModel() }
     }
 }

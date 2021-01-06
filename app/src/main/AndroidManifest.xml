@@ -36,13 +36,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver
+            android:name=".LauncherReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+<!--        <service-->
+<!--            android:name=".services.UpdateService"-->
+<!--            android:exported="false" />-->
         <service
             android:name=".services.MessageService"
             android:enabled="true" />
 
-        <activity android:name=".LoginActivity" >
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- <activity -->
@@ -56,9 +73,9 @@
         <!-- <category android:name="android.intent.category.HOME" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 

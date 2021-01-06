@@ -25,6 +25,7 @@ class UpdateReceiver : BroadcastReceiver()
             if (intent.action == Intent.ACTION_PACKAGE_ADDED)
             {
                 LogUtils.e("程序安装了")
+                EventBus.getDefault().post(AppInstalledEvent())
             }
             if (intent.action == Intent.ACTION_PACKAGE_REMOVED)
             {

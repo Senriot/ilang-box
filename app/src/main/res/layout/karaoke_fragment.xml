@@ -57,11 +57,12 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
                 android:onClick="openSetting"
+                android:padding="8dp"
                 android:src="@mipmap/ok_btn2" />
 
             <ImageButton
+                android:id="@+id/btnSoundEffect"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -69,7 +70,7 @@
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:padding="8dp"
-                android:src="@mipmap/ok_btn3" />
+                android:src="@mipmap/ic_sound_effect" />
 
             <ImageButton
                 android:layout_width="0dp"
@@ -94,54 +95,54 @@
                 android:src="@mipmap/ok_btn5" />
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="vertical">
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_weight="2"-->
+            <!--                android:gravity="center"-->
+            <!--                android:orientation="vertical">-->
 
-                <SeekBar
-                    android:id="@+id/volSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="60"
-                    android:progress="50"
-                    android:progressTint="@color/material_dialog_background"
-                    android:thumbTint="#EAE6E6" />
+            <!--                <SeekBar-->
+            <!--                    android:id="@+id/volSeekBar"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:max="60"-->
+            <!--                    android:progress="50"-->
+            <!--                    android:progressTint="@color/material_dialog_background"-->
+            <!--                    android:thumbTint="#EAE6E6" />-->
 
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:text="音乐音量"
-                    android:textAlignment="center" />
-            </LinearLayout>
+            <!--                <TextView-->
+            <!--                    android:id="@+id/textView7"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginTop="14dp"-->
+            <!--                    android:text="音乐音量"-->
+            <!--                    android:textAlignment="center" />-->
+            <!--            </LinearLayout>-->
 
-<!--            <ImageButton-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:background="?attr/selectableItemBackground"-->
-<!--                android:onClick="@{()->vm.volDown()}"-->
-<!--                android:padding="8dp"-->
-<!--                android:src="@mipmap/ok_btn6" />-->
+            <!--            <ImageButton-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:background="?attr/selectableItemBackground"-->
+            <!--                android:onClick="@{()->vm.volDown()}"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:src="@mipmap/ok_btn6" />-->
 
-<!--            <ImageButton-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:background="?attr/selectableItemBackground"-->
-<!--                android:onClick="@{()->vm.volUp()}"-->
-<!--                android:padding="8dp"-->
-<!--                android:src="@mipmap/ok_btn7" />-->
+            <!--            <ImageButton-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:background="?attr/selectableItemBackground"-->
+            <!--                android:onClick="@{()->vm.volUp()}"-->
+            <!--                android:padding="8dp"-->
+            <!--                android:src="@mipmap/ok_btn7" />-->
 
             <com.dunst.check.CheckableImageButton
                 android:layout_width="0dp"

@@ -13,6 +13,7 @@ import com.android.karaoke.common.models.ReadCategory
 import com.android.karaoke.player.DspHelper
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.MvvmFragment
+import com.senriot.ilangbox.App
 import org.koin.android.viewmodel.ext.android.viewModel
 
 import com.senriot.ilangbox.R
@@ -21,6 +22,7 @@ import com.senriot.ilangbox.databinding.LangDuFragmentBinding
 import com.senriot.ilangbox.event.ShowReadListEvent
 import io.realm.Realm
 import io.realm.kotlin.where
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.lang_du_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -66,31 +68,36 @@ class LangDuFragment :
     @Subscribe
     fun onShowReadList(event: ShowReadListEvent)
     {
-        LogUtils.e("onShowReadList")
         val host = childFragmentManager.findFragmentById(R.id.ldNavHost) as NavHostFragment
-        host.navController.navigate(Uri.parse("https://www.senriot.com/ilang-box/readlist"))
+        LogUtils.d(host.navController.currentDestination)
+        if (host.navController.currentDestination?.label != "ReadListFragment")
+            host.navController.navigate(Uri.parse("https://www.senriot.com/ilang-box/readlist"))
     }
 
     private val seekBarChangeListener = object : SeekBar.OnSeekBarChangeListener
     {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean)
         {
-            val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
-            if (seekBar.id == R.id.bgmSeekBar)
+            if (fromUser)
             {
-                sr.add("03")
-            } else
-            {
-                sr.add("02")
+                val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
+                if (seekBar.id == R.id.bgmSeekBar)
+                {
+                    sr.add("03")
+                }
+                else
+                {
+                    sr.add("02")
+                }
+                var sum = 0xff
+                sr.forEach {
+                    sum = sum xor Integer.parseInt(it, 16)
+                }
+                sr.add(Integer.toHexString(sum))
+                sr.add("AA")
+                LogUtils.e(sr.joinToString(""))
+                DspHelper.sendHex(sr.joinToString(""))
             }
-            var sum = 0xff
-            sr.forEach {
-                sum = sum xor Integer.parseInt(it, 16)
-            }
-            sr.add(Integer.toHexString(sum))
-            sr.add("AA")
-            LogUtils.e(sr.joinToString(""))
-            DspHelper.sendHex(sr.joinToString(""))
         }
 
         override fun onStartTrackingTouch(seekBar: SeekBar?)

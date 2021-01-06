@@ -31,7 +31,7 @@ class KaraokeArtistListViewModel : AbstractViewModel()
     }
 
     val items by lazy {
-        Realm.getDefaultInstance().where<Artist>().equalTo("status", "1")
+        Realm.getDefaultInstance().where<Artist>()
             .sort("hot", Sort.DESCENDING).findAll()
     }
 
@@ -57,7 +57,6 @@ class KaraokeArtistListViewModel : AbstractViewModel()
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
         val artists = Realm.getDefaultInstance().where<Artist>()
-            .equalTo("status", 2L)
             .beginGroup().like("name",  event.text + "*").or()
             .like("input_code",  event.text + "*")
             .endGroup()

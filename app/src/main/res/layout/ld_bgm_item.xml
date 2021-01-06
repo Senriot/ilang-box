@@ -28,6 +28,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        app:cardCornerRadius="8dp"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="#1a2c77">
 
@@ -63,7 +64,6 @@
                 android:layout_height="50dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
-                android:visibility="@{item.fileExist?View.GONE:View.VISIBLE}"
                 app:dbProgress="@{downloadVm.progress}"
                 app:downloadStatus="@{downloadVm.status}"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -12,26 +12,18 @@ import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.karaoke.common.MvvmActivity
-import com.android.karaoke.common.api.Auth
-import com.android.karaoke.common.models.Artist
-import com.android.karaoke.common.models.Song
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
-import com.apkfuns.logutils.LogUtils
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
-import com.senriot.ilangbox.services.MessageService
+import com.senriot.ilangbox.services.UpdateService
 import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
 import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
 import com.senriot.ilangbox.ui.xuexi.XueXiFragment
-import com.snappydb.DBFactory
-import com.snappydb.SnappydbException
-import io.realm.Realm
-import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -51,7 +43,6 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     override val bindingVariable: Int = BR.vm
 
-    private val snappy by lazy { DBFactory.open(this) }
 
     override fun createViewModel(): MainActViewModel
     {
@@ -80,23 +71,16 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
             if (id == R.id.langDuFragment)
             {
                 ldList.visibility = View.VISIBLE
-            } else
+            }
+            else
             {
                 ldList.visibility = View.GONE
             }
             EventBus.getDefault().post(MainNavChangedEvent(checkedId))
         }
-        try
-        {
-            val auth = snappy.get("authInfo", Auth::class.java)
-            btnProfile.setImageURI(auth.user.headImgUrl)
-        } catch (e: SnappydbException)
-        {
-            e.printStackTrace()
-        }
+        App.wxUser?.let { btnProfile.setImageURI(it.headImgUrl) }
 
-//        startPlayerService()
-//        startService(Intent(this, MessageService::class.java))
+        startPlayerService()
     }
 
     override fun onSupportNavigateUp(): Boolean
@@ -168,19 +152,19 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun karaokeCardClick(view: View)
     {
-        val nc = findNavController(view.id)
+        val nc = view.findNavController()
         val title = view.tag.toString()
         val args = Bundle()
         args.putString("title", title)
         if (title == "2")
         {
             nc.navigate(R.id.action_karaokeMainFragment_to_karaokeArtistListFragment)
-        } else
+        }
+        else
         {
             nc.navigate(R.id.action_karaokeMainFragment_to_karaokeListFragment, args)
         }
     }
-
 
     private val mediaListFragment by lazy { MediaListFragment() }
 
@@ -191,75 +175,22 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun showInputView(view: View)
     {
-        InputPopupWindow(this, vm).showOnAnchor(
+        val w = InputPopupWindow(this, vm)
+        w.setOnDismissListener {
+            vm.inputWindowIsShow = false
+            vm.onClear()
+        }
+        w.showOnAnchor(
             view,
             RelativePopupWindow.VerticalPosition.ALIGN_TOP,
             RelativePopupWindow.HorizontalPosition.ALIGN_RIGHT, 0, 80, false
         )
-//        val f = InputFragment()
-//        f.setAnchorView(view)
-//        f.setAligmentFlags(AlignmentFlag.ALIGN_ANCHOR_VIEW_RIGHT or AlignmentFlag.ALIGN_ANCHOR_VIEW_BOTTOM)
-//        f.show(supportFragmentManager, "input")
     }
 
     fun showProfile(view: View)
     {
         startActivity(Intent(this, LoginActivity::class.java))
-
-//        val realm = Realm.getDefaultInstance()
-//        val songs = realm.where<Song>().findAll()
-//        realm.beginTransaction()
-//        songs.forEach { song ->
-//            if (!song.artists_name.isNullOrBlank())
-//            {
-//                realm.where<Artist>().equalTo("name", song.artists_name).findFirst()?.let {
-//                    song.singer_id = it.id
-//                    it.status = "2"
-//                }
-//            }
-//        }
-//        realm.commitTransaction()
-//        LogUtils.e("ok======")
     }
-//        realm.executeTransaction { it.delete(Song::class.java) }
-//        val dzs = realm.where<DangZheng>().findAll()
-//        realm.beginTransaction()
-//        dzs.forEach {
-//            val song = Song().apply {
-//                id = it.code
-//                name = it.name!!
-//                input_code = it.pinyin
-//                artist = it.artist
-//                track = it.bz
-//                volume = it.vol
-//                file_name = it.code + ".mkv"
-//                hot = 0
-//            }
-//            when (it.type)
-//            {
-//                "军旅" -> song.type_id = 120
-//                "抒情" -> song.type_id = 121
-//                "民歌" -> song.type_id = 48
-//                "经典" -> song.type_id = 44
-//            }
-//
-//            when (it.lang)
-//            {
-//                "其他" -> song.lang_id = 28
-//                "台语" -> song.lang_id = 24
-//                "国语" -> song.lang_id = 22
-//                "粤语" -> song.lang_id = 23
-//                "英语" -> song.lang_id = 27
-//                "韩语" -> song.lang_id = 25
-//            }
-//
-//            realm.copyToRealmOrUpdate(song)
-////            val ss = realm.where<Song>().equalTo("id", it.code).findAll()
-////            ss.forEach { s ->
-////                s.status = 3
-////            }
-//        }
-//        realm.commitTransaction()
 
 
     private fun hideNavBar(hide: Boolean)
@@ -269,15 +200,28 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         sendBroadcast(intent)
     }
 
-    private val minorDisplay by lazy { MinorDisplayFragment() }
 
     fun showMinorDisplay(view: View)
     {
-        minorDisplay.show(supportFragmentManager, null)
+        MinorDisplayFragment().show(supportFragmentManager, null)
     }
 
     fun openSetting(view: View)
     {
         startActivity(Intent(Settings.ACTION_SETTINGS));
     }
+
+    fun updateLdRecord(view: View)
+    {
+
+    }
+
+//    fun showSoundEffect(view: View)
+//    {
+//        val nc = view.findNavController()
+//        if (nc.currentDestination?.label != "SoundEffectFragment")
+//        {
+//            nc.navigate(R.id.action_karaokeFragment_to_soundEffectFragment)
+//        }
+//    }
 }

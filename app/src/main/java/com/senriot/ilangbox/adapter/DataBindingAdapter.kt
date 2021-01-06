@@ -8,14 +8,11 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.VideoView
 import androidx.databinding.BindingAdapter
-import com.apkfuns.logutils.LogUtils
-import com.devzone.fillprogresslayout.FillProgressLayout
 import com.dunst.check.CheckableButton
 import com.dunst.check.CheckableImageButton
 import com.facebook.drawee.view.SimpleDraweeView
 import com.senriot.ilangbox.ui.weiget.DownloadButton
 import com.senriot.ilangbox.ui.weiget.ScrollPageView
-import java.sql.ClientInfoStatus
 
 object DataBindingAdapter
 {
@@ -157,13 +154,6 @@ object DataBindingAdapter
         view.pageIndex = pageIndex
     }
 
-
-    @BindingAdapter("progress")
-    @JvmStatic
-    fun setProgress(view: FillProgressLayout, progress: Int)
-    {
-        view.setProgress(progress, false)
-    }
 
     @BindingAdapter("dbProgress")
     @JvmStatic

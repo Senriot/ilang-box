@@ -1,8 +1,8 @@
-include ':launcher'
+//include ':launcher'
 include ':app'
 rootProject.name = "ilang-box"
 include ':player'
 include ':common'
 include ':mqtt'
 include ':serialport'
-include ':hplyricslibrary'
+//include ':hplyricslibrary'

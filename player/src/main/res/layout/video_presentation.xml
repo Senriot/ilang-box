@@ -18,8 +18,6 @@
         android:background="@mipmap/ld_tv_bg">
 
 
-
-
         <SurfaceView
             android:id="@+id/surfaceView"
             android:layout_width="wrap_content"
@@ -35,36 +33,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"/>
-
-<!--        <ImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:src="@mipmap/langdu_bg"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+            app:layout_constraintVertical_bias="1.0" />
 
         <com.android.karaoke.player.widget.lrcview.LrcView
             android:id="@+id/lrcView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="0dp"
-            app:lrcCurrentTextColor="@color/md_blue_900"
-            app:lrcTextSize="22sp"
-            app:lrcNormalTextSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:lrcCurrentTextColor="@color/md_white_1000"
+            app:lrcNormalTextSize="16sp"
+            app:lrcPadding="96dp"
+            app:lrcTextSize="18sp" />
 
         <com.android.karaoke.player.widget.TextSurface
             android:id="@+id/surfaceText"
@@ -100,51 +82,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/surfaceText"
             tools:text="下首播放" />
-
-        <!--        <FrameLayout-->
-        <!--            android:id="@+id/score"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginBottom="150dp"-->
-        <!--            android:background="@drawable/score_bg"-->
-        <!--            android:visibility="gone"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@+id/surfaceView"-->
-        <!--            app:layout_constraintEnd_toEndOf="@+id/surfaceView"-->
-        <!--            app:layout_constraintStart_toStartOf="@+id/surfaceView">-->
-
-        <!--            <ImageView-->
-        <!--                android:id="@+id/imageView4"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_gravity="bottom"-->
-        <!--                android:layout_marginBottom="22dp"-->
-        <!--                android:src="@drawable/gm" />-->
-
-        <!--            <ImageView-->
-        <!--                android:id="@+id/imageView5"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginStart="16dp"-->
-        <!--                android:layout_marginTop="108dp"-->
-        <!--                android:src="@drawable/df" />-->
-        <!--        </FrameLayout>-->
-        <!--        <com.zlm.hp.lyrics.widget.ManyLyricsView-->
-        <!--            android:id="@+id/lrcView"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:background="@mipmap/langdu_bg"-->
-        <!--            android:visibility="@{service.displayType == 1?View.VISIBLE:View.INVISIBLE}"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-<!--        <ImageView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:src="@mipmap/langdu_bg"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

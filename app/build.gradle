@@ -3,6 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
+
+//ext{
+//    git = Grgit.open(currentDir: project.file('.'))
+//    gitVersionName = git.describe()
+//    gitVersionCode = git.tag.list().size()
+//    gitVersionCodeTime = git.head().time
+//}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -12,12 +20,14 @@ android {
         minSdkVersion 22
         targetSdkVersion 29
         versionCode 1
-        versionName "1.4"
+        versionName "1.19"
         renderscriptTargetApi 22
         renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
         packagingOptions {
+            pickFirst 'LICENSE-EDL-1.0.txt'
+            pickFirst 'LICENSE-EPL-1.0.txt'
             exclude 'META-INF/library_release.kotlin_module'
         }
     }
@@ -58,17 +68,10 @@ android {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
     }
-
-    aaptOptions {
-        // 使用小于0x80的packageId需要添加 '--allow-reserved-package-id'
-        // additionalParameters '--allow-reserved-package-id', '--package-id', '0x72',
-        additionalParameters '--package-id', '0x80'
-    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -76,6 +79,8 @@ dependencies {
     implementation(project(":player"))
     implementation 'tp.xmaihh:serialport:2.1'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -120,7 +125,6 @@ dependencies {
     implementation 'co.zsmb:materialdrawer-kt:2.0.1'
     implementation 'com.kingfisherphuoc:quick-action-dialog-fragment:1.1'
     implementation('com.github.pwittchen:reactivenetwork-rx2:3.0.8')
-    implementation 'com.github.JDevZone:FillProgressLayout:0.0.6'
     implementation 'com.dsiner.lib:common:1.0.0'
     implementation 'com.github.brkckr:CircularProgressBar:1.0.1'
     implementation 'com.github.kenglxn.QRGen:android:2.6.0'

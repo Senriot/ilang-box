@@ -22,14 +22,10 @@ public abstract class RealmRecyclerViewAdapter<T extends RealmModel, S extends R
     private OrderedRealmCollection<T> adapterData;
 
     private OrderedRealmCollectionChangeListener createListener() {
-        return new OrderedRealmCollectionChangeListener() {
-            @Override
-            public void onChange(Object collection, OrderedCollectionChangeSet changeSet) {
+        return (collection, changeSet) ->
+        {
 
-                LogUtils.e(changeSet.getDeletionRanges());
-                LogUtils.e(changeSet.getInsertionRanges());
-                notifyDataSetChanged();
-                LogUtils.e(changeSet.getState());
+            notifyDataSetChanged();
 //                if (changeSet.getState() == OrderedCollectionChangeSet.State.INITIAL) {
 //                    notifyDataSetChanged();
 //                    return;
@@ -54,7 +50,6 @@ public abstract class RealmRecyclerViewAdapter<T extends RealmModel, S extends R
 //                for (OrderedCollectionChangeSet.Range range : modifications) {
 //                    notifyItemRangeChanged(range.startIndex + dataOffset(), range.length);
 //                }
-            }
         };
     }
 

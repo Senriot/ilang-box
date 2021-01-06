@@ -24,6 +24,7 @@
         android:onClick="@{(v)->vm.showSongs(v,item)}"
         android:visibility="@{item==null?View.GONE:View.VISIBLE}"
         app:cardBackgroundColor="#1A070707"
+        app:cardCornerRadius="8dp"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

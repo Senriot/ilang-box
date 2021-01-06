@@ -6,41 +6,43 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.Environment
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.UpdateInfo
-import com.android.karaoke.common.models.DzXueXi
-import com.android.karaoke.common.models.ReadBgm
-import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.onIO
 import com.android.karaoke.common.onUI
-import com.android.karaoke.common.realm.songsConfig
+import com.android.karaoke.common.realm.snappyClient
+import com.android.karaoke.common.realm.sysParams
 import com.android.karaoke.common.realm.userConfig
 import com.apkfuns.logutils.LogUtils
+import com.drake.net.Download
+import com.drake.net.Get
+import com.drake.net.utils.scopeDialog
+import com.drake.net.utils.scopeNetLife
 import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.snappydb.SnappydbException
 import com.stericson.RootShell.execution.Command
 import com.stericson.RootTools.RootTools
-import com.yanzhenjie.kalle.Kalle
-import com.yanzhenjie.kalle.download.SimpleCallback
+import com.yanzhenjie.kalle.NetCancel
 import io.reactivex.disposables.Disposable
 import io.realm.Realm
-import io.realm.kotlin.where
-import io.supercharge.rxsnappy.RxSnappyClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 
+
 class MainActivity : AppCompatActivity()
 {
     private lateinit var networkDisposable: Disposable
-    private val rxSnappyClient = RxSnappyClient()
 
+    //    private val db =
+//        DBFactory.open(Environment.getExternalStorageDirectory().absolutePath + "/ilang-box/realm")
+//    private val rxSnappyClient = RxSnappyClient(db)
+//    private val snappyClient by lazy { snappyClient(this) }
     private val dbDir = Environment.getExternalStorageDirectory().absolutePath + "/ilang-box/realm"
     private val fileName = "db.realm"
     private lateinit var textView: TextView
@@ -50,17 +52,51 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        LogcatViewer.showLogcatLoggerView(this);
         EventBus.getDefault().register(this)
         textView = findViewById(R.id.textView)
         progressBar = findViewById(R.id.progressBar)
         networkDisposable = ReactiveNetwork.observeNetworkConnectivity(this)
-            .onIO().filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))
-            .filter(ConnectivityPredicate.hasType(ConnectivityManager.TYPE_ETHERNET))
+            .onIO()
+            .filter(
+                ConnectivityPredicate.hasType(
+                    ConnectivityManager.TYPE_ETHERNET,
+                    ConnectivityManager.TYPE_WIFI
+                )
+            )
             .onUI({
                 networkDisposable.dispose()
-                this.getUpdateInfo()
+                when (it.state())
+                {
+                    NetworkInfo.State.CONNECTED ->
+                    {
+                        this.getUpdateInfo()
+                    }
+                    else                        ->
+                    {
+                        Toast.makeText(this, "初始化网络连接失败.", Toast.LENGTH_LONG).show()
+                        try
+                        {
+                            packageManager.getPackageInfo("com.senriot.ilangbox", 0)
+                            startMainAct()
+                        }
+                        catch (e: PackageManager.NameNotFoundException)
+                        {
+                            textView.text = "APP未安装，请连接网络更新安装";
+                        }
+                    }
+                }
             }, {
-                LogUtils.e(it)
+                Toast.makeText(this, "初始化网络连接失败.", Toast.LENGTH_LONG).show()
+                try
+                {
+                    packageManager.getPackageInfo("com.senriot.ilangbox", 0)
+                    startMainAct()
+                }
+                catch (e: PackageManager.NameNotFoundException)
+                {
+                    textView.text = "APP未安装，请连接网络更新安装";
+                }
             })
     }
 
@@ -74,25 +110,15 @@ class MainActivity : AppCompatActivity()
     {
         LogUtils.d("检测版本更新")
         textView.text = "检测版本更新"
-        GlobalScope.launch(Dispatchers.Main) {
-            val res = Api.updateApiService.updateInfo().await()
-            if (res.success)
-            {
-                updateInfo = res.result
-                checkApp(res.result!!)
-            }
+        scopeDialog {
+            updateInfo = Get<UpdateInfo>(
+                "sysParams/queryByCode?code=app_update_info",
+                uid = "updateInfo"
+            ).await()
+            updateInfo?.let { checkApp(it) }
+        }.catch {
+            startMainAct()
         }
-
-//        updateApiService.updateInfo().onIO().onUI({
-//            LogUtils.d(it)
-//            if (it.success)
-//            {
-//                updateInfo = it.result
-//                checkApp(it.result!!)
-//            }
-//        }, {
-//            it.printStackTrace()
-//        })
     }
 
     private fun checkApp(updateInfo: UpdateInfo)
@@ -100,29 +126,40 @@ class MainActivity : AppCompatActivity()
         try
         {
             val ver = packageManager.getPackageInfo("com.senriot.ilangbox", 0).versionName
-            if (ver != updateInfo.appVer)
-            {
-                textView.text = "正在下载App..."
-                downloadApk(updateInfo)
-            } else
-            {
-                val dbFile = File("$dbDir/$fileName")
-                if (!dbFile.exists())
+            val dbVer = updateInfo.paramsItems["dbVer"] ?: error("参数错误")
+            updateInfo.paramsItems["appVer"]?.let { appVer ->
+                if (ver != appVer.paramsValue)
                 {
-                    downDbFile(updateInfo)
-                } else
+                    textView.text = "正在下载App..."
+                    downloadApk(updateInfo)
+                }
+                else
                 {
-                    rxSnappyClient.getString("dbVer").subscribe({
-                        if (it != updateInfo.dbVer)
-                            downDbFile(updateInfo)
-                        else startMainAct()
-                    }, {
-                        it.printStackTrace()
+                    val dbFile = File("$dbDir/${dbVer.paramsValue}/$fileName")
+                    if (!dbFile.exists())
+                    {
                         downDbFile(updateInfo)
-                    })
+                    }
+                    else
+                    {
+                        updateInfo.paramsItems["dbVer"]
+                            ?.let { dbVer ->
+                                val db = sysParams["dbVer"]
+                                if (db != dbVer.paramsValue)
+                                {
+                                    downDbFile(updateInfo)
+                                }
+                                else
+                                {
+                                    startMainAct()
+                                }
+                            }
+                    }
                 }
             }
-        } catch (e: PackageManager.NameNotFoundException)
+
+        }
+        catch (e: PackageManager.NameNotFoundException)
         {
             downloadApk(updateInfo)
         }
@@ -131,93 +168,139 @@ class MainActivity : AppCompatActivity()
 
     private fun downloadApk(updateInfo: UpdateInfo)
     {
-        Kalle.Download.get(updateInfo.appUrl)
-            .fileName("ilang-box.apk")
-            .directory("/sdcard/ilang-box/apk")
-            .onProgress { progress, byteCount, speed -> progressBar.progress = progress }
-            .perform(object : SimpleCallback()
+        scopeNetLife {
+            updateInfo.paramsItems["appUrl"]?.let {
+                val filePath = Download(it.paramsValue, absolutePath = true, uid = "downloadApk") {
+                    onProgress { progress, byteCount, speed ->
+                        progressBar.progress = progress
+                    }
+                }.await()
+                LogUtils.d(filePath)
+                textView.text = "正在安装App..."
+                installApk(filePath)
+            }
+        }
+    }
+
+    private fun installApk(path: String)
+    {
+//        RootTools.
+        RootTools.getShell(true)
+            .add(object : Command(0, "pm install -r $path")
             {
-                override fun onFinish(path: String)
+                override fun commandCompleted(id: Int, exitcode: Int)
                 {
-                    super.onFinish(path)
-                    LogUtils.d(path)
-                    textView.text = "正在安装App..."
-                    RootTools.getShell(true)
-                        .add(Command(0, "pm install -i com.senriot.ilangbox -r $path"))
+                    super.commandCompleted(id, exitcode)
+                    LogUtils.d("安装完成")
+                }
+
+                override fun commandOutput(id: Int, line: String?)
+                {
+                    super.commandOutput(id, line)
+                    LogUtils.d(line)
+//                    if (line == "Success")
+//                    {
+//
+//                        val dbVer = sysParams.get("dbVer")
+//                        updateInfo?.paramsItems?.get("dbVer")?.let {
+//                            if (it.paramsValue != dbVer)
+//                            {
+//                                downDbFile(updateInfo!!)
+//                            }
+//                            else
+//                            {
+//                                startMainAct()
+//                            }
+//                        }
+//                    }
                 }
             })
     }
-
 
     private fun downDbFile(updateInfo: UpdateInfo)
     {
         textView.text = "更新数据库..."
-        Kalle.Download.get(updateInfo.downloadUrl)
-            .fileName(fileName)
-            .directory(dbDir)
-            .onProgress { progress, byteCount, speed -> progressBar.progress = progress }
-            .perform(object : SimpleCallback()
-            {
-                override fun onFinish(path: String?)
-                {
-                    super.onFinish(path)
-                    textView.text = "扫描本地文件..."
-                    Realm.init(applicationContext)
-                    var realm = Realm.getInstance(songsConfig)
-                    val songs = realm.where<Song>().findAll()
-                    realm.executeTransaction {
-                        songs.forEach {
-                            val file = File(it.file_path + it.file_name)
-                            it.exist = file.exists()
-                        }
-                        it.where<DzXueXi>().findAll().forEach {
-                            val file = File(it.audioPath + it.audioFileName)
-                            it.exist = file.exists()
-                        }
-                        it.where<ReadBgm>().findAll().forEach {
-                            val file = File(it.filePath + it.file_name)
-                            it.fileExist = file.exists()
-                        }
-                    }
-                    realm.close()
-                    realm = Realm.getInstance(userConfig)
-                    realm.executeTransaction {
-                        it.deleteAll()
-                    }
-                    File("/mnt/usb_storage/SATA/C/langdu/records").delete()
-                    File("/mnt/usb_storage/SATA/C/langdu/songs/records").delete()
-                    rxSnappyClient.setString("dbVer", updateInfo.dbVer).subscribe { startMainAct() }
-                }
-            })
+        val dbVer = updateInfo.paramsItems["dbVer"] ?: error("aa")
+        updateInfo.paramsItems["downloadUrl"]?.let {
+            scopeNetLife {
+                val filePath =
+                    Download(
+                        it.paramsValue,
+                        dbDir + "/" + dbVer.paramsValue,
+                        absolutePath = true,
+                        uid = "downloadDb"
+                    ) {
+                        onProgress { progress, byteCount, speed -> progressBar.progress = progress }
+                        fileName(fileName)
+                    }.await()
+
+                LogUtils.d(filePath)
+                sysParams["DbFilePath"] = filePath
+                sysParams["dbVer"] = dbVer.paramsValue
+                startMainAct()
+            }
+        }
     }
 
     private fun startMainAct()
     {
+        textView.text = ""
+        progressBar.visibility = View.INVISIBLE
+        sysParams.close()
+        val realm = Realm.getInstance(userConfig)
+        realm.executeTransaction {
+            it.deleteAll()
+        }
+        realm.close()
+        File("/mnt/usb_storage/SATA/C/langdu/records").delete()
+        File("/mnt/usb_storage/SATA/C/songs/records").delete()
         val i = packageManager.getLaunchIntentForPackage("com.senriot.ilangbox")
-        i?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        i?.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(i)
-        finish()
-//        RePlugin.startActivity(
-//            this, RePlugin.createIntent(
-//                "ilangbox",
-//                "com.senriot.ilangbox.MainActivity"
-//            )
-//        );
     }
 
     @Subscribe
     fun appInstalled(event: AppInstalledEvent)
     {
-        updateInfo?.let { i ->
-            rxSnappyClient.getString("dbVer").subscribe({
-                if (it != i.dbVer)
-                    downDbFile(i)
-                else startMainAct()
-            }, {
-                it.printStackTrace()
-                downDbFile(i)
-            })
+
+        val dbVer = sysParams.get("dbVer")
+        updateInfo?.paramsItems?.get("dbVer")?.let {
+            if (it.paramsValue != dbVer)
+            {
+                downDbFile(updateInfo!!)
+            }
+            else
+            {
+                startMainAct()
+            }
         }
 
+//        updateInfo?.let { i ->
+//            rxSnappyClient.getString("dbVer").subscribe({
+//                if (it != i.dbVer)
+//                    downDbFile(i)
+//                else startMainAct()
+//            }, {
+//                it.printStackTrace()
+//                downDbFile(i)
+//            })
+//        }
+
+    }
+
+    fun jumpUpdate(v: View)
+    {
+        try
+        {
+            NetCancel.cancel("updateInfo")
+            NetCancel.cancel("downloadApk")
+            NetCancel.cancel("downloadDb")
+            startMainAct()
+        }
+        catch (e: Exception)
+        {
+            e.printStackTrace()
+            startMainAct()
+        }
     }
 }

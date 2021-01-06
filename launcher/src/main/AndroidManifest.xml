@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.senriot.ilang.launcher"
     android:sharedUserId="android.uid.system">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ilangbox">
-
-        <meta-data
-            android:name="dependence"
-            android:value="com.senriot.ilangbox" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -33,10 +33,15 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-    </application>
 
+        <service
+            android:name="com.fatangare.logcatviewer.service.LogcatViewerService"
+            android:label="LogcatLoggerService" />
+        <service
+            android:name="com.fatangare.logcatviewer.service.LogcatViewerFloatingView"
+            android:label="LogcatLoggerFloatingView" />
+    </application>
 </manifest>

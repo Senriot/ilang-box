@@ -77,7 +77,7 @@
     <fragment
         android:id="@+id/readListFragment"
         android:name="com.senriot.ilangbox.ui.langdu.ReadListFragment"
-        android:label="readListFragment">
+        android:label="ReadListFragment">
         <deepLink
             android:id="@+id/deepLink3"
             app:uri="https://www.senriot.com/ilang-box/readlist" />

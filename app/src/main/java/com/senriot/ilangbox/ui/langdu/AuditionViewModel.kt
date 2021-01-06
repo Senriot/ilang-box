@@ -55,7 +55,7 @@ class AuditionViewModel : AbstractViewModel()
     {
         EventBus.getDefault().post(StartRecordingEvent(item.readItem!!))
         val args = Bundle()
-        args.putSerializable("item",item.readItem!!)
+        args.putParcelable("item",item.readItem!!)
         view.findNavController().navigate(
            R.id.ldRecordingFragment,args
         )

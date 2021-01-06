@@ -17,11 +17,11 @@ data class RecordVO(
     /**
      * 微信ID
      */
-    var openid: String = "",
-    /**
-     * 歌曲ID
-     */
-    var itemid: String = "",
+    var openId: String = "",
+
+    var langduId: String = "",
+
+    var songId: String = "",
     /**
      * 地址
      */

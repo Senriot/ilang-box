@@ -1,0 +1,23 @@
+buildscript{
+    repositories{
+        jcenter()
+    }
+    dependencies{
+        classpath 'org.ajoberstar:gradle-git:1.7.2'
+    }
+}
+
+//import org.ajoberstar:grgit
+
+ext{
+    git = grgit.init()
+    gitVersionName = git.describe()
+    gitVersionCode = git.tag.list().size()
+    gitVersionCodeTime = git.head().time
+}
+//
+//task printVersion(){
+//    println("Version name: $gitVersionName")
+//    println("Version Code: $gitVersionCode")
+//    println("Version Code Time: $gitVersionCodeTime")
+//}

@@ -14,6 +14,7 @@ import com.yuan.library.dmanager.download.DownloadTask
 import com.yuan.library.dmanager.download.TaskEntity
 import com.yuan.library.dmanager.download.TaskStatus.*
 import io.realm.OrderedRealmCollection
+import java.io.File
 import java.text.DecimalFormat
 
 
@@ -31,21 +32,24 @@ class SongListAdapter(
         setHasStableIds(true)
     }
 
+
+
     @SuppressLint("SdCardPath")
     override fun onBindViewHolder(holder: RealmViewHolder, position: Int)
     {
         super.onBindViewHolder(holder, position)
         val binding = (holder.binding as OkSongItemBinding)
         val item = getItem(position) ?: return
-
         var itemTask = downloadManager.getTask(item.id)
-        binding.buttons.visibility = if (item.exist == true) View.VISIBLE else View.GONE
-        binding.btnDownload.visibility = if (item.exist == true) View.GONE else View.VISIBLE
+        val file = File("${item.file_path}${item.file_name}")
+        binding.buttons.visibility = if (file.exists()) View.VISIBLE else View.GONE
+        binding.btnDownload.visibility = if (file.exists()) View.GONE else View.VISIBLE
         if (itemTask != null)
         {
             val downloadViewModel = DownloadViewModel(item.id, 0)
             holder.binding.setVariable(BR.downloadVm, downloadViewModel)
-        } else
+        }
+        else
         {
             holder.binding.setVariable(BR.downloadVm, null)
         }
@@ -57,12 +61,13 @@ class SongListAdapter(
                     TaskEntity.Builder().downloadId(item.id)
                         .filePath(item.file_path)
                         .fileName(item.file_name)
-                        .url("http://aogevod.com:9000/group1/ilang/songs/90096705.mkv").build()
+                        .url(item.cloud_url).build()
                 )
                 downloadManager.addTask(itemTask)
                 val vm = DownloadViewModel(item.id, 0)
                 binding.setVariable(BR.downloadVm, vm)
-            } else
+            }
+            else
             {
                 val taskEntity = itemTask.taskEntity
                 when (taskEntity.taskStatus)

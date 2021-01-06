@@ -65,24 +65,26 @@
 
             <ImageButton
                 android:id="@+id/imageButton16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{()->vm.upload(item)}"
+                android:scaleType="fitCenter"
                 android:visibility="@{UserDataHelper.hasUpload(item)?View.VISIBLE:View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton18"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_shangchuan" />
 
             <ImageButton
                 android:id="@+id/imageButton21"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{(v)->vm.reRecording(v,item)}"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageButton16"
                 app:layout_constraintTop_toTopOf="parent"
@@ -90,16 +92,27 @@
 
             <ImageButton
                 android:id="@+id/imageButton22"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
                 android:background="?attr/selectableItemBackground"
                 android:onClick="@{(v)->vm.playRecord(v,item)}"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageButton21"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_shiting" />
 
+            <ImageButton
+                android:id="@+id/imageButton18"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)->vm.delete(item)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_ok_del" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

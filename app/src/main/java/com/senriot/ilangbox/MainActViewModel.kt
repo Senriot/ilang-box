@@ -9,6 +9,7 @@ import androidx.databinding.ObservableField
 import com.android.karaoke.player.DspHelper
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
+import com.drake.net.utils.scopeNet
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import com.wwengine.hw.PaintView
@@ -32,12 +33,15 @@ class MainActViewModel : AbstractViewModel()
     var searchText = ObservableField<String>().apply { set("") }
     var charArray = ObservableArrayList<Char>()
 
+    var inputWindowIsShow = false
+
     private var paintView: PaintView? = null
     private var searchKeyword by Delegates.observable("", onChange = { _, oldValue, newValue ->
         if (oldValue != newValue)
         {
             searchText.set(newValue)
-            EventBus.getDefault().post(SearchTextChangedEvent(newValue))
+            if (inputWindowIsShow)
+                EventBus.getDefault().post(SearchTextChangedEvent(newValue))
         }
     })
     val hwListener: PaintView.OnResultListener = PaintView.OnResultListener { view, result ->
@@ -77,7 +81,7 @@ class MainActViewModel : AbstractViewModel()
     {
         val uri = when (event.id)
         {
-            R.id.rb_xuexi  -> R.mipmap.xuexi_bg
+            R.id.rb_xuexi -> R.mipmap.xuexi_bg
             R.id.rb_langdu -> R.mipmap.langdu_bg
             R.id.rb_hongge -> R.mipmap.kge_bg
             else           -> -1
