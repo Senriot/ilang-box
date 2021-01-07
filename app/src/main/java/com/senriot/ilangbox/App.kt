@@ -12,7 +12,10 @@ import com.drake.net.initNet
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.senriot.ilangbox.koin.ViewModels
 import com.senriot.ilangbox.services.MessageService
+import com.stericson.RootShell.execution.Command
+import com.stericson.RootTools.RootTools
 import com.yuan.library.dmanager.download.DownloadManager
+import io.reactivex.Observable
 import io.realm.Realm
 import org.json.JSONObject
 import org.koin.android.ext.koin.androidContext
@@ -50,10 +53,6 @@ class App : Application()
 
     companion object
     {
-        var micVolume = 34
-        var headsetVolume = 34
-        var soundVolume = 34
-
         var wxUser: WxUser? = null
     }
 }
@@ -66,5 +65,22 @@ class FastJsonConvert : DefaultConvert(code = "code", message = "message", succe
         val b = JSONObject(this)
         val result = b.getString("result")
         return JSON.parseObject(result, succeed)
+    }
+}
+
+fun getDeviceSN(): Observable<String>
+{
+    val cmd = "busybox ifconfig eth0 | grep 'HWaddr' | busybox awk '{print $5}'"
+    return Observable.create {
+        RootTools.getShell(true).add(object : Command(1, cmd)
+        {
+            override fun commandOutput(id: Int, line: String)
+            {
+                super.commandOutput(id, line)
+                val result = line.replace(":", "")
+                it.onNext(result)
+                it.onComplete()
+            }
+        })
     }
 }

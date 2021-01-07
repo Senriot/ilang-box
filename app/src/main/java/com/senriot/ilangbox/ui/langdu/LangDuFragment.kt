@@ -60,8 +60,12 @@ class LangDuFragment :
         bgmSeekBar.setOnSeekBarChangeListener(seekBarChangeListener)
         micSeekBar.setOnSeekBarChangeListener(seekBarChangeListener)
         btnDefault.setOnClickListener {
-            bgmSeekBar.progress = 50
-            micSeekBar.progress = 50
+            vm.micVolume.set(34)
+            vm.soundVolume.set(34)
+            vm.sendEffectValue(34, "03")
+            vm.sendEffectValue(34, "02")
+            vm.sp.micVolume = 34
+            vm.sp.soundVolume = 34
         }
     }
 
@@ -80,23 +84,16 @@ class LangDuFragment :
         {
             if (fromUser)
             {
-                val sr = arrayListOf("48", "4D", "00", "06", "02", "00", progress.toString(16))
                 if (seekBar.id == R.id.bgmSeekBar)
                 {
-                    sr.add("03")
+                    vm.sendEffectValue(progress, "03")
+                    vm.sp.soundVolume = progress
                 }
                 else
                 {
-                    sr.add("02")
+                    vm.sendEffectValue(progress, "02")
+                    vm.sp.micVolume = progress
                 }
-                var sum = 0xff
-                sr.forEach {
-                    sum = sum xor Integer.parseInt(it, 16)
-                }
-                sr.add(Integer.toHexString(sum))
-                sr.add("AA")
-                LogUtils.e(sr.joinToString(""))
-                DspHelper.sendHex(sr.joinToString(""))
             }
         }
 

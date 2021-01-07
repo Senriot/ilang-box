@@ -2,8 +2,6 @@ package com.android.karaoke.common
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.stericson.RootShell.execution.Command
-import com.stericson.RootTools.RootTools
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -13,39 +11,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 
-fun getDeviceSN(): Observable<String>
-{
-    val cmd = "busybox ifconfig eth0 | grep 'HWaddr' | busybox awk '{print $5}'"
-    return Observable.create {
-        RootTools.getShell(true).add(object : Command(1, cmd)
-        {
-            override fun commandOutput(id: Int, line: String)
-            {
-                super.commandOutput(id, line)
-                val result = line.replace(":", "")
-                it.onNext(result)
-                it.onComplete()
-            }
-        })
-    }
 
-//    Observable.defer {r->
-
-//    }
-
-
-//    var serial: String = UUID.randomUUID().toString()
-//    try
-//    {
-//        val c = Class.forName("android.os.SystemProperties")
-//        val get = c.getMethod("get", String::class.java)
-//        serial = get.invoke(c, "ro.boot.serialno") as String
-//    } catch (e: Exception)
-//    {
-//        e.printStackTrace()
-//    }
-//    return serial
-}
 
 fun <T> Observable<T>.onUI(): Observable<T> = observeOn(AndroidSchedulers.mainThread())
 
@@ -71,5 +37,3 @@ fun <T> Flowable<T>.onIO(): Flowable<T> = subscribeOn(Schedulers.io())
 
 fun <T> Flowable<T>.onUI(onNext: (T) -> Unit, onError: (Throwable) -> Unit): Disposable =
     observeOn(AndroidSchedulers.mainThread()).subscribe(onNext, onError)
-
-val objectMapper by lazy { ObjectMapper().apply { registerModule(KotlinModule()) } }

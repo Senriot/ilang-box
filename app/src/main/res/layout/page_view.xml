@@ -16,7 +16,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="?attr/selectableItemBackground"
-        android:text="上一页" />
+        android:text="上一页"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/currentPage"
@@ -51,7 +52,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="?attr/selectableItemBackground"
-        android:text="下一页" />
+        android:text="下一页"
+        android:textColor="#FFFFFF" />
 
     <ImageButton
         android:id="@+id/btnBack"

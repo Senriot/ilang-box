@@ -3,50 +3,34 @@ package com.senriot.ilangbox
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.*
+import com.apkfuns.logutils.LogUtils
+import com.stericson.RootTools.RootTools
+import java.lang.Exception
 
 class LauncherReceiver : BroadcastReceiver()
 {
 
     override fun onReceive(context: Context, intent: Intent)
     {
-        val action = intent.action.toString()
-        when (action)
+        LogUtils.e("启动APP ${intent.action}")
+        when (intent.action)
         {
-            ACTION_BOOT_COMPLETED ->
+           Intent.ACTION_BOOT_COMPLETED ->
             {
                 runApp(context)
             }
-            ACTION_PACKAGE_REPLACED ->
-            {
-                reRunApp(intent, context)
-            }
-            ACTION_PACKAGE_ADDED ->
-            {
-                reRunApp(intent, context)
-            }
-            ACTION_PACKAGE_REMOVED ->
-            {
-
-            }
-        }
-    }
-
-    private fun reRunApp(intent: Intent, context: Context)
-    {
-        val packageName = intent.dataString
-        val packages = context.packageName
-        if (packageName == "package:$packages")
-        {
-            runApp(context)
         }
     }
 
     private fun runApp(context: Context)
     {
-        context.packageManager.getLaunchIntentForPackage(context.packageName)?.let {
-            it.addFlags(FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(it)
-        }
+        LogUtils.e("启动APP")
+        val i = Intent(context, LoginActivity::class.java)
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(i)
+//        context.packageManager.getLaunchIntentForPackage(context.packageName)?.let {
+//            it.addFlags(FLAG_ACTIVITY_NEW_TASK)
+//            context.startActivity(it)
+//        }
     }
 }

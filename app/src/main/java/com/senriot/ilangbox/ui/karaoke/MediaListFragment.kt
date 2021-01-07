@@ -1,25 +1,18 @@
 package com.senriot.ilangbox.ui.karaoke
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.models.SongRecord
-import com.android.karaoke.common.mvvm.BindingConfig
 import com.android.karaoke.common.realm.UserDataHelper
 import com.android.karaoke.common.realm.userConfig
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.HistoryAdapter
 import com.senriot.ilangbox.adapter.PlaylistAdapter
-import com.senriot.ilangbox.adapter.RealmAdapter
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.media_list_dialog.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 class MediaListFragment : DialogFragment()
 {

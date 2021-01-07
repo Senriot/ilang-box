@@ -3,18 +3,13 @@ package com.senriot.ilangbox.services
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.content.pm.IPackageManager
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.net.Uri
 import android.os.Binder
 import android.os.Environment
 import android.os.IBinder
-import android.widget.Toast
 import com.android.karaoke.common.api.Auth
 import com.android.karaoke.common.api.UpdateInfo
-import com.android.karaoke.common.getDeviceSN
 import com.android.karaoke.common.onIO
 import com.android.karaoke.common.onUI
 import com.android.karaoke.common.preference.SPService
@@ -27,12 +22,13 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ConnectivityPredicate
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.google.gson.Gson
 import com.senriot.ilangbox.event.LoginEvent
+import com.senriot.ilangbox.getDeviceSN
+import com.stericson.RootShell.execution.Command
+import com.stericson.RootTools.RootTools
 import io.reactivex.disposables.Disposable
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
 import org.greenrobot.eventbus.EventBus
-import java.io.File
-import java.lang.reflect.Method
 import java.nio.charset.Charset
 
 class MessageService : Service()
@@ -90,7 +86,7 @@ class MessageService : Service()
     {
         scopeNet {
             val updateInfo = Get<UpdateInfo>(
-                "sysParams/queryByCode?code=app_update_info",
+                "sysParams/queryByCode?code=app_update_info_v2",
                 uid = "updateInfo"
             ).await()
             checkApp(updateInfo)
@@ -160,16 +156,21 @@ class MessageService : Service()
 
     private fun installApk(path: String)
     {
-        val file = File(path)
-        val clazz = Class.forName("android.os.ServiceManager")
-        val method_getService: Method = clazz.getMethod(
-            "getService",
-            String::class.java
-        )
-        val bind: IBinder = method_getService.invoke(null, "package") as IBinder
+        RootTools.getShell(true)
+            .add(object : Command(0, "pm install -r -i $packageName $path \n")
+            {
+                override fun commandCompleted(id: Int, exitcode: Int)
+                {
+                    super.commandCompleted(id, exitcode)
+                    LogUtils.d("安装完成")
+                }
 
-        val iPm = IPackageManager.Stub.asInterface(bind)
-        iPm.installPackage(Uri.fromFile(file), null, 2, file.name)
+                override fun commandOutput(id: Int, line: String?)
+                {
+                    super.commandOutput(id, line)
+                    LogUtils.d(line)
+                }
+            })
     }
 
     override fun onBind(intent: Intent): IBinder
@@ -198,9 +199,9 @@ class MessageService : Service()
                 override fun onSuccess(asyncActionToken: IMqttToken)
                 {
                     LogUtils.d("mtqq 连接成功")
-                    val topics =
-                        arrayOf("device/langdu/$clientId/login", "device/langdu/onLogin/$clientId")
-                    asyncActionToken.client.subscribe(topics, intArrayOf(0, 0))
+//                    val topics =
+//                        arrayOf("device/langdu/$clientId/login", "device/langdu/onLogin/$clientId")
+//                    asyncActionToken.client.subscribe(topics, intArrayOf(0, 0))
 //                    client?.subscribe(topics, intArrayOf(0, 0))
                 }
 
@@ -240,12 +241,9 @@ class MessageService : Service()
         override fun connectComplete(reconnect: Boolean, serverURI: String?)
         {
             LogUtils.e("连接完成 serverURI: $serverURI reconnect:$reconnect")
-            if (reconnect)
-            {
-                getDeviceSN().subscribe {
-                    val topics = arrayOf("device/langdu/$it/login", "device/langdu/onLogin/$it")
-                    client?.subscribe(topics, intArrayOf(0, 0))
-                }
+            getDeviceSN().subscribe {
+                val topics = arrayOf("device/langdu/$it/login", "device/langdu/onLogin/$it")
+                client?.subscribe(topics, intArrayOf(0, 0))
             }
         }
     }

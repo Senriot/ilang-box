@@ -136,23 +136,27 @@
                 android:layout_marginTop="60dp"
                 android:orientation="horizontal">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/button"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
                     android:onClick="@{()->vm.reset()}"
                     android:text="默认"
+                    android:textColor="@color/md_white_1000"
+                    app:cornerRadius="22dp"
                     android:textSize="18sp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnGoBack"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="225dp"
-                    android:background="?attr/selectableItemBackground"
                     android:onClick="goBack"
                     android:text="返回"
+                    android:textColor="@color/md_white_1000"
+                    app:cornerRadius="22dp"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>

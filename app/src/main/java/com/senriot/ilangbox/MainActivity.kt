@@ -18,7 +18,6 @@ import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
-import com.senriot.ilangbox.services.UpdateService
 import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
@@ -38,8 +37,6 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     val navHostFragment by lazy {
         supportFragmentManager.findFragmentById(R.id.navNavigation) as NavHostFragment
     }
-
-    private var currentFragment: Fragment = XueXiFragment()
 
     override val bindingVariable: Int = BR.vm
 
@@ -78,9 +75,20 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
             }
             EventBus.getDefault().post(MainNavChangedEvent(checkedId))
         }
-        App.wxUser?.let { btnProfile.setImageURI(it.headImgUrl) }
-
         startPlayerService()
+    }
+
+    override fun onStart()
+    {
+        super.onStart()
+        if (App.wxUser != null)
+        {
+            btnProfile.setImageURI(App.wxUser!!.headImgUrl)
+        }
+        else
+        {
+            btnProfile.setImageURI("")
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean
@@ -103,7 +111,8 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun goBack(view: View)
     {
-        view.findNavController().popBackStack()
+//        view.findNavController().popBackStack()
+        onBackPressed()
     }
 
     fun showLdList(view: View)
@@ -166,11 +175,11 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         }
     }
 
-    private val mediaListFragment by lazy { MediaListFragment() }
+//    private val mediaListFragment by lazy { MediaListFragment() }
 
     fun showMediaList(view: View)
     {
-        mediaListFragment.show(supportFragmentManager, "mediaList")
+        MediaListFragment().show(supportFragmentManager, "mediaList")
     }
 
     fun showInputView(view: View)

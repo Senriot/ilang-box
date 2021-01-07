@@ -37,21 +37,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver
+            android:name=".ApkInstalledReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".LauncherReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
             </intent-filter>
-        </receiver>
-
-<!--        <service-->
-<!--            android:name=".services.UpdateService"-->
-<!--            android:exported="false" />-->
+        </receiver> <!-- <service -->
+        <!-- android:name=".services.UpdateService" -->
+        <!-- android:exported="false" /> -->
         <service
             android:name=".services.MessageService"
             android:enabled="true" />

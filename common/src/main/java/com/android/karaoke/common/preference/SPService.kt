@@ -7,4 +7,10 @@ class SPService
     var dbFilePath: String? by Preference.string("DB_FILE_PATH")
 
     var userFirst: Boolean by Preference.boolean("FIRST", true)
+
+    var micVolume: Int by Preference.int("MIC_VOLUME", 34)
+
+    var headsetVolume: Int by Preference.int("HEADSET_VOLUME", 34)
+
+    var soundVolume: Int by Preference.int("SOUND_VOLUME", 34)
 }

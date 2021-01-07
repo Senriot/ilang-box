@@ -700,9 +700,12 @@ class PlayerService : Service(), PresentationHelper.Listener
             readItem = item
             file = f
         }
+
+        val records = UserDataHelper.userData.records
+
         Realm.getInstance(userConfig).executeTransaction {
             val i = it.copyToRealmOrUpdate(record)
-            UserDataHelper.userData.records.add(i)
+            records.add(i)
         }
         audioRecorder?.start()
     }

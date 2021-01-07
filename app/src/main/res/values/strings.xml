@@ -22,4 +22,6 @@
     <string name="queue">等待中</string>
     <string name="request_error">请求异常</string>
     <string name="storage_error">存储异常</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

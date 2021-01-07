@@ -2,6 +2,7 @@ package com.senriot.ilangbox.ui.karaoke
 
 import android.widget.SeekBar
 import androidx.databinding.ObservableInt
+import com.android.karaoke.common.preference.SPService
 import com.android.karaoke.player.DspHelper
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
@@ -10,18 +11,21 @@ import com.senriot.ilangbox.R
 
 class SoundEffectViewModel : AbstractViewModel()
 {
-    val micVolume = ObservableInt(App.micVolume)
-    val headsetVolume = ObservableInt(App.headsetVolume)
-    val soundVolume = ObservableInt(App.soundVolume)
+
+    val sp = SPService()
+
+    val micVolume = ObservableInt(sp.micVolume)
+    val headsetVolume = ObservableInt(sp.headsetVolume)
+    val soundVolume = ObservableInt(sp.soundVolume)
 
     fun reset()
     {
         micVolume.set(34)
         headsetVolume.set(34)
         soundVolume.set(34)
-        App.micVolume = 34
-        App.headsetVolume = 34
-        App.soundVolume = 34
+        sp.micVolume = 34
+        sp.headsetVolume = 34
+        sp.soundVolume = 34
     }
 
     private fun changeVolume(value: Int, id: Int)
@@ -53,22 +57,22 @@ class SoundEffectViewModel : AbstractViewModel()
             {
                 when (seekBar.id)
                 {
-                    R.id.micSeekBar     ->
+                    R.id.micSeekBar ->
                     {
                         changeVolume(progress, seekBar.id)
                         micVolume.set(progress)
-                        App.micVolume = progress
+                        sp.micVolume = progress
                     }
                     R.id.headsetSeekBar ->
                     {
                         changeVolume(progress, seekBar.id)
                         headsetVolume.set(progress)
-                        App.headsetVolume = progress
+                        sp.headsetVolume = progress
                     }
-                    R.id.soundSeekBar   ->
+                    R.id.soundSeekBar ->
                     {
                         soundVolume.set(progress)
-                        App.soundVolume = progress
+                        sp.soundVolume = progress
                     }
                 }
             }

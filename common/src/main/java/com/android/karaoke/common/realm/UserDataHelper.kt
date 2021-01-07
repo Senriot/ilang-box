@@ -13,28 +13,56 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import org.greenrobot.eventbus.EventBus
 import java.io.File
+import kotlin.properties.Delegates
 
 object UserDataHelper
 {
     private val realm = Realm.getInstance(userConfig)
 
-    var userId = "guest"
+//    var userId = "guest"
 
-//    lateinit var userData: UserData
+    var userData: UserData = UserData("guest")
 
-
-    val userData by lazy {
-        var data = UserData(userId)
-        realm.executeTransaction {  data = realm.copyToRealmOrUpdate(data) }
-        data.favorites.addChangeListener { t, _ ->
-            EventBus.getDefault().post(FavoritesChangedEvent())
+    var userId by Delegates.observable("", { property, oldValue, newValue ->
+        if (oldValue != newValue)
+        {
+            if (newValue.isNotEmpty())
+            {
+                userData = realm.where<UserData>().equalTo("id", newValue).findFirst() ?: UserData(
+                    newValue
+                )
+                if (!userData.isManaged)
+                {
+                    realm.executeTransaction {
+                        userData = it.createObject(UserData::class.java, newValue)
+                    }
+                }
+                userData.favorites.addChangeListener { t, _ ->
+                    EventBus.getDefault().post(FavoritesChangedEvent())
+                }
+                userData.playlist.addChangeListener { t, _ ->
+                    EventBus.getDefault().post(PlaylistChangedEvent(t))
+                }
+                EventBus.getDefault().post(ProfileDataInitEvent(userData))
+            }
         }
-        data.playlist.addChangeListener { t, _ ->
-            EventBus.getDefault().post(PlaylistChangedEvent(t))
-        }
-        EventBus.getDefault().post(ProfileDataInitEvent(data))
-        data
-    }
+    })
+
+//    val userData by lazy {
+//        var data = realm.where<UserData>().equalTo("id", userId).findFirst() ?: UserData(userId)
+//        if (!data.isManaged)
+//        {
+//            realm.executeTransaction { data = realm.createObject(UserData::class.java, userId) }
+//        }
+//        data.favorites.addChangeListener { t, _ ->
+//            EventBus.getDefault().post(FavoritesChangedEvent())
+//        }
+//        data.playlist.addChangeListener { t, _ ->
+//            EventBus.getDefault().post(PlaylistChangedEvent(t))
+//        }
+//        EventBus.getDefault().post(ProfileDataInitEvent(data))
+//        data
+//    }
 
 
 //    @JvmStatic
