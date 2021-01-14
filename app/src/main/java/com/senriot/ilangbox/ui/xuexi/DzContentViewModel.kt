@@ -1,8 +1,8 @@
 package com.senriot.ilangbox.ui.xuexi
 
 import androidx.databinding.ObservableField
-import androidx.lifecycle.ViewModel
 import com.android.karaoke.common.models.DzXueXi
+import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.events.PlayEventType
 import com.android.karaoke.player.events.PlayerControlEvent
 import com.android.karaoke.player.events.StartDzxxEvent
@@ -12,13 +12,20 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.io.File
 
 class DzContentViewModel : AbstractViewModel()
 {
     val item = ObservableField<DzXueXi>()
 
-    var categoryId = 123L
+    var categoryId = ""
 
+    private var curIndex = 0
+    private val items by lazy {
+        val r = Realm.getInstance(songsConfig).where<DzXueXi>().equalTo("type", categoryId).findAll()
+        curIndex = r.indexOf(item.get())
+        r
+    }
 
     init
     {
@@ -31,31 +38,68 @@ class DzContentViewModel : AbstractViewModel()
         super.onCleared()
     }
 
-//    private val items by lazy {
-//        Realm.getDefaultInstance().where<DzXueXi>().equalTo("category.id", categoryId).findAll()
-//    }
 
     fun onNext()
     {
-        val items = Realm.getDefaultInstance().where<DzXueXi>().equalTo("category.id", categoryId).findAll()
-        val index = items.indexOf(item.get())
-        LogUtils.e("${index}  ${items.size}")
-        if (items.size > index + 1)
-            items[index + 1]?.let {
-                LogUtils.e(it)
-                EventBus.getDefault().post(StartDzxxEvent(it))
+        if (items.size > curIndex + 1)
+        {
+            try
+            {
+                items[curIndex + 1]?.let {
+                    LogUtils.e(it)
+                    curIndex += 1
+                    val file = File(it.audioPath + it.audioFileName)
+                    if (file.exists())
+                    {
+                        EventBus.getDefault().post(StartDzxxEvent(it, categoryId))
+                    }
+                    else
+                    {
+                        onNext()
+                    }
+                }
             }
+            catch (e: Exception)
+            {
+
+            }
+        }
+        else
+        {
+            curIndex = items.size - 1
+        }
     }
 
     fun onPrevious()
     {
-        val items = Realm.getDefaultInstance().where<DzXueXi>().equalTo("category.id", categoryId).findAll()
-        val index = items.indexOf(item.get())
-        if (index > 0)
-            items[index - 1]?.let {
-                LogUtils.e(it)
-                EventBus.getDefault().post(StartDzxxEvent(it))
+        if (curIndex > 0)
+        {
+            try
+            {
+
+
+                items[curIndex - 1]?.let {
+                    curIndex -= 1
+                    val file = File(it.audioPath + it.audioFileName)
+                    if (file.exists())
+                    {
+                        EventBus.getDefault().post(StartDzxxEvent(it, categoryId))
+                    }
+                    else
+                    {
+                        onPrevious()
+                    }
+                }
             }
+            catch (e: Exception)
+            {
+
+            }
+        }
+        else
+        {
+            curIndex = items.size - 1
+        }
     }
 
     val pause = fun(isPause: Boolean)
@@ -66,6 +110,6 @@ class DzContentViewModel : AbstractViewModel()
     @Subscribe
     fun startDzxx(event: StartDzxxEvent)
     {
-        item.set(event.item)
+        item.set(event.currentItem)
     }
 }

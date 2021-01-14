@@ -47,7 +47,6 @@ class AuditionViewModel : AbstractViewModel()
 
     fun onCompletion(view: View)
     {
-        view.findNavController().popBackStack()
         EventBus.getDefault().post(StopAuditionEvent())
     }
 
@@ -56,11 +55,5 @@ class AuditionViewModel : AbstractViewModel()
         EventBus.getDefault().post(StartRecordingEvent(item.readItem!!))
         val args = Bundle()
         args.putParcelable("item",item.readItem!!)
-        view.findNavController().navigate(
-           R.id.ldRecordingFragment,args
-        )
-//        EventBus.getDefault().post(StartRecordingEvent(item.get()!!))
-//        view.findNavController()
-//            .navigate(ReadListFragmentDirections.actionReadListFragmentToLdItemDetailFragment(item.readItem!!))
     }
 }

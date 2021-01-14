@@ -1,14 +1,14 @@
 package com.senriot.ilangbox.ui.welcome
 
-import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.arthurivanets.mvvm.MvvmFragment
+import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
+import com.senriot.ilangbox.databinding.KaraokeRecordsFragmentBinding
+import org.koin.android.viewmodel.ext.android.viewModel
 
-class KaraokeRecordsFragment : Fragment()
+class KaraokeRecordsFragment :
+    MvvmFragment<KaraokeRecordsFragmentBinding, KaraokeRecordsViewModel>(R.layout.karaoke_records_fragment)
 {
 
     companion object
@@ -16,21 +16,20 @@ class KaraokeRecordsFragment : Fragment()
         fun newInstance() = KaraokeRecordsFragment()
     }
 
-    private lateinit var viewModel: KaraokeRecordsViewModel
+    private val viewModel: KaraokeRecordsViewModel by viewModel()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View?
+
+    override fun createViewModel(): KaraokeRecordsViewModel = viewModel
+
+    override val bindingVariable: Int = BR.vm
+
+
+    override fun postInit()
     {
-        return inflater.inflate(R.layout.karaoke_records_fragment, container, false)
+        super.postInit()
+        viewDataBinding?.let {
+            it.list.layoutManager = LinearLayoutManager(activity)
+            it.list.adapter = viewModel.adapter
+        }
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(KaraokeRecordsViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }

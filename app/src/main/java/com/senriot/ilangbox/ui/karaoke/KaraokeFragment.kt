@@ -1,25 +1,30 @@
 package com.senriot.ilangbox.ui.karaoke
 
-import android.net.Uri
-import android.widget.SeekBar
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.android.karaoke.player.Accompany
-import com.android.karaoke.player.DspHelper
 import com.android.karaoke.player.events.AccompanyChangedEvent
-import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.KaraokeFragmentBinding
+import com.senriot.ilangbox.ui.NavFragment
 import kotlinx.android.synthetic.main.karaoke_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.koin.android.viewmodel.ext.android.viewModel
+import universum.studios.android.fragment.manage.FragmentController
 
 class KaraokeFragment :
-    MvvmFragment<KaraokeFragmentBinding, KaraokeViewModel>(R.layout.karaoke_fragment)
+    NavFragment<KaraokeFragmentBinding, KaraokeViewModel>(R.layout.karaoke_fragment)
 {
+
+//    private lateinit var fragmentController: FragmentController
+
+    override val fragmentController: FragmentController by lazy {
+        FragmentController(context, childFragmentManager).apply {
+            viewContainerId = R.id.container
+            factory = KaraokeFragments()
+        }
+    }
 
     override val bindingVariable: Int = BR.vm
 
@@ -42,13 +47,22 @@ class KaraokeFragment :
     override fun postInit()
     {
         super.postInit()
-        val host = childFragmentManager.findFragmentById(R.id.okNavHost) as NavHostFragment
-        btnBack.setOnClickListener {
-            host.navController.popBackStack(
-                R.id.karaokeMainFragment,
-                false
-            )
+        fragmentController.newRequest(KaraokeFragments.karaokeMain).immediate(true).execute()
+        btnSoundEffect.setOnClickListener {
+            fragmentController.newRequest(KaraokeFragments.soundEffect).addToBackStack(true)
+                .replaceSame(true).execute()
         }
+
+        viewDataBinding!!.btnBack.setOnClickListener {
+            fragmentController.fragmentManager.popBackStackImmediate()
+        }
+//        val host = childFragmentManager.findFragmentById(R.id.okNavHost) as NavHostFragment
+//        btnBack.setOnClickListener {
+//            host.navController.popBackStack(
+//                R.id.karaokeMainFragment,
+//                false
+//            )
+//        }
     }
 
     @Subscribe
@@ -57,17 +71,7 @@ class KaraokeFragment :
         btnAccompany.isChecked = event.acc != Accompany.BC
     }
 
-    override fun performDataBinding()
-    {
-        super.performDataBinding()
-        btnSoundEffect.setOnClickListener {
-            val host = childFragmentManager.findFragmentById(R.id.okNavHost) as NavHostFragment
-            if (host.navController.currentDestination?.label != "SoundEffectFragment")
-            {
-                host.navController.navigate(Uri.parse("https://www.senriot.com/ilang-box/soundEffect"))
-            }
-        }
-    }
+
 //    override fun p()
 //    {
 //        super.performDataBinding()

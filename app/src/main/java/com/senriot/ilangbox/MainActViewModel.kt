@@ -25,6 +25,10 @@ import kotlin.properties.Delegates
 class MainActViewModel : AbstractViewModel()
 {
 
+    val user = App.wxUser
+    val userName = ObservableField("")
+    val avatar = ObservableField("")
+
     init
     {
         EventBus.getDefault().register(this)

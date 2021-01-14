@@ -10,27 +10,27 @@ import kotlinx.android.synthetic.main.karaoke_list_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class KaraokeListFragment :
-        MvvmFragment<KaraokeListFragmentBinding, KaraokeListViewModel>(R.layout.karaoke_list_fragment)
+    MvvmFragment<KaraokeListFragmentBinding, KaraokeListViewModel>(R.layout.karaoke_list_fragment)
 {
 
     override val bindingVariable: Int = BR.vm
 
     private val vm by viewModel<KaraokeListViewModel>()
 
-    private val args by navArgs<KaraokeListFragmentArgs>()
+    // private val args by navArgs<KaraokeListFragmentArgs>()
 
     override fun createViewModel(): KaraokeListViewModel = vm
 
     override fun init(savedInstanceState: Bundle?)
     {
         super.init(savedInstanceState)
-        vm.title = args.title
+        val t = arguments?.getString("title") ?: ""
+        vm.title = t
     }
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
-
+        super.postInit()
         scrollView.setAdapter(vm.adapter)
     }
 }

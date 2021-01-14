@@ -21,7 +21,9 @@ object UserDataHelper
 
 //    var userId = "guest"
 
-    var userData: UserData = UserData("guest")
+    private const val GUEST_ID = "Guest"
+
+    var userData: UserData = UserData(GUEST_ID)
 
     var userId by Delegates.observable("", { property, oldValue, newValue ->
         if (oldValue != newValue)
@@ -248,7 +250,13 @@ object UserDataHelper
     @JvmStatic
     fun hasUpload(item: Record): Boolean
     {
-        return userData.id != "Guest" && !item.updated
+        return userData.id != GUEST_ID && !item.updated
+    }
+
+    @JvmStatic
+    fun hasUpload(item: SongRecord): Boolean
+    {
+        return userData.id != GUEST_ID && !item.updated
     }
 
     @JvmStatic

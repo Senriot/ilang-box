@@ -13,13 +13,12 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/kge_bg"
         tools:context=".ui.welcome.ProfileFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="457.3dp"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom"
             android:layout_marginStart="64dp"
             android:layout_marginEnd="64dp"
             android:background="@mipmap/dz_bg">
@@ -51,7 +50,7 @@
                         android:clickable="true"
                         android:text="朗读录音"
                         android:textColor="@color/nav_item_color"
-                        android:textSize="24sp" />
+                        android:textSize="18sp" />
 
                     <RadioButton
                         android:id="@+id/rb_song_records"
@@ -61,7 +60,7 @@
                         android:button="@null"
                         android:text="歌曲录音"
                         android:textColor="@color/nav_item_color"
-                        android:textSize="24sp" />
+                        android:textSize="18sp" />
 
                 </RadioGroup>
 

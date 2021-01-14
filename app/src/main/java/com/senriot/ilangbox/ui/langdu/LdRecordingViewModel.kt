@@ -17,6 +17,7 @@ import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.drake.net.Post
 import com.drake.net.utils.scopeNet
+import com.senriot.ilangbox.GUEST
 import com.yanzhenjie.kalle.FormBody
 import io.realm.Realm
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +81,7 @@ class LdRecordingViewModel : AbstractViewModel()
     {
         record = event.record
         recordCompletion.set(true)
-        if (UserDataHelper.userData.id != "Guest")
+        if (UserDataHelper.userData.id != GUEST)
             hasUpload.set(true)
     }
 
@@ -93,7 +94,7 @@ class LdRecordingViewModel : AbstractViewModel()
     fun onCompletion()
     {
         recordCompletion.set(true)
-        if (UserDataHelper.userData.id != "Guest")
+        if (UserDataHelper.userData.id != GUEST)
             hasUpload.set(true)
         EventBus.getDefault().post(ReadingStopOfUser())
     }
@@ -110,15 +111,12 @@ class LdRecordingViewModel : AbstractViewModel()
         if (record != null)
         {
             EventBus.getDefault().post(PlayRecordEvent(record!!))
-            view.findNavController().navigate(
-                LdRecordingFragmentDirections.actionLdRecordingFragmentToAuditionFragment(record!!)
-            )
         }
     }
 
     fun upload(view: View)
     {
-        if (UserDataHelper.userData.id != "Guest")
+        if (UserDataHelper.userData.id != GUEST)
         {
 
 

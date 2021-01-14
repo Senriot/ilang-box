@@ -1,15 +1,17 @@
 // Please note : @LinkingObjects and default values are not represented in the schema and thus will not be part of the generated models
 package com.android.karaoke.common.models
 
+import android.os.Parcelable
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.RealmField
-import java.io.Serializable
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @RealmClass(name = "ilang_dz_xiexi")
-open class DzXueXi : RealmObject(), Serializable
+@Parcelize
+open class DzXueXi : RealmObject(), Parcelable
 {
 
     @PrimaryKey

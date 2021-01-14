@@ -9,22 +9,22 @@ class KaraokeFragments : BaseFragmentFactory()
     {
         @JvmStatic
         @FactoryFragment(KaraokeMainFragment::class)
-        val main = 0x01
+        val karaokeMain = 0x31
 
         @JvmStatic
         @FactoryFragment(KaraokeArtistListFragment::class)
-        val artistList = 0x02
+        val artistList = 0x32
 
         @JvmStatic
         @FactoryFragment(KaraokeArtistSongsFragment::class)
-        var artistSongs = 0x03
+        val artistSongs = 0x33
 
         @JvmStatic
         @FactoryFragment(KaraokeListFragment::class)
-        val songList = 0x04
+        val songList = 0x34
 
         @JvmStatic
-        @FactoryFragment(KaraokeListFragment::class)
-        val soundEffect = 0x05
+        @FactoryFragment(SoundEffectFragment::class)
+        val soundEffect = 0x35
     }
 }

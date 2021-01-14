@@ -43,7 +43,7 @@ class SongRecordPlaying(val songRecord: SongRecord)
 
 class StopAuditionEvent()
 
-class StartDzxxEvent(val item: DzXueXi)
+class StartDzxxEvent(val currentItem: DzXueXi, val categoryId: String)
 
 class AccompanyChangedEvent(val acc: Accompany)
 

@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity()
 
     init
     {
-        FragmentAnnotations.setEnabled(true)
         EventBus.getDefault().register(this)
     }
 
@@ -78,7 +77,7 @@ class LoginActivity : AppCompatActivity()
 
     fun guestLogin(view: View)
     {
-        UserDataHelper.userId = "guest"
+        UserDataHelper.userId = GUEST
         App.wxUser = null
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

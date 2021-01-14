@@ -11,21 +11,31 @@ import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.android.karaoke.common.MvvmActivity
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
+import com.arthurivanets.mvvm.MvvmActivity
+import com.arthurivanets.mvvm.MvvmFragment
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
+import com.senriot.ilangbox.event.LoginEvent
 import com.senriot.ilangbox.event.MainNavChangedEvent
 import com.senriot.ilangbox.event.ShowReadListEvent
+import com.senriot.ilangbox.ui.NavFragment
 import com.senriot.ilangbox.ui.input.InputPopupWindow
+import com.senriot.ilangbox.ui.karaoke.KaraokeFragment
+import com.senriot.ilangbox.ui.karaoke.KaraokeFragments
 import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
+import com.senriot.ilangbox.ui.langdu.LangDuFragment
+import com.senriot.ilangbox.ui.langdu.LangDuFragments
 import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
+import com.senriot.ilangbox.ui.welcome.ProfileFragment
 import com.senriot.ilangbox.ui.xuexi.XueXiFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import org.koin.android.viewmodel.ext.android.viewModel
+import universum.studios.android.fragment.manage.FragmentController
 
 class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layout.activity_main)
 {
@@ -34,8 +44,12 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     val conn: PlayerServiceConnection by lazy { PlayerServiceConnection() }
 
-    val navHostFragment by lazy {
-        supportFragmentManager.findFragmentById(R.id.navNavigation) as NavHostFragment
+
+    private val fragmentController by lazy {
+        FragmentController(this, supportFragmentManager).apply {
+            viewContainerId = R.id.container
+            factory = MainActFragments()
+        }
     }
 
     override val bindingVariable: Int = BR.vm
@@ -49,32 +63,20 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     override fun init(savedInstanceState: Bundle?)
     {
         super.init(savedInstanceState)
+        EventBus.getDefault().register(this)
         nav.check(R.id.rb_langdu)
         nav.setOnCheckedChangeListener { group, checkedId ->
             val id = when (checkedId)
             {
-                R.id.rb_xuexi -> R.id.xueXiFragment
-                R.id.rb_langdu -> R.id.langDuFragment
-                R.id.rb_hongge -> R.id.karaokeFragment
+                R.id.rb_xuexi -> MainActFragments.DZ
+                R.id.rb_langdu -> MainActFragments.LANGDU
+                R.id.rb_hongge -> MainActFragments.KARAOKE
                 else           -> -1
             }
-            val builder = NavOptions.Builder()
-                .setLaunchSingleTop(true)
-                .setEnterAnim(R.anim.nav_default_enter_anim)
-                .setExitAnim(R.anim.nav_default_exit_anim)
-                .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-                .setPopExitAnim(R.anim.nav_default_pop_exit_anim)
-            navHostFragment.navController.navigate(id, null, builder.build())
-            if (id == R.id.langDuFragment)
-            {
-                ldList.visibility = View.VISIBLE
-            }
-            else
-            {
-                ldList.visibility = View.GONE
-            }
+            fragmentController.newRequest(id).immediate(true).execute()
             EventBus.getDefault().post(MainNavChangedEvent(checkedId))
         }
+        fragmentController.newRequest(MainActFragments.LANGDU).immediate(true).execute()
         startPlayerService()
     }
 
@@ -83,17 +85,8 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         super.onStart()
         if (App.wxUser != null)
         {
-            btnProfile.setImageURI(App.wxUser!!.headImgUrl)
+            vm.avatar.set(App.wxUser!!.headImgUrl)
         }
-        else
-        {
-            btnProfile.setImageURI("")
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean
-    {
-        return Navigation.findNavController(this, R.id.navNavigation).navigateUp()
     }
 
     override fun onResume()
@@ -102,52 +95,47 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         hideNavBar(true)
     }
 
+
     fun showLdContent(view: View)
     {
-        val nc = findNavController(view.id)
         val tag = view.tag.toString()
-        nc.navigate(LdMainFragmentDirections.actionLdMainFragmentToLdContentFragment(tag))
+        val f = fragmentController.findCurrentFragment()
+        if (f is LangDuFragment)
+        {
+            f.onBackPressed()
+            f.fragmentController.newRequest(LangDuFragments.content)
+                .arguments(Bundle().apply { putString("categoryId", tag) }).addToBackStack(true)
+                .execute()
+        }
     }
+
 
     fun goBack(view: View)
     {
-//        view.findNavController().popBackStack()
         onBackPressed()
     }
 
-    fun showLdList(view: View)
+    override fun onBackPressed()
     {
-
-        EventBus.getDefault().post(ShowReadListEvent())
-//        navHostFragment.navController.navigate(Uri.parse("https://www.senriot.com/ilang-box/readlist"))
-//        val artists = Realm.getDefaultInstance().where<Dict>().findAll()
-//
-//        Realm.getInstance(userConfig).executeTransaction {
-//            it.copyToRealmOrUpdate(artists)
-//        }
-//
-//        LogUtils.e("保存完成")
-//        Realm.getInstance(ldConfig).executeTransaction {
-//            it.delete(ReadBgm::class.java)
-//        }
-//        val file = File("/sdcard/ilang-box/bgm")
-
-//        file.listFiles().forEach {
-//            val names = it.name.split("-")
-//            val bgm = ReadBgm().apply {
-//                uuid = UUID.randomUUID().toString()
-//                artist = names[0]
-//                name = names[1].replace(".mp3", "")
-//                this.file = it.path
-//            }
-//            bgm.saveManaged(Realm.getInstance(ldConfig))
-//        }
+        val f = fragmentController.findCurrentFragment() as NavFragment<*, *>
+        if (f.fragmentController.hasBackStackEntries())
+        {
+            f.fragmentController.fragmentManager.popBackStack()
+        }
+        else
+            super.onBackPressed()
     }
 
     fun showLdBgmList(view: View)
     {
-        val navController = view.findNavController()
-        navController.navigate(Uri.parse("https://senriot.com/bgm"))
+        val f = fragmentController.findCurrentFragment()
+        if (f is LangDuFragment)
+        {
+            f.onBackPressed()
+            f.fragmentController.newRequest(LangDuFragments.bgm)
+                .addToBackStack(true)
+                .execute()
+        }
     }
 
     /**
@@ -161,21 +149,24 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun karaokeCardClick(view: View)
     {
-        val nc = view.findNavController()
         val title = view.tag.toString()
         val args = Bundle()
         args.putString("title", title)
-        if (title == "2")
+        val f = fragmentController.findCurrentFragment()
+        if (f is KaraokeFragment)
         {
-            nc.navigate(R.id.action_karaokeMainFragment_to_karaokeArtistListFragment)
-        }
-        else
-        {
-            nc.navigate(R.id.action_karaokeMainFragment_to_karaokeListFragment, args)
+            if (title == "2")
+            {
+                f.fragmentController.newRequest(KaraokeFragments.artistList).addToBackStack(true)
+                    .replaceSame(true).execute()
+            }
+            else
+            {
+                f.fragmentController.newRequest(KaraokeFragments.songList).arguments(args)
+                    .addToBackStack(true).replaceSame(true).execute()
+            }
         }
     }
-
-//    private val mediaListFragment by lazy { MediaListFragment() }
 
     fun showMediaList(view: View)
     {
@@ -198,7 +189,7 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
 
     fun showProfile(view: View)
     {
-        startActivity(Intent(this, LoginActivity::class.java))
+        ProfileDialogFragment().show(supportFragmentManager, "profile")
     }
 
 
@@ -220,17 +211,11 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
         startActivity(Intent(Settings.ACTION_SETTINGS));
     }
 
-    fun updateLdRecord(view: View)
+    @Subscribe
+    fun loginEvent(event: LoginEvent)
     {
-
+        vm.avatar.set(App.wxUser!!.headImgUrl)
     }
 
-//    fun showSoundEffect(view: View)
-//    {
-//        val nc = view.findNavController()
-//        if (nc.currentDestination?.label != "SoundEffectFragment")
-//        {
-//            nc.navigate(R.id.action_karaokeFragment_to_soundEffectFragment)
-//        }
-//    }
+
 }

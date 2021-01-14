@@ -1,4 +1,4 @@
-//include ':launcher'
+include ':mvvm-core-release'//include ':launcher'
 include ':app'
 rootProject.name = "ilang-box"
 include ':player'

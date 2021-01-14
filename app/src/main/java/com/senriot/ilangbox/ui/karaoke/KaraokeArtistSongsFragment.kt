@@ -1,7 +1,6 @@
 package com.senriot.ilangbox.ui.karaoke
 
-import androidx.navigation.NavController
-import androidx.navigation.fragment.navArgs
+import com.android.karaoke.common.models.Artist
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
@@ -17,19 +16,23 @@ class KaraokeArtistSongsFragment :
 
     private val vm by viewModel<KaraokeArtistSongsViewModel>()
 
-    private val args by navArgs<KaraokeArtistSongsFragmentArgs>()
-
     override fun createViewModel(): KaraokeArtistSongsViewModel = vm
 
     override fun preInit()
     {
         super.preInit()
-        vm.artist.set(args.artist)
+        arguments?.getParcelable<Artist>("artist")?.let {  vm.artist.set(it) }
     }
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         scrollView.setAdapter(vm.adapter)
     }
+
+//    override fun performDataBinding()
+//    {
+//        super.performDataBinding()
+//        scrollView.setAdapter(vm.adapter)
+//    }
 }

@@ -13,7 +13,7 @@ class LangDuViewModel : AbstractViewModel()
     val sp = SPService()
 
     val micVolume = ObservableInt(sp.micVolume)
-    val soundVolume = ObservableInt(sp.soundVolume)
+    val soundVolume = ObservableInt(sp.headsetVolume)
 
 
     fun sendEffectValue(value: Int, type: String)

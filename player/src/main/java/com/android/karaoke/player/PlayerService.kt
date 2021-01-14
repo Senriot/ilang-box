@@ -3,7 +3,10 @@ package com.android.karaoke.player
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.graphics.Rect
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
@@ -12,8 +15,8 @@ import android.os.SystemClock
 import android.util.Base64
 import android.view.*
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.graphics.drawable.toBitmap
 import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
 import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.events.ProfileDataInitEvent
 import com.android.karaoke.common.models.*
@@ -241,8 +244,15 @@ class PlayerService : Service(), PresentationHelper.Listener
 
             if (displayType != DISPLAY_TYPE_SONGRECORD)
             {
-                curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
-                curSongRecord = null
+                try
+                {
+                    curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
+                    curSongRecord = null
+                }
+                catch (e: Exception)
+                {
+
+                }
             }
 
             when (displayType)
@@ -402,6 +412,8 @@ class PlayerService : Service(), PresentationHelper.Listener
         }
     }
 
+    private var needPaint = true
+
     override fun showPreso(display: Display)
     {
         val presoContext = createPresoContext(display)
@@ -431,6 +443,30 @@ class PlayerService : Service(), PresentationHelper.Listener
             override fun surfaceCreated(holder: SurfaceHolder?)
             {
                 mainDisplay = holder
+                if (needPaint)
+                {
+                    val canvas: Canvas = holder!!.lockCanvas()
+                    val bitmap = resources.getDrawable(R.mipmap.ld_tv_bg).toBitmap()
+                    val mSrcRect = Rect(0, 0, bitmap.width, bitmap.height)
+                    val mDestRect = Rect(0, 0, bitmap.width, bitmap.height)
+                    val mBitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                        isFilterBitmap = true
+                        isDither = true
+                    }
+                    canvas.drawBitmap(bitmap, mSrcRect, mDestRect, mBitPaint)
+                    holder.unlockCanvasAndPost(canvas)
+                    needPaint = false
+                }
+//                val canvas: Canvas = holder!!.lockCanvas()
+//                val bitmap = resources.getDrawable(R.mipmap.ld_tv_bg).toBitmap()
+//                val mSrcRect = Rect(0, 0, bitmap.width, bitmap.height)
+//                val mDestRect = Rect(0, 0, bitmap.width, bitmap.height)
+//                val mBitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+//                    isFilterBitmap = true
+//                    isDither = true
+//                }
+//                canvas.drawBitmap(bitmap, mSrcRect, mDestRect, mBitPaint)
+//                holder.unlockCanvasAndPost(canvas);
 //                mPlayer.setSurface(holder!!.surface)
             }
 
@@ -444,8 +480,11 @@ class PlayerService : Service(), PresentationHelper.Listener
 
         if (data.currentPlay != null)
         {
-            realm.executeTransaction {
-                it.copyToRealmOrUpdate(songRecord)
+
+            realm.executeTransaction { realm ->
+                songRecord?.let {
+                    realm.copyToRealmOrUpdate(it)
+                }
                 data.currentPlay = null
             }
         }
@@ -788,7 +827,7 @@ class PlayerService : Service(), PresentationHelper.Listener
     @Subscribe
     fun startDzxx(event: StartDzxxEvent)
     {
-        this.dzxxItem = event.item
+        this.dzxxItem = event.currentItem
     }
 
     /**

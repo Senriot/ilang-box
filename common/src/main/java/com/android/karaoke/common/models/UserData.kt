@@ -1,9 +1,11 @@
 package com.android.karaoke.common.models
 
+import android.os.Parcelable
 import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
+import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 import java.util.*
 
@@ -20,6 +22,7 @@ open class UserData(
 
 }
 
+@Parcelize
 open class Record(
     @PrimaryKey
     var id: String = "",
@@ -28,7 +31,7 @@ open class Record(
     var file: String = "",
     var updated: Boolean = false,
     var createDate: Date = Date()
-) : RealmObject(), Serializable
+) : RealmObject(), Serializable, Parcelable
 
 
 open class SongRecord(

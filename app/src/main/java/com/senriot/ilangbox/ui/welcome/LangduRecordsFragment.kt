@@ -6,7 +6,6 @@ import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.FragmentLangduRecordsBinding
 import com.senriot.ilangbox.ui.langdu.ReadListViewModel
-import kotlinx.android.synthetic.main.fragment_langdu_records.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -19,11 +18,13 @@ class LangduRecordsFragment :
 
     override fun createViewModel(): ReadListViewModel = vm
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
-        list.layoutManager = LinearLayoutManager(activity)
-        list.adapter = vm.adapter
+        super.postInit()
+        with(viewDataBinding) {
+            this?.list?.layoutManager = LinearLayoutManager(activity)
+            this?.list?.adapter = vm.adapter
+        }
     }
 
 }

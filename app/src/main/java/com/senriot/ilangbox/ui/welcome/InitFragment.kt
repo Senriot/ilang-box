@@ -35,9 +35,9 @@ class InitFragment : MvvmFragment<InitFragmentBinding, InitViewModel>(R.layout.i
 
     override fun createViewModel(): InitViewModel = vm
     private lateinit var networkDisposable: Disposable
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         networkDisposable = ReactiveNetwork.observeNetworkConnectivity(context)
             .onIO()
             .filter(
@@ -107,7 +107,7 @@ class InitFragment : MvvmFragment<InitFragmentBinding, InitViewModel>(R.layout.i
             ) {
                 onProgress { progress, byteCount, speed ->
                     vm.progress.set(progress)
-                    vm.title.set("初始化数据 %$progress")
+                    vm.title.set("初始化数据 $progress%")
                 }
                 fileName(fileName)
             }.await()

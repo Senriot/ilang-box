@@ -2,18 +2,18 @@ package com.senriot.ilangbox.ui.langdu
 
 import android.graphics.Color
 import android.view.View
-import android.widget.TextView
-import androidx.core.view.ViewCompat
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
-import androidx.navigation.findNavController
-import com.android.karaoke.common.models.*
+import com.android.karaoke.common.models.Category
+import com.android.karaoke.common.models.ReadCategory
+import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.mvvm.BindingConfig
+import com.android.karaoke.common.realm.songsConfig
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RecyclerViewRealmAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
+import com.senriot.ilangbox.ui.GeneralViewModelCommands
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.where
@@ -39,7 +39,7 @@ class LdContentViewModel : AbstractViewModel()
 
     var curSelectedId: String by Delegates.observable("1", { _, old, new ->
 
-        val query = Realm.getDefaultInstance().where<ReadItem>()
+        val query = Realm.getInstance(songsConfig).where<ReadItem>()
         if (new != "0")
         {
             query.equalTo("category_id", new)
@@ -50,7 +50,7 @@ class LdContentViewModel : AbstractViewModel()
     })
 
     val categories by lazy {
-        Realm.getDefaultInstance().where<Category>().equalTo("pid", "1287240189223268354")
+        Realm.getInstance(songsConfig).where<Category>().equalTo("pid", "1287240189223268354")
             .sort("sort_no", Sort.ASCENDING).findAll()
     }
 
@@ -96,7 +96,7 @@ class LdContentViewModel : AbstractViewModel()
     }
 
     val itemsAdapter by lazy {
-        val query = Realm.getDefaultInstance().where<ReadItem>()
+        val query = Realm.getInstance(songsConfig).where<ReadItem>()
 
         if (curSelectedId != "0")
         {
@@ -123,15 +123,16 @@ class LdContentViewModel : AbstractViewModel()
 
     fun itemSelected(view: View, item: ReadItem)
     {
-        view.findNavController()
-            .navigate(LdContentFragmentDirections.actionLdContentFragmentToLdItemDetailFragment(item))
+//        view.findNavController()
+//            .navigate(LdContentFragmentDirections.actionLdContentFragmentToLdItemDetailFragment(item))
+        dispatchCommand(GeneralViewModelCommands.showLangDuDetail(item))
     }
 
     fun categorySelected(item: ReadCategory)
     {
         this.curSelectedId = item.id
         val items =
-            Realm.getDefaultInstance().where<ReadItem>().equalTo("category_id", curSelectedId)
+            Realm.getInstance(songsConfig).where<ReadItem>().equalTo("category_id", curSelectedId)
                 .sort("id").findAll()
         itemsAdapter.updateData(items)
     }
@@ -139,7 +140,7 @@ class LdContentViewModel : AbstractViewModel()
     @Subscribe
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
-        val query = Realm.getDefaultInstance().where<ReadItem>()
+        val query = Realm.getInstance(songsConfig).where<ReadItem>()
 //        if (curSelectedId != "0")
 //        {
 //            query.equalTo("category_id", curSelectedId)
@@ -154,5 +155,10 @@ class LdContentViewModel : AbstractViewModel()
             .endGroup()
             .sort("id").findAll()
         itemsAdapter.updateData(items)
+    }
+
+    override fun onBackPressed(): Boolean
+    {
+        return true
     }
 }

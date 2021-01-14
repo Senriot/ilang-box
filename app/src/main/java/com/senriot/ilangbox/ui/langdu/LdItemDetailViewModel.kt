@@ -3,6 +3,7 @@ package com.senriot.ilangbox.ui.langdu
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.android.karaoke.common.models.ReadItem
+import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.events.ChangeBgmEvent
 import com.arthurivanets.mvvm.AbstractViewModel
 import io.realm.Realm
@@ -30,7 +31,7 @@ class LdItemDetailViewModel : AbstractViewModel()
     fun bgmChanged(event: ChangeBgmEvent)
     {
         val i = item.get()
-        Realm.getDefaultInstance().executeTransaction {
+        Realm.getInstance(songsConfig).executeTransaction {
             i?.bgMusic = event.bgm
         }
     }

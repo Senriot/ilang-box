@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.android.karaoke.common.models.Record
 import com.arthurivanets.mvvm.MvvmFragment
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -24,12 +25,14 @@ class AuditionFragment :
 
     override fun createViewModel(): AuditionViewModel = vm
 
-    private val args by navArgs<AuditionFragmentArgs>()
+//    private val args by navArgs<AuditionFragmentArgs>()
 
     override fun postInit()
     {
         super.postInit()
-        vm.item = args.record
-        vm.title.set(args.record.readItem!!.name)
+        arguments?.getParcelable<Record>("item")?.let {
+            vm.item = it
+            vm.title.set(it.readItem!!.name)
+        }
     }
 }

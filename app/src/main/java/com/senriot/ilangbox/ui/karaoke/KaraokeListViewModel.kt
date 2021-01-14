@@ -4,6 +4,7 @@ import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
+import com.android.karaoke.common.realm.songsConfig
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
@@ -40,7 +41,7 @@ class KaraokeListViewModel : AbstractViewModel()
     }
 
     val items by lazy {
-        val query = Realm.getDefaultInstance().where<Song>()
+        val query =Realm.getInstance(songsConfig).where<Song>()
         when (title)
         {
             "红歌会" -> query.`in`("type_id", arrayOf("40", "1296433966084857857"))
@@ -67,7 +68,7 @@ class KaraokeListViewModel : AbstractViewModel()
     @Subscribe
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
-        val query = Realm.getDefaultInstance().where<Song>()
+        val query = Realm.getInstance(songsConfig).where<Song>()
         when (title)
         {
             "红歌会" -> query.`in`("type_id", arrayOf("40", "1296433966084857857"))

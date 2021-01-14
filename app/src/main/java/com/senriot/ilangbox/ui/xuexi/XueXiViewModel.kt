@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.android.karaoke.common.models.Category
 import com.android.karaoke.common.models.DzXueXi
+import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.events.StartDzxxEvent
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
@@ -21,7 +21,6 @@ import com.yuan.library.dmanager.download.DownloadTask
 import com.yuan.library.dmanager.download.TaskEntity
 import com.yuan.library.dmanager.download.TaskStatus
 import io.realm.Realm
-import io.realm.Sort
 import io.realm.kotlin.where
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -29,15 +28,16 @@ import kotlin.properties.Delegates
 
 class XueXiViewModel : AbstractViewModel()
 {
-    //    private val defaultDict =
-//        Realm.getDefaultInstance().where<Dict>().equalTo("id", 123L).findFirst()!!
     private val downloadManager = DownloadManager.getInstance()
+
+    private val realm by lazy {
+        Realm.getInstance(songsConfig)
+    }
 
     val adapter by lazy {
         val items =
-            Realm.getDefaultInstance().where<DzXueXi>().equalTo("type", "1277623003445903361")
+            realm.where<DzXueXi>().equalTo("type", "1277623003445903361")
                 .findAll()
-//        RecyclerViewRealmAdapter(items, BindingConfig(R.layout.dzxx_item, mapOf(Pair(BR.vm, this))))
         object : RealmRecyclerViewAdapter<DzXueXi, DzItemViewHolder>(items, true)
         {
             init
@@ -76,7 +76,7 @@ class XueXiViewModel : AbstractViewModel()
                 holder.binding.root.setOnClickListener {
                     LogUtils.d(it)
                     if (file.exists())
-                        EventBus.getDefault().post(StartDzxxEvent(item))
+                        EventBus.getDefault().post(StartDzxxEvent(item, selectedDict.id))
                 }
                 holder.binding.btnDownload.setOnClickListener {
                     if (itemTask == null)
@@ -134,35 +134,14 @@ class XueXiViewModel : AbstractViewModel()
 
     }
 
-    var selectedDict: Category by Delegates.observable(Category(), { _, old, new ->
+    var selectedDict: Category by Delegates.observable(Category().apply {
+        id = "1277623003445903361"
+    }, { _, old, new ->
         if (old != new)
         {
             val items =
-                Realm.getDefaultInstance().where<DzXueXi>().equalTo("type", new.id).findAll()
+                realm.where<DzXueXi>().equalTo("type", new.id).findAll()
             adapter.updateData(items)
         }
     })
-
-
-    val categories by lazy {
-        Realm.getDefaultInstance().where<Category>().equalTo("pid", "1277622648859443202")
-            .sort("sort_no", Sort.ASCENDING).findAll()
-    }
-
-    fun startPlay(view: View, item: DzXueXi)
-    {
-        val file = File(item.audioPath + item.audioFileName)
-        if (file.exists())
-        {
-            EventBus.getDefault().post(StartDzxxEvent(item))
-        }
-//        view.findNavController().navigate(
-//            XueXiFragmentDirections.actionXueXiFragmentToDzContentFragment(
-//                item,
-//                if (selectedDict.id <= 0) 123L else selectedDict.id
-//            )
-//        )
-//        if (item.exist == true)
-//            EventBus.getDefault().post(StartDzxxEvent(item))
-    }
 }

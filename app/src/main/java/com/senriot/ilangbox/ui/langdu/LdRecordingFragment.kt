@@ -1,6 +1,7 @@
 package com.senriot.ilangbox.ui.langdu
 
 import androidx.navigation.fragment.navArgs
+import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.player.events.StopReadEvent
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
@@ -18,15 +19,15 @@ class LdRecordingFragment :
 
     private val vm by viewModel<LdRecordingViewModel>()
 
-    private val args by navArgs<LdRecordingFragmentArgs>()
-
     override fun createViewModel(): LdRecordingViewModel = vm
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
-        vm.item.set(args.item)
-        vm.title.set(args.item.name)
-        args.item.bg_music?.let { vm.curBgmName.set(it) }
+        super.postInit()
+        arguments?.getParcelable<ReadItem>("item")?.let { item ->
+            vm.item.set(item)
+            vm.title.set(item.name)
+            item.bg_music?.let { vm.curBgmName.set(it) }
+        }
     }
 }

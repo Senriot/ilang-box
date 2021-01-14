@@ -21,6 +21,7 @@ import org.json.JSONObject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import universum.studios.android.fragment.annotation.FragmentAnnotations
 import java.lang.reflect.Type
 
 @CorePreference("ilang_sp")
@@ -31,11 +32,10 @@ class App : Application()
         super.onCreate()
         Preference.init(this)
         Fresco.initialize(this)
-
+        FragmentAnnotations.setEnabled(true)
 //        RxSnappy.init(this)
         DownloadManager.getInstance().init(this, 3)
         Realm.init(this)
-        Realm.setDefaultConfiguration(songsConfig)
         initNet("https://ilang.senriot.com/sery/ilang/") {
             converter(FastJsonConvert())
         }
@@ -84,3 +84,5 @@ fun getDeviceSN(): Observable<String>
         })
     }
 }
+
+const val GUEST = "Guest"

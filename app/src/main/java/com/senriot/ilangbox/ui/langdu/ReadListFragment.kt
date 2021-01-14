@@ -24,9 +24,9 @@ class ReadListFragment : MvvmFragment<ReadListFragmentBinding, ReadListViewModel
 
     override fun createViewModel(): ReadListViewModel = vm
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         list.layoutManager = LinearLayoutManager(activity)
         list.adapter = vm.adapter
     }

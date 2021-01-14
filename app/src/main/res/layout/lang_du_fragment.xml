@@ -16,18 +16,28 @@
         android:clipChildren="false"
         tools:context="com.senriot.ilangbox.ui.langdu.LangDuFragment">
 
-        <fragment
-            android:id="@+id/ldNavHost"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <!--        <fragment-->
+        <!--            android:id="@+id/ldNavHost"-->
+        <!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_marginBottom="32dp"-->
+        <!--            app:defaultNavHost="true"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:navGraph="@navigation/ld" />-->
+
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="32dp"
-            app:defaultNavHost="true"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/ld" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -60,7 +70,7 @@
                     android:id="@+id/bgmSeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="50"
+                    android:max="60"
                     android:progress="@{vm.soundVolume}" />
             </LinearLayout>
 
@@ -71,6 +81,7 @@
                 android:layout_marginStart="8dp"
                 android:background="@mipmap/ld_btn_default_bg"
                 android:text="默认"
+                android:textColor="@color/md_white_1000"
                 android:textSize="24sp" />
 
             <LinearLayout
@@ -91,7 +102,7 @@
                     android:id="@+id/micSeekBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="50"
+                    android:max="60"
                     android:progress="@{vm.micVolume}" />
             </LinearLayout>
         </LinearLayout>

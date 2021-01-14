@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.android.karaoke.common.models.SongRecord" />
+
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.welcome.KaraokeRecordsViewModel" />
+
+        <import type="com.android.karaoke.player.PlayerHelper" />
+
+        <import type="com.android.karaoke.common.realm.UserDataHelper" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="#1A070707"
+        app:cardElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/simpleDraweeView3"
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                app:actualImageResource="@mipmap/song_default"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@{item.song.name}"
+                app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@{item.song.artists_name}"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/simpleDraweeView3"
+                app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+            <ImageButton
+                android:id="@+id/imageButton16"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)->vm.upload(v,item)}"
+                android:visibility="@{UserDataHelper.hasUpload(item)?View.VISIBLE:View.GONE}"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton18"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_shangchuan" />
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/imageButton21"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginEnd="8dp"-->
+<!--                android:background="?attr/selectableItemBackground"-->
+<!--                android:onClick="@{(v)->vm.reRecording(v,item)}"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/imageButton16"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:srcCompat="@mipmap/ic_luyin" />-->
+
+            <ImageButton
+                android:id="@+id/imageButton22"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)->vm.playRecord(item)}"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageButton16"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_shiting" />
+
+            <ImageButton
+                android:id="@+id/imageButton18"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{(v)-> UserDataHelper.removeSongRecord(v,item)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_ok_del" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

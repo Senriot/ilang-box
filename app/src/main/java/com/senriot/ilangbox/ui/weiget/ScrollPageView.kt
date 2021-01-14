@@ -4,14 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apkfuns.logutils.LogUtils
-import com.senriot.ilangbox.MainActivity
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RealmAdapter
-import kotlin.math.log
 
 class ScrollPageView @JvmOverloads constructor(
     context: Context,
@@ -39,7 +35,7 @@ class ScrollPageView @JvmOverloads constructor(
     override fun onBack()
     {
 //        (context as MainActivity).supportFragmentManager.popBackStack()
-        this.findNavController().popBackStack()
+//        this.findNavController().popBackStack()
     }
 
 

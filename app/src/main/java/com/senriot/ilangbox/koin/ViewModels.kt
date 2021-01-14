@@ -5,8 +5,10 @@ import com.senriot.ilangbox.MainActViewModel
 import com.senriot.ilangbox.ui.karaoke.*
 import com.senriot.ilangbox.ui.langdu.*
 import com.senriot.ilangbox.ui.welcome.InitViewModel
+import com.senriot.ilangbox.ui.welcome.KaraokeRecordsViewModel
 import com.senriot.ilangbox.ui.welcome.LoginViewModel
 import com.senriot.ilangbox.ui.welcome.ProfileViewModel
+import com.senriot.ilangbox.ui.xuexi.DangZhengViewModel
 import com.senriot.ilangbox.ui.xuexi.DzContentViewModel
 import com.senriot.ilangbox.ui.xuexi.XueXiViewModel
 import org.koin.android.viewmodel.dsl.viewModel
@@ -36,5 +38,7 @@ object ViewModels
         viewModel { InitViewModel() }
         viewModel { ProfileViewModel() }
         viewModel { LoginViewModel() }
+        viewModel { DangZhengViewModel() }
+        viewModel { KaraokeRecordsViewModel() }
     }
 }

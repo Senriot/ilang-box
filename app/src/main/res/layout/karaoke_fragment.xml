@@ -15,17 +15,26 @@
         android:layout_height="match_parent"
         tools:context="com.senriot.ilangbox.ui.karaoke.KaraokeFragment">
 
-        <fragment
-            android:id="@+id/okNavHost"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <!--        <fragment-->
+        <!--            android:id="@+id/okNavHost"-->
+        <!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            app:defaultNavHost="true"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/btns"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:navGraph="@navigation/karaoke" />-->
+
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:defaultNavHost="true"
             app:layout_constraintBottom_toTopOf="@+id/btns"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/karaoke" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <LinearLayout

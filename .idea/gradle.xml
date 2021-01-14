@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/mqtt" />
+            <option value="$PROJECT_DIR$/mvvm-core-release" />
             <option value="$PROJECT_DIR$/player" />
             <option value="$PROJECT_DIR$/serialport" />
           </set>

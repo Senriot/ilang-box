@@ -23,6 +23,7 @@ import com.drake.net.utils.scopeDialog
 import com.drake.net.utils.scopeNet
 import com.drake.net.utils.scopeNetLife
 import com.senriot.ilangbox.BR
+import com.senriot.ilangbox.GUEST
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.HistoryItemBinding
 import com.yanzhenjie.kalle.FormBody
@@ -89,7 +90,7 @@ class HistoryAdapter(items: OrderedRealmCollection<SongRecord>) :
         holder.binding.btnUpload.text = "上传"
         holder.binding.btnUpload.isEnabled = true
         holder.binding.btnUpload.visibility =
-            if (!item.updated && UserDataHelper.userData.id != "Guest") View.VISIBLE else View.GONE
+            if (!item.updated && UserDataHelper.userData.id != GUEST) View.VISIBLE else View.GONE
         holder.binding.btnUpload.setOnClickListener {
             holder.binding.btnUpload.text = "上传中..."
             holder.binding.btnUpload.isEnabled = false

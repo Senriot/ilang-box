@@ -41,30 +41,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/textView2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="24dp"-->
-<!--            android:text="武警昆明支队西山支队"-->
-<!--            android:textSize="18sp"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/textView2"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="24dp"-->
+        <!--            android:text="武警昆明支队西山支队"-->
+        <!--            android:textSize="18sp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <fragment
-            android:id="@+id/navNavigation"
-            android:name="androidx.navigation.fragment.NavHostFragment"
+        <!--        <fragment-->
+        <!--            android:id="@+id/navNavigation"-->
+        <!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_marginStart="32dp"-->
+        <!--            android:layout_marginEnd="32dp"-->
+        <!--            app:defaultNavHost="true"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/nav"-->
+        <!--            app:navGraph="@navigation/main" />-->
+
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/nav"
-            app:navGraph="@navigation/main" />
+            app:layout_constraintTop_toTopOf="@+id/nav" />
 
 
         <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
@@ -83,7 +94,6 @@
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
-
 
 
             <RadioButton
@@ -117,28 +127,29 @@
                 android:textSize="24sp" />
         </RadioGroup>
 
-        <ImageButton
-            android:id="@+id/ldList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="64dp"
-            android:background="?attr/selectableItemBackground"
-            android:onClick="showLdList"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_list" />
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/ldList"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="24dp"-->
+        <!--            android:layout_marginEnd="64dp"-->
+        <!--            android:background="?attr/selectableItemBackground"-->
+        <!--            android:onClick="showLdList"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            app:srcCompat="@mipmap/ic_list" />-->
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/btnProfile"
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:layout_marginTop="24dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="24dp"
             android:onClick="showProfile"
-            app:roundAsCircle="true"
-            app:layout_constraintEnd_toStartOf="@+id/ldList"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@mipmap/ic_user" />
+            app:placeholderImage="@mipmap/ic_user"
+            app:roundAsCircle="true"
+            app:uri="@{vm.avatar}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

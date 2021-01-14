@@ -15,7 +15,6 @@
         <item name="android:textColor">#fff</item>
         <item name="android:fontFamily">@font/xhei</item>
         <item name="android:windowFullscreen">true</item>
-
         <item name="material_dialog_background">#000000</item>
         <item name="material_dialog_title_text_color">#ffffff</item>
         <item name="material_dialog_message_text_color">#5F5F5F</item>

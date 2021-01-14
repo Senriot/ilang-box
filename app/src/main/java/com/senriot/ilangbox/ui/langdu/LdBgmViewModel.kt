@@ -3,6 +3,7 @@ package com.senriot.ilangbox.ui.langdu
 import android.view.View
 import androidx.navigation.findNavController
 import com.android.karaoke.common.models.ReadBgm
+import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.events.ChangeBgmEvent
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
@@ -16,7 +17,7 @@ import org.greenrobot.eventbus.EventBus
 
 class LdBgmViewModel : AbstractViewModel()
 {
-    val items by lazy { Realm.getDefaultInstance().where<ReadBgm>().findAll() }
+    val items by lazy { Realm.getInstance(songsConfig).where<ReadBgm>().findAll() }
     val adapter by lazy { LdBgmAdapter(items) }
     val itemBinding by lazy {
         ItemBinding.of<ReadBgm>(

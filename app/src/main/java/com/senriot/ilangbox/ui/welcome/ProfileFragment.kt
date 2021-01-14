@@ -26,9 +26,9 @@ class ProfileFragment :
 
     lateinit var fragmentController: FragmentController
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         fragmentController = FragmentController(context, childFragmentManager)
         fragmentController.viewContainerId = R.id.records_container
         rb_langdu_records.isChecked = true

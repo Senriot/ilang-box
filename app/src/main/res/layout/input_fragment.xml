@@ -85,6 +85,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="A"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="0" />
@@ -95,6 +96,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="B"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="1"
                     app:layout_row="0" />
@@ -105,6 +107,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="C"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="2"
                     app:layout_row="0" />
@@ -115,6 +118,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="D"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="3"
                     app:layout_row="0" />
@@ -125,6 +129,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="E"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="4"
                     app:layout_row="0" />
@@ -135,6 +140,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="F"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="1" />
@@ -145,6 +151,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="G"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="1"
                     app:layout_row="1" />
@@ -155,6 +162,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="H"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="2"
                     app:layout_row="1" />
@@ -165,6 +173,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="I"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="3"
                     app:layout_row="1" />
@@ -175,6 +184,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="J"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="4"
                     app:layout_row="1" />
@@ -185,6 +195,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="K"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="2" />
@@ -195,6 +206,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="L"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="1"
                     app:layout_row="2" />
@@ -205,6 +217,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="M"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="2"
                     app:layout_row="2" />
@@ -215,6 +228,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="N"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="3"
                     app:layout_row="2" />
@@ -225,6 +239,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="O"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="4"
                     app:layout_row="2" />
@@ -235,6 +250,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="P"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="3" />
@@ -245,6 +261,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="Q"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="1"
                     app:layout_row="3" />
@@ -255,6 +272,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="R"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="2"
                     app:layout_row="3" />
@@ -265,6 +283,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="S"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="3"
                     app:layout_row="3" />
@@ -275,6 +294,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="T"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="4"
                     app:layout_row="3" />
@@ -285,6 +305,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="U"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="4" />
@@ -295,6 +316,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="V"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="1"
                     app:layout_row="4" />
@@ -305,6 +327,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="W"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="2"
                     app:layout_row="4" />
@@ -315,6 +338,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="X"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="3"
                     app:layout_row="4" />
@@ -325,6 +349,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="Y"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="4"
                     app:layout_row="4" />
@@ -335,6 +360,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{(v)->vm.pyInput(v)}"
                     android:text="Z"
+                    android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     app:layout_column="0"
                     app:layout_row="5" />

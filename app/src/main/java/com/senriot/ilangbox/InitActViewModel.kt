@@ -3,9 +3,6 @@ package com.senriot.ilangbox
 import androidx.databinding.ObservableField
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
-import com.arthurivanets.mvvm.events.Command
-import com.senriot.ilangbox.event.StartMainActEvent
-import com.yuan.library.dmanager.download.DownloadManager
 import com.yuan.library.dmanager.download.DownloadTask
 import com.yuan.library.dmanager.download.DownloadTaskListener
 import java.text.DecimalFormat
@@ -52,7 +49,6 @@ class InitActViewModel : AbstractViewModel()
 //            DownloadManager.getInstance().cancelTask(downloadTask)
             if (downloadTask.taskEntity.taskId == "downloadDb")
             {
-                commandBus.post(StartMainActEvent())
             }
         }
 

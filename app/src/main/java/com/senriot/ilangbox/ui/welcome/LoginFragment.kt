@@ -36,9 +36,9 @@ class LoginFragment : MvvmFragment<LoginFragmentBinding, LoginViewModel>(R.layou
     override val bindingVariable: Int = BR.vm
 
     private var networkDisposable: Disposable? = null
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         networkDisposable = ReactiveNetwork.observeNetworkConnectivity(context)
             .onIO()
             .filter(ConnectivityPredicate.hasState(NetworkInfo.State.CONNECTED))

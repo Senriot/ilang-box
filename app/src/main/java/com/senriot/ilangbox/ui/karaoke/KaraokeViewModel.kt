@@ -1,6 +1,5 @@
 package com.senriot.ilangbox.ui.karaoke
 
-import androidx.lifecycle.ViewModel
 import com.android.karaoke.player.events.PlayEventType
 import com.android.karaoke.player.events.PlayerControlEvent
 import com.arthurivanets.mvvm.AbstractViewModel

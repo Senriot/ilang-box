@@ -43,9 +43,9 @@ class PageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             listener?.onNext()
         }
 
-        btnBack.setOnClickListener {
-            listener?.onBack()
-        }
+//        btnBack.setOnClickListener {
+//            listener?.onBack()
+//        }
     }
 
     interface PageViewListener

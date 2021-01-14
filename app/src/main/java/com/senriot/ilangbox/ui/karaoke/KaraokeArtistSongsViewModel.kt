@@ -5,6 +5,7 @@ import com.android.karaoke.common.events.PlaylistChangedEvent
 import com.android.karaoke.common.models.Artist
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
+import com.android.karaoke.common.realm.songsConfig
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.R
@@ -25,7 +26,7 @@ class KaraokeArtistSongsViewModel : AbstractViewModel()
 
     val adapter by lazy {
         val songs =
-            Realm.getDefaultInstance().where<Song>().equalTo("artists.id", artist.get()!!.id)
+            Realm.getInstance(songsConfig).where<Song>().equalTo("artists.id", artist.get()!!.id)
                 .sort("hot", Sort.DESCENDING).findAll()
         SongListAdapter(songs, BindingConfig(R.layout.ok_song_item, mapOf()), 3, 3)
     }
@@ -51,7 +52,7 @@ class KaraokeArtistSongsViewModel : AbstractViewModel()
     fun searchTextChanged(event: SearchTextChangedEvent)
     {
         LogUtils.d(event.text)
-        val songs = Realm.getDefaultInstance().where<Song>().equalTo("artists.id", artist.get()!!.id)
+        val songs = Realm.getInstance(songsConfig).where<Song>().equalTo("artists.id", artist.get()!!.id)
             .beginGroup().like("name", event.text + "*").or()
             .like("input_code", event.text + "*")
             .endGroup()

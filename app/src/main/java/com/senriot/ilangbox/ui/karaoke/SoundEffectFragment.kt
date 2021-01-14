@@ -16,9 +16,9 @@ class SoundEffectFragment :
 
     override val bindingVariable: Int = BR.vm
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
+        super.postInit()
         micSeekBar.setOnSeekBarChangeListener(vm.volumeChangedListener)
         headsetSeekBar.setOnSeekBarChangeListener(vm.volumeChangedListener)
         soundSeekBar.setOnSeekBarChangeListener(vm.volumeChangedListener)

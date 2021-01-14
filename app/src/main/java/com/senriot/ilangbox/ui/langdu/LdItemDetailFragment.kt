@@ -1,11 +1,9 @@
 package com.senriot.ilangbox.ui.langdu
 
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
+import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.player.events.StartRecordingEvent
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
-import com.senriot.ilangbox.MainActivity
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.LdItemDetailFragmentBinding
 import kotlinx.android.synthetic.main.ld_item_detail_fragment.*
@@ -19,20 +17,21 @@ class LdItemDetailFragment :
     override val bindingVariable: Int = BR.vm
 
     private val vm by viewModel<LdItemDetailViewModel>()
-    private val args by navArgs<LdItemDetailFragmentArgs>()
     override fun createViewModel(): LdItemDetailViewModel = vm
 
-    override fun performDataBinding()
+    override fun postInit()
     {
-        super.performDataBinding()
-        vm.item.set(args.item)
+        super.postInit()
+        val item = arguments?.getParcelable<ReadItem>("item")
+        vm.item.set(item)
         btnStart.setOnClickListener {
-            val act: MainActivity = activity as MainActivity
-            act.conn.service
-            EventBus.getDefault().post(StartRecordingEvent(args.item))
-            it.findNavController().navigate(
-                LdItemDetailFragmentDirections.actionLdItemDetailFragmentToLdRecordingFragment(args.item)
-            )
+            item?.let {
+                EventBus.getDefault().post(StartRecordingEvent(item))
+            }
+//            EventBus.getDefault().post(StartRecordingEvent(item))
+//            it.findNavController().navigate(
+//                LdItemDetailFragmentDirections.actionLdItemDetailFragmentToLdRecordingFragment(args.item)
+//            )
         }
     }
 }

@@ -61,6 +61,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackground"
+        android:onClick="goBack"
         android:scaleType="center"
         android:src="@mipmap/ld_btn_back" />
 

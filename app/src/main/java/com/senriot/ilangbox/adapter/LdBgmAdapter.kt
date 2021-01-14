@@ -101,7 +101,6 @@ class LdBgmAdapter(private val items: OrderedRealmCollection<ReadBgm>) :
             if (file.exists())
             {
                 EventBus.getDefault().post(ChangeBgmEvent(item))
-                it.findNavController().popBackStack()
             }
         }
     }
