@@ -1,19 +1,11 @@
 package com.senriot.ilangbox.ui.langdu
 
-import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.navigation.fragment.navArgs
 import com.android.karaoke.common.models.Record
 import com.arthurivanets.mvvm.MvvmFragment
-import org.koin.android.viewmodel.ext.android.viewModel
-
-import com.senriot.ilangbox.R
 import com.senriot.ilangbox.BR
+import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.AuditionFragmentBinding
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class AuditionFragment :
     MvvmFragment<AuditionFragmentBinding, AuditionViewModel>(R.layout.audition_fragment)

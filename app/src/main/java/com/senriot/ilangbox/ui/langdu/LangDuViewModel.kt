@@ -1,12 +1,10 @@
 package com.senriot.ilangbox.ui.langdu
 
 import androidx.databinding.ObservableInt
-import androidx.lifecycle.ViewModel
 import com.android.karaoke.common.preference.SPService
 import com.android.karaoke.player.DspHelper
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
-import com.senriot.ilangbox.R
 
 class LangDuViewModel : AbstractViewModel()
 {

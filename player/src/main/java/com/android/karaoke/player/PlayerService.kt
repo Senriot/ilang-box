@@ -49,11 +49,10 @@ class PlayerService : Service(), PresentationHelper.Listener
     private var mWindowManager: WindowManager? = null
     private var mainDisplay: SurfaceHolder? = null
 
-    //    private var userData: UserData? = null
-    private val mTrackAudioIndex = Vector<Int>()
-    private var trackNum = 0
-    private var currentTrack: String? = null
-    private var curAudioIndex: Int = 0
+//    private val mTrackAudioIndex = Vector<Int>()
+//    private var trackNum = 0
+//    private var currentTrack: String? = null
+//    private var curAudioIndex: Int = 0
 
     private var displayType by Delegates.observable(0, { _, oldValue, newValue ->
         if (oldValue != newValue)
@@ -132,7 +131,6 @@ class PlayerService : Service(), PresentationHelper.Listener
 
     private var mBaseTimer = SystemClock.elapsedRealtime();
 
-//    val displayType = ObservableInt(0)  //显示类别，1：朗读 2:K歌 3:播放录音 4:党政
 
     val currentPlay = ObservableField<Song>()
 
@@ -162,17 +160,6 @@ class PlayerService : Service(), PresentationHelper.Listener
     private val realm by lazy {
         Realm.getInstance(userConfig)
     }
-
-//    private val mPlayer by lazy {
-//        MediaPlayer().apply {
-//            setOnErrorListener(mediaPlayerListeners)
-//            setOnCompletionListener(mediaPlayerListeners)
-//            setOnBufferingUpdateListener(mediaPlayerListeners)
-//            setOnPreparedListener(mediaPlayerListeners)
-//            setOnInfoListener(mediaPlayerListeners)
-//            setOnSeekCompleteListener(mediaPlayerListeners)
-//        }
-//    }
 
     private var mPlayer: MediaPlayer? = null
 
@@ -290,72 +277,6 @@ class PlayerService : Service(), PresentationHelper.Listener
                     mp?.start()
                 }
             }
-
-//            if (displayType.get() != 5)
-//            {
-//                curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
-//                curSongRecord = null
-//            }
-//            when
-//            {
-//                displayType.get() == 1 ->
-//                {
-//                    DspHelper.sendHex("484D00020200010501AA")
-//                    startLdReading(readItem)
-////                    mBinding?.lrcView?.play(0)
-//                    initTimer()
-//                    mp?.start()
-//                }
-//                displayType.get() == 3 ->
-//                {
-////                    mBinding?.lrcView?.play(0)
-//                    initTimer()
-//                    mp?.start()
-//                }
-//                displayType.get() == 4 ->
-//                {
-////                    mBinding?.lrcView?.play(0)
-//                    initTimer()
-//                    mp?.start()
-//                }
-//                displayType.get() == 5 ->
-//                {
-////                    mBinding?.lrcView?.play(0)
-//                    initTimer()
-//                    mp?.start()
-//                    curSongRecord?.let { i -> realm.executeTransaction { i.playing = true } }
-//                }
-//                else                   ->
-//                {
-//                    try
-//                    {
-//                        mBinding?.lrcView?.loadLrc("")
-//                        startRecordSong(curSong)
-//                        accompany = Accompany.BC
-//                        EventBus.getDefault().post(AccompanyChangedEvent(accompany))
-//                        DspHelper.sendHex("484D00020200010307AA")
-//                        mp?.start()
-//                    }
-//                    catch (e: Exception)
-//                    {
-//                        e.printStackTrace()
-//                    }
-//
-////                    when (currentTrack?.trim())
-////                    {
-////                        "R"  -> accompany = Accompany.YC
-////                        "L"  -> accompany = Accompany.BC
-////                        else ->
-////                        {
-////                            if (trackNum > 1)
-////                            {
-////                                curAudioIndex = currentTrack?.toInt() ?: 0
-////                                mp?.selectTrack(if (curAudioIndex == 0) 2 else 1)
-////                            } else mp?.setAudioChannel(1)
-////                        }
-////                    }
-//                }
-//            }
         }
 
         override fun onSeekComplete(mp: MediaPlayer?)
@@ -419,7 +340,6 @@ class PlayerService : Service(), PresentationHelper.Listener
         val presoContext = createPresoContext(display)
         mWindowManager = presoContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mBinding = VideoPresentationBinding.inflate(LayoutInflater.from(presoContext))
-//        val typeface = Typeface.createFromAsset(resources.assets, "font/xhei.ttf")
         mBinding!!.lrcView.apply {
             setLabel("")
         }
@@ -457,17 +377,6 @@ class PlayerService : Service(), PresentationHelper.Listener
                     holder.unlockCanvasAndPost(canvas)
                     needPaint = false
                 }
-//                val canvas: Canvas = holder!!.lockCanvas()
-//                val bitmap = resources.getDrawable(R.mipmap.ld_tv_bg).toBitmap()
-//                val mSrcRect = Rect(0, 0, bitmap.width, bitmap.height)
-//                val mDestRect = Rect(0, 0, bitmap.width, bitmap.height)
-//                val mBitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-//                    isFilterBitmap = true
-//                    isDither = true
-//                }
-//                canvas.drawBitmap(bitmap, mSrcRect, mDestRect, mBitPaint)
-//                holder.unlockCanvasAndPost(canvas);
-//                mPlayer.setSurface(holder!!.surface)
             }
 
         })
@@ -530,7 +439,6 @@ class PlayerService : Service(), PresentationHelper.Listener
         mBinding?.surfaceView?.visibility = View.INVISIBLE
         audioRecorder?.stop()
         newPlayer("file://${item.audioPath}${item.audioFileName}")
-//        mPlayer?.prepareAsync()
         realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
     }
 
@@ -631,20 +539,10 @@ class PlayerService : Service(), PresentationHelper.Listener
                 if (b)
                 {
                     mPlayer?.pause()
-//                    if (displayType.get() != 2)
-//                    {
-//                        mBinding?.lrcView?.pause()
-//                    }
-//                    audioRecorder?.pause()
                 }
                 else
                 {
                     mPlayer?.start()
-//                    if (displayType.get() != 2)
-//                    {
-//                        mBinding?.lrcView?.resume()
-//                    }
-//                    audioRecorder?.resume()
                 }
 
             }
@@ -766,7 +664,6 @@ class PlayerService : Service(), PresentationHelper.Listener
             File(f)
         )
         songRecord = SongRecord(id = uuid, song, UserDataHelper.userData.id, f)
-//        Realm.getInstance(userConfig).executeTransaction { it.copyToRealmOrUpdate(songRecord) }
         audioRecorder?.start()
     }
 
@@ -775,12 +672,9 @@ class PlayerService : Service(), PresentationHelper.Listener
     {
         mPlayer?.stop()
         audioRecorder?.stop()
-//        mBinding?.lrcView?.pause()
         EventBus.getDefault().post(ReadingStop(record))
         timer?.dispose()
         readItem = ReadItem()
-//        val record = Record().query { equalTo("id", uuid) }.first()
-//        EventBus.getDefault().post(ReadingStop(record))
     }
 
     @Subscribe
@@ -795,17 +689,9 @@ class PlayerService : Service(), PresentationHelper.Listener
             val lrc = Base64.decode(event.record.readItem?.lyric, Base64.NO_WRAP)
                 .toString(Charset.defaultCharset())
             mBinding?.lrcView?.loadLrc(lrc)
-//            val s = LyricsReader()
-//            s.loadLrc(
-//                event.record.readItem!!.lyric,
-//                File("${Environment.getDataDirectory().absolutePath}/${event.record.readItem!!.id}.lrc"),
-//                event.record.readItem!!.id + ".lrc"
-//            )
-//            mBinding?.lrcView?.lyricsReader = s
         }
         mBinding?.surfaceView?.visibility = View.INVISIBLE
         newPlayer(event.record.file)
-//        mPlayer?.prepareAsync()
         realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
     }
 
@@ -816,7 +702,6 @@ class PlayerService : Service(), PresentationHelper.Listener
     fun stopAudition(event: StopAuditionEvent)
     {
         mPlayer?.stop()
-//        mBinding?.lrcView?.pause()
         timer?.dispose()
     }
 
@@ -843,7 +728,6 @@ class PlayerService : Service(), PresentationHelper.Listener
         curSongRecord?.let { i -> realm.executeTransaction { i.playing = false } }
         curSongRecord = event.songRecord
         newPlayer("file://${event.songRecord.filePath}")
-//        mPlayer?.prepareAsync()
         realm.executeTransaction { UserDataHelper.userData.currentPlay = null }
     }
 
@@ -866,5 +750,6 @@ class PlayerService : Service(), PresentationHelper.Listener
         const val DISPLAY_TYPE_LDRECORD = 3
         const val DISPLAY_TYPE_SONGRECORD = 4
         const val DISPLAY_TYPE_DANGZHENG = 5
+        const val DISPLAY_TYPE_DANGZHENG_VIDEO = 6
     }
 }

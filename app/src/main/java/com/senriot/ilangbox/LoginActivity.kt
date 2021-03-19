@@ -10,10 +10,8 @@ import com.apkfuns.logutils.LogUtils
 import com.senriot.ilangbox.event.LoginEvent
 import com.senriot.ilangbox.ui.welcome.WelcomeFragments
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_login.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import universum.studios.android.fragment.annotation.FragmentAnnotations
 import universum.studios.android.fragment.manage.FragmentController
 
 class LoginActivity : AppCompatActivity()

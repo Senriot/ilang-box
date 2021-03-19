@@ -8,9 +8,7 @@ import com.senriot.ilangbox.ui.welcome.InitViewModel
 import com.senriot.ilangbox.ui.welcome.KaraokeRecordsViewModel
 import com.senriot.ilangbox.ui.welcome.LoginViewModel
 import com.senriot.ilangbox.ui.welcome.ProfileViewModel
-import com.senriot.ilangbox.ui.xuexi.DangZhengViewModel
-import com.senriot.ilangbox.ui.xuexi.DzContentViewModel
-import com.senriot.ilangbox.ui.xuexi.XueXiViewModel
+import com.senriot.ilangbox.ui.xuexi.*
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -40,5 +38,7 @@ object ViewModels
         viewModel { LoginViewModel() }
         viewModel { DangZhengViewModel() }
         viewModel { KaraokeRecordsViewModel() }
+        viewModel { DangZhengMainViewModel() }
+        viewModel { DangZhengVideoListViewModel() }
     }
 }

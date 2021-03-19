@@ -22,7 +22,6 @@ import com.senriot.ilangbox.databinding.FragmentProfileDialogBinding
 import com.senriot.ilangbox.event.LoginEvent
 import com.senriot.ilangbox.ui.welcome.KaraokeRecordsFragment
 import com.senriot.ilangbox.ui.welcome.LangduRecordsFragment
-import com.senriot.ilangbox.ui.welcome.ProfileViewModel
 import fr.tvbarthel.lib.blurdialogfragment.SupportBlurDialogFragment
 import io.reactivex.disposables.Disposable
 import net.glxn.qrgen.android.QRCode
@@ -30,7 +29,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONObject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
 import universum.studios.android.fragment.manage.FragmentController
 
 

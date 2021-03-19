@@ -6,6 +6,8 @@ import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.DangZhengFragmentBinding
 import com.senriot.ilangbox.ui.NavFragment
+import com.senriot.ilangbox.ui.karaoke.KaraokeFragments
+import com.senriot.ilangbox.ui.karaoke.SoundEffectFragment
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -43,6 +45,14 @@ class DangZhengFragment :
     {
         super.postInit()
         fragmentController.newRequest(DangZhengFragments.dzMain).immediate(true).execute()
+        viewDataBinding?.btnSoundEffect?.setOnClickListener {
+            if (fragmentController.findCurrentFragment() !is SoundEffectFragment)
+                fragmentController.newRequest(DangZhengFragments.soundEffect).addToBackStack(true)
+                    .replaceSame(true).execute()
+        }
+        viewDataBinding!!.btnBack.setOnClickListener {
+            fragmentController.fragmentManager.popBackStackImmediate()
+        }
     }
 
     @Subscribe

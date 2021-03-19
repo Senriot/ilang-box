@@ -5,7 +5,6 @@ import androidx.navigation.findNavController
 import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.RecordVO
-import com.android.karaoke.common.api.UpdateInfo
 import com.android.karaoke.common.api.UploadResult
 import com.android.karaoke.common.models.Record
 import com.android.karaoke.common.mvvm.BindingConfig
@@ -21,13 +20,7 @@ import com.senriot.ilangbox.R
 import com.senriot.ilangbox.adapter.RecyclerViewRealmAdapter
 import com.yanzhenjie.kalle.FormBody
 import io.realm.Realm
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 

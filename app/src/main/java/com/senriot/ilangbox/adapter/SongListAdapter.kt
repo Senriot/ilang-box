@@ -1,7 +1,6 @@
 package com.senriot.ilangbox.adapter
 
 import android.annotation.SuppressLint
-import android.os.Environment
 import android.view.View
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
@@ -15,7 +14,6 @@ import com.yuan.library.dmanager.download.TaskEntity
 import com.yuan.library.dmanager.download.TaskStatus.*
 import io.realm.OrderedRealmCollection
 import java.io.File
-import java.text.DecimalFormat
 
 
 class SongListAdapter(

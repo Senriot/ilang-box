@@ -1,9 +1,7 @@
 package com.senriot.ilangbox.ui.karaoke
 
 import android.view.View
-import androidx.navigation.findNavController
 import com.android.karaoke.common.models.Artist
-import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
 import com.android.karaoke.common.realm.songsConfig
 import com.arthurivanets.mvvm.AbstractViewModel

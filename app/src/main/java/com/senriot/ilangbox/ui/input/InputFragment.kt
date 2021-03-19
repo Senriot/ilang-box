@@ -1,16 +1,12 @@
 package com.senriot.ilangbox.ui.input
 
-import android.content.DialogInterface
-import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import com.apkfuns.logutils.LogUtils
 import com.kingfisherphuoc.quickactiondialog.QuickActionDialogFragment
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.event.SearchTextChangedEvent
-import com.wwengine.hw.PaintView
 import io.alterac.blurkit.BlurLayout
 import kotlinx.android.synthetic.main.input_fragment.*
 import org.greenrobot.eventbus.EventBus

@@ -1,7 +1,6 @@
 package com.senriot.ilangbox.ui.langdu
 
 import androidx.databinding.ObservableField
-import androidx.lifecycle.ViewModel
 import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.events.ChangeBgmEvent

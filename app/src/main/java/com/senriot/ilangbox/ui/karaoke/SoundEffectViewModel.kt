@@ -6,7 +6,6 @@ import com.android.karaoke.common.preference.SPService
 import com.android.karaoke.player.DspHelper
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
-import com.senriot.ilangbox.App
 import com.senriot.ilangbox.R
 
 class SoundEffectViewModel : AbstractViewModel()
@@ -31,13 +30,20 @@ class SoundEffectViewModel : AbstractViewModel()
     private fun changeVolume(value: Int, id: Int)
     {
         val sr = arrayListOf("48", "4D", "00", "06", "02", "00", value.toString(16))
-        if (id == R.id.headsetSeekBar)
+        when (id)
         {
-            sr.add("03")
-        }
-        else
-        {
-            sr.add("02")
+            R.id.headsetSeekBar ->
+            {
+                sr.add("03")
+            }
+            R.id.micSeekBar     ->
+            {
+                sr.add("02")
+            }
+            else                ->
+            {
+                sr.add("23")
+            }
         }
         var sum = 0xff
         sr.forEach {
@@ -71,6 +77,7 @@ class SoundEffectViewModel : AbstractViewModel()
                     }
                     R.id.soundSeekBar ->
                     {
+                        changeVolume(progress, seekBar.id)
                         soundVolume.set(progress)
                         sp.soundVolume = progress
                     }

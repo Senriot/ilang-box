@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.senriot.ilangbox.ui.xuexi.DangZhengMainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.senriot.ilangbox.ui.karaoke.KaraokeMainFragment">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="dangZhengCardClick"
+                    android:src="@mipmap/bainiandangshi"
+                    android:tag="1372929232080011266"
+                    app:layout_column="0"
+                    app:layout_row="0"
+                    app:layout_rowSpan="2" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="dangZhengCardClick"
+                    android:src="@mipmap/xibaozi"
+                    android:tag="1372929282516516865"
+                    app:layout_column="1"
+                    app:layout_columnSpan="2"
+                    app:layout_row="0" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="dangZhengCardClick"
+                    android:src="@mipmap/baijia"
+                    android:tag="1372929378134065153"
+                    app:layout_column="3"
+                    app:layout_row="0" />
+
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="dangZhengCardClick"
+                    android:src="@mipmap/maonarou"
+                    android:tag="1372929329161371650"
+                    app:layout_column="1"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/tuopin"
+                    android:tag="脱贫攻坚"
+                    app:layout_column="2"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/waijiao"
+                    android:tag="大国外交"
+                    app:layout_column="3"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/dalushang"
+                    android:tag="抒情"
+                    app:layout_column="4"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/zailushang"
+                    android:tag="抒情"
+                    app:layout_column="4"
+                    app:layout_row="1"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/gaige"
+                    android:tag="抒情"
+                    app:layout_column="5"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/fuxingzhilu"
+                    android:tag="抒情"
+                    app:layout_column="6"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/jundui"
+                    android:tag="抒情"
+                    app:layout_column="5"
+                    app:layout_columnSpan="2"
+                    app:layout_row="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/daguojueqi"
+                    android:tag="抒情"
+                    app:layout_column="7"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/taikongyingxiong"
+                    android:tag="抒情"
+                    app:layout_column="7"
+                    app:layout_row="1"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/daguozhongqi"
+                    android:tag="抒情"
+                    app:layout_column="8"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/zhongguomeng"
+                    android:tag="抒情"
+                    app:layout_column="8"
+                    app:layout_row="1"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/hongseyingshi"
+                    android:tag="抒情"
+                    app:layout_column="9"
+                    app:layout_row="0"
+                    app:layout_rowSpan="1" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="karaokeCardClick"
+                    android:src="@mipmap/yinpinku"
+                    android:tag="抒情"
+                    app:layout_column="9"
+                    app:layout_row="1"
+                    app:layout_rowSpan="1" />
+            </androidx.gridlayout.widget.GridLayout>
+        </HorizontalScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

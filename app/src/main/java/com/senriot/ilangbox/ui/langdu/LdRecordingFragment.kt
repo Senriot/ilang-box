@@ -1,14 +1,10 @@
 package com.senriot.ilangbox.ui.langdu
 
-import androidx.navigation.fragment.navArgs
 import com.android.karaoke.common.models.ReadItem
-import com.android.karaoke.player.events.StopReadEvent
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.LdRecordingFragmentBinding
-import kotlinx.android.synthetic.main.ld_recording_fragment.*
-import org.greenrobot.eventbus.EventBus
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class LdRecordingFragment :

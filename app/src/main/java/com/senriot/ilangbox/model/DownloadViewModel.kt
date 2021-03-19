@@ -1,6 +1,5 @@
 package com.senriot.ilangbox.model
 
-import android.os.Environment
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
 import com.android.karaoke.common.models.DzXueXi
@@ -8,11 +7,9 @@ import com.android.karaoke.common.models.ReadBgm
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.realm.songsConfig
 import com.apkfuns.logutils.LogUtils
-import com.senriot.ilangbox.BR
 import com.yuan.library.dmanager.download.DownloadManager
 import com.yuan.library.dmanager.download.DownloadTask
 import com.yuan.library.dmanager.download.DownloadTaskListener
-import com.yuan.library.dmanager.download.TaskEntity
 import com.yuan.library.dmanager.download.TaskStatus.*
 import io.realm.Realm
 import io.realm.kotlin.where

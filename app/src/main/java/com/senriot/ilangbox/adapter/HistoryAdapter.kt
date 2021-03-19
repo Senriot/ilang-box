@@ -4,14 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.RecordVO
 import com.android.karaoke.common.api.UploadResult
-import com.android.karaoke.common.models.Record
-import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.models.SongRecord
 import com.android.karaoke.common.realm.UserDataHelper
 import com.android.karaoke.common.realm.userConfig
@@ -19,9 +16,7 @@ import com.android.karaoke.player.events.PlaySongRecordEvent
 import com.android.karaoke.player.events.StopPlaySongRecordEvent
 import com.apkfuns.logutils.LogUtils
 import com.drake.net.Post
-import com.drake.net.utils.scopeDialog
 import com.drake.net.utils.scopeNet
-import com.drake.net.utils.scopeNetLife
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.GUEST
 import com.senriot.ilangbox.R
@@ -29,12 +24,6 @@ import com.senriot.ilangbox.databinding.HistoryItemBinding
 import com.yanzhenjie.kalle.FormBody
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 

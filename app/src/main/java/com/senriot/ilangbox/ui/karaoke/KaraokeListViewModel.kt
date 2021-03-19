@@ -1,14 +1,12 @@
 package com.senriot.ilangbox.ui.karaoke
 
 import com.android.karaoke.common.events.PlaylistChangedEvent
-import com.android.karaoke.common.models.ReadItem
 import com.android.karaoke.common.models.Song
 import com.android.karaoke.common.mvvm.BindingConfig
 import com.android.karaoke.common.realm.songsConfig
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
-import com.senriot.ilangbox.adapter.RealmAdapter
 import com.senriot.ilangbox.adapter.SongListAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import io.realm.Realm

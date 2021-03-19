@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.WxUser
 import com.android.karaoke.common.preference.Preference
 import com.android.karaoke.common.preference.core.annotation.CorePreference
-import com.android.karaoke.common.realm.songsConfig
 import com.drake.net.convert.DefaultConvert
 import com.drake.net.initNet
 import com.facebook.drawee.backends.pipeline.Fresco

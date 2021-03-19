@@ -2,8 +2,6 @@ package com.senriot.ilangbox.ui.welcome
 
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.arthurivanets.mvvm.AbstractViewModel
 
 class InitViewModel : AbstractViewModel()

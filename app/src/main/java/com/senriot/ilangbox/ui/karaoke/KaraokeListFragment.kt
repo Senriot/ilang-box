@@ -1,7 +1,6 @@
 package com.senriot.ilangbox.ui.karaoke
 
 import android.os.Bundle
-import androidx.navigation.fragment.navArgs
 import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R

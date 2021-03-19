@@ -3,7 +3,6 @@ package com.senriot.ilangbox.ui.langdu
 import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
-import androidx.navigation.findNavController
 import com.alibaba.fastjson.JSON
 import com.android.karaoke.common.api.Api
 import com.android.karaoke.common.api.RecordVO
@@ -20,16 +19,9 @@ import com.drake.net.utils.scopeNet
 import com.senriot.ilangbox.GUEST
 import com.yanzhenjie.kalle.FormBody
 import io.realm.Realm
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
-import java.io.ObjectStreamField
 import java.text.DecimalFormat
 
 class LdRecordingViewModel : AbstractViewModel()

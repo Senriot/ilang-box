@@ -1,6 +1,5 @@
 package com.senriot.ilangbox.adapter
 
-import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -9,9 +8,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.karaoke.common.mvvm.BindingConfig
 import com.apkfuns.logutils.LogUtils
-import io.realm.RealmObject
 import com.senriot.ilangbox.BR
 import io.realm.OrderedRealmCollection
+import io.realm.RealmObject
 
 open class RealmAdapter<T : RealmObject> : RealmRecyclerViewAdapter<T, RealmAdapter.RealmViewHolder>
 {

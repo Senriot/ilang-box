@@ -9,7 +9,6 @@ import com.android.karaoke.common.realm.songsConfig
 import com.apkfuns.logutils.LogUtils
 import com.arthurivanets.mvvm.AbstractViewModel
 import com.senriot.ilangbox.R
-import com.senriot.ilangbox.adapter.RealmAdapter
 import com.senriot.ilangbox.adapter.SongListAdapter
 import com.senriot.ilangbox.event.SearchTextChangedEvent
 import io.realm.Realm

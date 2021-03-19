@@ -2,7 +2,6 @@ package com.senriot.ilangbox.ui.karaoke
 
 import com.android.karaoke.player.Accompany
 import com.android.karaoke.player.events.AccompanyChangedEvent
-import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.KaraokeFragmentBinding
@@ -49,8 +48,9 @@ class KaraokeFragment :
         super.postInit()
         fragmentController.newRequest(KaraokeFragments.karaokeMain).immediate(true).execute()
         btnSoundEffect.setOnClickListener {
-            fragmentController.newRequest(KaraokeFragments.soundEffect).addToBackStack(true)
-                .replaceSame(true).execute()
+            if (fragmentController.findCurrentFragment() !is SoundEffectFragment)
+                fragmentController.newRequest(KaraokeFragments.soundEffect).addToBackStack(true)
+                    .replaceSame(true).execute()
         }
 
         viewDataBinding!!.btnBack.setOnClickListener {

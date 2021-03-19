@@ -1,7 +1,10 @@
 package com.senriot.ilangbox.ui.karaoke
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.SurfaceHolder
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.android.karaoke.player.events.MinorDisplayInit
 import com.senriot.ilangbox.R

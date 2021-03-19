@@ -1,10 +1,8 @@
 package com.senriot.ilangbox.ui.langdu
 
 import android.os.Bundle
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.arthurivanets.mvvm.MvvmFragment
 import com.arthurivanets.mvvm.events.Command
 import com.senriot.ilangbox.BR

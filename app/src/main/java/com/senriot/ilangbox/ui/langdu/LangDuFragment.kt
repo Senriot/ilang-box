@@ -6,15 +6,11 @@ import com.android.karaoke.player.events.ChangeBgmEvent
 import com.android.karaoke.player.events.PlayRecordEvent
 import com.android.karaoke.player.events.StartRecordingEvent
 import com.android.karaoke.player.events.StopAuditionEvent
-import com.arthurivanets.mvvm.MvvmFragment
-import com.arthurivanets.mvvm.events.Command
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.LangDuFragmentBinding
 import com.senriot.ilangbox.event.ShowReadListEvent
-import com.senriot.ilangbox.ui.GeneralViewModelCommands
 import com.senriot.ilangbox.ui.NavFragment
-import com.senriot.ilangbox.ui.karaoke.KaraokeFragments
 import kotlinx.android.synthetic.main.lang_du_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

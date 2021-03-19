@@ -2,24 +2,18 @@ package com.senriot.ilangbox
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
+import com.android.karaoke.common.models.Category
+import com.android.karaoke.common.realm.songsConfig
 import com.android.karaoke.player.PlayerService
 import com.android.karaoke.player.PlayerServiceConnection
 import com.arthurivanets.mvvm.MvvmActivity
-import com.arthurivanets.mvvm.MvvmFragment
 import com.labo.kaji.relativepopupwindow.RelativePopupWindow
 import com.senriot.ilangbox.databinding.ActivityMainBinding
 import com.senriot.ilangbox.event.LoginEvent
 import com.senriot.ilangbox.event.MainNavChangedEvent
-import com.senriot.ilangbox.event.ShowReadListEvent
 import com.senriot.ilangbox.ui.NavFragment
 import com.senriot.ilangbox.ui.input.InputPopupWindow
 import com.senriot.ilangbox.ui.karaoke.KaraokeFragment
@@ -28,9 +22,10 @@ import com.senriot.ilangbox.ui.karaoke.MediaListFragment
 import com.senriot.ilangbox.ui.karaoke.MinorDisplayFragment
 import com.senriot.ilangbox.ui.langdu.LangDuFragment
 import com.senriot.ilangbox.ui.langdu.LangDuFragments
-import com.senriot.ilangbox.ui.langdu.LdMainFragmentDirections
-import com.senriot.ilangbox.ui.welcome.ProfileFragment
-import com.senriot.ilangbox.ui.xuexi.XueXiFragment
+import com.senriot.ilangbox.ui.xuexi.DangZhengFragment
+import com.senriot.ilangbox.ui.xuexi.DangZhengFragments
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -147,6 +142,9 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
     }
 
 
+    /**
+     * 红歌card点击
+     */
     fun karaokeCardClick(view: View)
     {
         val title = view.tag.toString()
@@ -164,6 +162,25 @@ class MainActivity : MvvmActivity<ActivityMainBinding, MainActViewModel>(R.layou
             {
                 f.fragmentController.newRequest(KaraokeFragments.songList).arguments(args)
                     .addToBackStack(true).replaceSame(true).execute()
+            }
+        }
+    }
+
+
+    fun dangZhengCardClick(view: View)
+    {
+        val id = view.tag.toString()
+        val category =
+            Realm.getInstance(songsConfig).where<Category>().equalTo("id", id).findFirst()
+        category?.let {
+            val f = fragmentController.findCurrentFragment()
+            if (f is DangZhengFragment)
+            {
+                val args = Bundle()
+                args.putParcelable("category", it)
+                f.fragmentController.newRequest(DangZhengFragments.videoList).arguments(args)
+                    .addToBackStack(true)
+                    .replaceSame(true).execute()
             }
         }
     }

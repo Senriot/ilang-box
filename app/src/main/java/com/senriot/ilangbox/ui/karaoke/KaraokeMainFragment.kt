@@ -1,17 +1,10 @@
 package com.senriot.ilangbox.ui.karaoke
 
-import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.arthurivanets.mvvm.MvvmFragment
-import org.koin.android.viewmodel.ext.android.viewModel
-
-import com.senriot.ilangbox.R
 import com.senriot.ilangbox.BR
+import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.KaraokeMainFragmentBinding
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class KaraokeMainFragment : MvvmFragment<KaraokeMainFragmentBinding, KaraokeMainViewModel>(R.layout.karaoke_main_fragment)
 {

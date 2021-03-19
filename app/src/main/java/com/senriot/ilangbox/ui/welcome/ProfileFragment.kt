@@ -4,7 +4,6 @@ import com.arthurivanets.mvvm.MvvmFragment
 import com.senriot.ilangbox.BR
 import com.senriot.ilangbox.R
 import com.senriot.ilangbox.databinding.ProfileFragmentBinding
-import com.senriot.ilangbox.ui.langdu.ReadListFragment
 import kotlinx.android.synthetic.main.profile_fragment.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import universum.studios.android.fragment.manage.FragmentController
